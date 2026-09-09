@@ -133,6 +133,7 @@
         DECLARE maiorCodigo INT DEFAULT 0;
         DECLARE pCarteira INT DEFAULT 0;
         DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE qtdCategoria INT DEFAULT 0;
         
         SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
 			IF qtdUsuario = 0 THEN
@@ -158,10 +159,14 @@
 			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'parcelado', pStatus, pCarteira, null);
          END IF; 
          
-         IF  pTipo = 'controlada' THEN 
-		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
-			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'controlada', pStatus, pCarteira, pCategoriaGasto);
-         END IF;
+         IF pTipo = 'controlada' THEN
+			SELECT COUNT(*) INTO qtdCategoria
+				FROM categoria_gasto
+				WHERE cd_categoria_gasto = pCategoriaGasto AND FK_nm_email = pEmail;
+			IF qtdCategoria = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria não encontrada para este usuário';
+			END IF;
+		END IF;
          
          UPDATE Carteira
 			SET vl_carteira = vl_carteira - pValor
@@ -171,11 +176,15 @@
     DROP PROCEDURE IF EXISTS listar_saidas$$
     CREATE PROCEDURE listar_saidas(pEmail VARCHAR(200))
     BEGIN
+		DECLARE pCarteira INT DEFAULT 0;
+        
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
 		select  
 		c.cd_carteira, c.FK_nm_email,
-		s.cd_saida, s.nm_saida
+		s.cd_saida, s.nm_saida, s.FK_cd_categoria_gasto
 		from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
-		where c.FK_nm_email = pEmail; 
+		where c.cd_carteira = pCarteira; 
 	END$$
 
 delimiter ;
