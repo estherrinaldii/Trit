@@ -125,6 +125,57 @@
 		SET nm_categoria_gasto = pNovoNome 
 		WHERE cd_categoria_gasto = pCodigoCategoria AND FK_nm_email = pEmail;
 	END$$
-
+    
+    DROP PROCEDURE IF EXISTS criar_saida$$
+    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pPrazo datetime, pTipo enum('fixa','parcelado','controlada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
+    BEGIN
+		DECLARE pCodigoSaida INT DEFAULT 0; 
+        DECLARE maiorCodigo INT DEFAULT 0;
+        DECLARE pCarteira INT DEFAULT 0;
+        DECLARE qtdUsuario INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;        
+        
+        SELECT IFNULL(MAX(cd_saida), 0) INTO maiorCodigo FROM saida;
+				SET pCodigoSaida = maiorCodigo + 1;
+                
+		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+        IF pValor <= 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+        END IF;
+    
+		IF pTipo = 'fixa' THEN 
+		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
+			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, null, 'fixa', pStatus, pCarteira, null);
+         END IF; 
+         
+         IF  pTipo = 'parcelado' THEN 
+		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
+			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'parcelado', pStatus, pCarteira, null);
+         END IF; 
+         
+         IF  pTipo = 'controlada' THEN 
+		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
+			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'controlada', pStatus, pCarteira, pCategoriaGasto);
+         END IF;
+         
+         UPDATE Carteira
+			SET vl_carteira = vl_carteira - pValor
+			WHERE cd_carteira = pCarteira;
+	END$$
+    
+    DROP PROCEDURE IF EXISTS listar_saidas$$
+    CREATE PROCEDURE listar_saidas(pEmail VARCHAR(200))
+    BEGIN
+		select  
+		c.cd_carteira, c.FK_nm_email,
+		s.cd_saida, s.nm_saida
+		from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
+		where c.FK_nm_email = pEmail; 
+	END$$
 
 delimiter ;

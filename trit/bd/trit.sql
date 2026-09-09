@@ -46,7 +46,7 @@ CREATE TABLE Categoria_Gasto (
   cd_categoria_gasto INT NOT NULL,
   nm_categoria_gasto VARCHAR(100) NOT NULL,
   FK_nm_email VARCHAR(200) NOT NULL,
-  ic_tipo_categoria enum('fixo', 'personalizada') NOT NULL DEFAULT 'fixo',
+  ic_tipo_categoria enum('fixa', 'personalizada') NOT NULL DEFAULT 'fixa',
   CONSTRAINT PK_categoria_gasto PRIMARY KEY (cd_categoria_gasto),
   CONSTRAINT FK_Categoria_Gasto_Usuario
   FOREIGN KEY (FK_nm_email)
@@ -111,7 +111,7 @@ CREATE TABLE  Saida (
   vl_saida DECIMAL(10,2) NOT NULL,
   dt_saida TIMESTAMP NOT NULL,
   dt_prazo_saida DATETIME NULL,
-  ic_tipo_saida ENUM('fixo', 'parcelado', 'controlado') NOT NULL,
+  ic_tipo_saida ENUM('fixa', 'parcelada', 'controlada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
   FK_cd_carteira INT NOT NULL,
   FK_cd_categoria_gasto INT NOT NULL,
