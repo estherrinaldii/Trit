@@ -163,6 +163,9 @@
 			SELECT COUNT(*) INTO qtdCategoria
 				FROM categoria_gasto
 				WHERE cd_categoria_gasto = pCategoriaGasto AND FK_nm_email = pEmail;
+                
+			INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
+				VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'controlada', pStatus, pCarteira, pCategoriaGasto);
 			IF qtdCategoria = 0 THEN
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria não encontrada para este usuário';
 			END IF;
@@ -182,9 +185,36 @@
         
 		select  
 		c.cd_carteira, c.FK_nm_email,
-		s.cd_saida, s.nm_saida, s.FK_cd_categoria_gasto
+		s.cd_saida, s.nm_saida, s.dt_saida, s.FK_cd_categoria_gasto
 		from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
 		where c.cd_carteira = pCarteira; 
 	END$$
-
+    
+    DROP PROCEDURE IF EXISTS criar_entrada$$
+    CREATE PROCEDURE criar_entrada(pEmail VARCHAR(200), pNomeEntrada varchar(100), pValor decimal(10,2))
+    BEGIN
+		DECLARE pCodigoEntrada INT DEFAULT 0; 
+        DECLARE maiorCodigo INT DEFAULT 0;
+        DECLARE pCarteira INT DEFAULT 0;
+        DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE qtdCategoria INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;        
+        
+        SELECT IFNULL(MAX(cd_entrada), 0) INTO maiorCodigo FROM entrada;
+				SET pCodigoEntrada = maiorCodigo + 1;
+                
+		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+        IF pValor <= 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+        END IF;
+         
+         UPDATE Carteira
+			SET vl_carteira = vl_carteira + pValor
+			WHERE cd_carteira = pCarteira;
+	END$$
 delimiter ;
