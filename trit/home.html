@@ -14,75 +14,104 @@
 <body>
 
     <div class="menu">
-        <img src="img/menu/calendario.png" alt="calendario">
-        <img src="img/menu/cofre.png" alt="cofre">
-        <img src="img/menu/home.png" alt="home">
-        <img src="img/menu/extrato.png" alt="extrato">
-        <img src="img/menu/perfil.png" alt="perfil">
+        <a href="">
+            <img src="img/menu/calendario.svg" alt="calendario">
+        </a>
+        <a href="">
+            <img src="img/menu/cofre.svg" alt="cofre">
+        </a>
+        <a href="home.html" class="selecionado">
+            <img src="img/menu/home.svg" alt="home">
+        </a>
+        <a href="">
+            <img src="img/menu/extrato.svg" alt="extrato">
+        </a>
+        <a href="">
+            <img src="img/menu/perfil.svg" alt="perfil">
+        </a>
     </div>
 
     <header>
         <img src="img/logo3.png" alt="logo trit">
     </header>
 
-    <p>home</p>
+    <p class="guia">home</p>
 
-    <div>
-        <img src="img/galho/galho-f1.png" alt="galho de gastos">
+    <main>
 
-        <div>
-            <p>R$ 2000,00</p>
-            <div></div>
-            <p>R$ 5500,00</p>
-        </div>
-    </div>
+        <div class="areaGalho">
+            <img src="img/galho/galho-f1.png" alt="galho de gastos" id="galho">
 
-    <div>
-        <button>Nova saída</button>
-        <button>Nova entrada</button>
-    </div>
-
-    <div>
-        <p>Gastos controlados</p>
-
-        <div>
-            <div>
-                <div>
-                    <p>Lazer</p>
-                    <p>R$ 87,21 / R$ 120,00</p>
+            <div class="areaRenda">
+                <div class="valor">
+                    <p>R$</p>
+                    <p id="valorAtual">4000,00</p>
                 </div>
-                <div></div>
+                <div class="linha"></div>
+                <div class="valor">
+                    <p>R$</p>
+                    <p id="valorTotal">5500,00</p>
+                </div>
             </div>
-            <p>></p>
         </div>
 
-        <p>Nenhum gasto controlado registrado</p>
-    </div>
-
-    <div>
-        <p>Gastos fixos</p>
-
-        <div>
-            <div>
-                <p>Celular</p>
-                <p>R$ 90,00</p>
-            </div>
-
-            <div>
-                <p>Frequência</p>
-                <p>03/06 parcelas</p>
-            </div>
-
-            <div>
-                <p>Vencimento</p>
-                <p>28/08/2016</p>
-            </div>
-
-            <p>></p>
+        <div class="areaBotoes">
+            <button id="novaSaida">Nova saída</button>
+            <button id="novaEntrada">Nova entrada</button>
         </div>
 
-        <p>Nenhum gasto fixo registrado</p>
-    </div>
-    
+        <section id="areaControlados">
+            <p class="titulo">Gastos controlados</p>
+
+            <div class="card controlado">
+                <div class="infosControlado">
+                    <div class="tituloControlado">
+                        <p>Lazer</p>
+                        <div class="valorControlado">
+                            <div>
+                                <p id="valorAtualControladoMoeda">R$</p>
+                                <p id="valorAtualControlado">75,00</p>
+                            </div>
+                            <p>/</p>
+                            <div>
+                                <p>R$</p>
+                                <p id="valorTotalControlado">120,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <progress value="0" max="100"></progress>
+                </div>
+                <img src="img/seta.png" alt="">
+            </div>
+        </section>
+
+        <section id="areaFixos">
+            <p class="titulo">Gastos fixos</p>
+
+            <div class="card fixo">
+                <div class="infosFixo">
+                    <div class="left">
+                        <p>Celular</p>
+                        <p class="subtxt">R$ 90,00</p>
+                    </div>
+
+                    <div class="center">
+                        <p>Frequência</p>
+                        <p class="subtxt">03/06 parcelas</p>
+                    </div>
+
+                    <div class="right">
+                        <p>Vencimento</p>
+                        <p class="subtxt">28/08/2016</p>
+                    </div>
+                </div>
+
+                <img src="img/seta.png" alt="">
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/home.js"></script>
 </body>
 </html>

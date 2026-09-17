@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -7,7 +9,7 @@
     font-style: normal;
 }
 
-body{
+main{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -15,6 +17,12 @@ body{
     align-items: center;
     justify-content: center;
 }
+
+.mainCategoria{
+    min-height: 100%;
+    padding-bottom: 16px;
+}
+
 
 .tritLogo2{
     margin-bottom: 16px;
@@ -26,6 +34,7 @@ form{
     align-items: center;
     justify-content: center;
     width: 100%;
+    height: calc(100% - 70px);
     gap: 24px;
 }
 
@@ -48,6 +57,10 @@ div{
     gap: 8px;
 }
 
+.areaRight, .areaLeft{
+    position: relative;
+}
+
 input{
     width: 100%;
     height: 40px;
@@ -56,10 +69,36 @@ input{
     border: solid rgb(9, 95, 184) 2px;
     border-radius: 10px;
     color: rgb(29, 59, 90);
+    outline-color: rgb(29, 59, 90);
+}
+
+input:disabled{
+    border: solid rgba(9, 95, 184, 0.21) 2px;
+    color: rgb(29, 59, 90, 0.57);
 }
 
 .inputErro{ 
     border: solid rgb(255, 85, 85) 2px !important;
+}
+
+.inputSenha{
+    padding-right: 48px;
+}
+
+.obrigatorio{
+    position: absolute;
+    right: -15px;
+    bottom: 4px;
+    font-size: 26px;
+    font-weight: 450;
+    color: rgb(255, 85, 85);
+}
+
+.exibirSenha{
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    height: 30px;
 }
 
 .erro{
@@ -83,6 +122,11 @@ button{
     background-color: rgb(9, 95, 184);
 }
 
+.btnEntrar:active, .btnSalvar:active{
+    background-color: rgb(29, 59, 90);
+    border: none;
+}
+
 .btnGoogle{
     background-color: white;
     display: flex;
@@ -97,10 +141,23 @@ button{
     left: -18%;
 }
 
+.requisitos{
+    color: rgb(29, 59, 90, 0.57); 
+    margin-bottom: 8px;
+}
+
+.requisitoAtendido{
+    color: rgb(9, 95, 184) !important;
+}
+
 .btnContinuar{
     background-color: white;
     color: rgb(9, 95, 184);
     margin-top: 8px;
+}
+
+.btnContinuar:active{
+    background-color: rgb(9, 95, 184, 0.05);
 }
 
 .opcaoRegistro{
@@ -122,11 +179,18 @@ a{
 
 .titulo{
     font-size: 20px;
-    color: rgb(9, 95, 184);
     font-weight: 550;
     font-family: "Bricolage Grotesque", sans-serif !important;
     font-optical-sizing: auto;
     font-style: normal;
+}
+
+.tituloPagina{
+    color: rgb(9, 95, 184);
+}
+
+.tituloPopup{
+    color: rgb(29, 59, 90);
 }
 
 .txtVerificacao{
@@ -144,28 +208,32 @@ a{
     width: 32px;
     height: 32px;
     border: none;
-    background-color: rgba(9, 94, 184, 0.21);
+    background-color: rgba(9, 95, 184, 0.21);
     text-align: center;
     font-size: 20px;
 }
 
-.txtRenda{
+.inputMoeda{
     padding-left: 34px;
 }
 
 .moeda{
     position: absolute;
-    bottom: 39%;
-    left: 12%;
+    bottom: 10px;
+    left: 5px;
     color: rgb(29, 59, 90);
     font-weight: 500;
 }
 
-.areaCategorias{
+.areaTodasCategorias{
+    width: 80%;
+}
+
+.todasCategorias{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    width: 80%;
+    width: 100%;
 }
 
 .categoria{
@@ -192,9 +260,6 @@ a{
 }
 
 header{
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     padding: 16px;
 }
@@ -209,12 +274,14 @@ header{
     backdrop-filter: blur(2px);
 }
 
+.recuoPopup > .areaDigitar{
+    width: 97%;
+}
+
 .areaCriarCategoria{
     z-index: 2;
     background-color: white;
     position: fixed;
-    left: calc(50% - 176px);
-    top: calc(50% - 152.3px);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -229,6 +296,24 @@ header{
     align-items: center;
 }
 
+.btnSair{
+    width: 48px;
+    height: 48px;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imgSair{
+    height: 80%;
+}
+
 .btnSalvar{
     width: 100%;
+}
+
+.selecionado{
+    background-color: rgba(9, 94, 184, 0.21);
 }
