@@ -204,38 +204,45 @@ btnEntrar.addEventListener('click', function(e){
         erro(txtSenha, 'Senha não foi informada!', areaInfos);
         return;  
     }
-    
-    // fetch("http://localhost/trit/api/acessar.php", {
-    //     method: "POST",
-    //     credentials: "include",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(
-    //         {
-    //             email: txtEmail.value,
-    //             senha: txtSenha.value
-    //         }
-    //     ),
-    //   })
-    //     .then(function (resposta) {
-    //         console.log(txtEmail.value);
-    //       if (!resposta.ok) {
-    //         throw new Error("Erro HTTP: " + resposta.status);
-    //       }
-    //       return resposta.json();
-    //     })
-    //     .then(function (dadosJSON) {
-    //       if (dadosJSON) {
-    //         console.log(dadosJSON);
-    //             window.location.replace("http://localhost/trit/home.html");
-    //       } else {
-    //         erro(null, error.message);
-    //       }
-    //     })
-    //     .catch(function (error) {
-    //         console.warn(error);
-    //     });
+
+    fetch("http://localhost/Trit/trit/api/acessar.php", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+            {
+                "email":txtEmail.value,
+                "senha":txtSenha.value
+            }
+        ),
+        })
+        .then(function (resposta) {
+            if (!resposta.ok) {
+            throw new Error("Erro HTTP: " + resposta.status);
+            }
+            return resposta.json();
+        })
+        .then(function (dadosJSON) {
+            if (dadosJSON) {
+                console.log(dadosJSON);
+                sessionStorage['logado'] = txtEmail.value;
+                if(sessionStorage['logado'] != null){
+                    window.location.href = "http://localhost/Trit/trit/home.html";
+                }
+                
+            } else {
+                erro(null, "Email e/ou senha inválidos!", areaInfos);
+            }
+        })
+        .catch(function (error) {
+            console.warn(error);
+            erro(null, "Email e/ou senha inválidos!", areaInfos);
+        })
+        .finally(function () {
+            // O que fazer independente de ter dado erro ou não
+        });
 
 })
 
