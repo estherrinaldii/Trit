@@ -212,7 +212,10 @@
         IF pValor <= 0 THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
         END IF;
-         
+        
+        INSERT INTO entrada(cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira)
+				VALUES (pCodigoEntrada,  pNomeEntrada, pValor, current_timestamp, pCarteira);
+          
          UPDATE Carteira
 			SET vl_carteira = vl_carteira + pValor
 			WHERE cd_carteira = pCarteira;
