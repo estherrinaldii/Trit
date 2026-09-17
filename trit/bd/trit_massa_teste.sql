@@ -40,12 +40,12 @@ INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(6, 950.20, '
 
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto) VALUES
 (1, 'Aluguel Agosto', 1500.00, '2026-08-05 09:00:00', '2026-08-10 00:00:00', 'fixa', 'finalizada', 1, null),
-(2, 'Supermercado semanal', 320.75, '2026-08-08 18:30:00', NULL, 'controlada', 'finalizada', 1, 16),
+(2, 'Supermercado semanal', 320.75, '2026-08-08 18:30:00', NULL, 'categorizada', 'finalizada', 1, 16),
 (3, 'Parcela notebook 3/10', 250.00, '2026-08-01 10:00:00', '2026-08-15 00:00:00', 'parcelada', 'pendente', 2, null),
 (4, 'Plano de saúde', 480.00, '2026-08-03 08:00:00', '2026-08-05 00:00:00', 'fixa', 'finalizada', 2, null),
-(5, 'Uber para o trabalho', 45.90, '2026-08-09 07:45:00', NULL, 'controlada', 'finalizada', 3, 3),
+(5, 'Uber para o trabalho', 45.90, '2026-08-09 07:45:00', NULL, 'categorizada', 'finalizada', 3, 3),
 (6, 'Academia mensalidade', 99.90, '2026-08-02 12:00:00', '2026-08-10 00:00:00', 'fixa', 'pendente', 3, null),
 (7, 'Assinatura streaming', 39.90, '2026-08-06 20:00:00', '2026-08-06 00:00:00', 'fixa', 'finalizada', 4, null),
-(8, 'Roupas inverno', 210.00, '2026-08-04 16:20:00', NULL, 'controlada', 'finalizada', 4, 6),
-(9, 'Ração e petiscos', 89.50, '2026-08-07 11:10:00', NULL, 'controlada', 'finalizada', 5, 20),
+(8, 'Roupas inverno', 210.00, '2026-08-04 16:20:00', NULL, 'categorizada', 'finalizada', 4, 6),
+(9, 'Ração e petiscos', 89.50, '2026-08-07 11:10:00', NULL, 'categorizada', 'finalizada', 5, 20),
 (10, 'Parcela celular 6/12', 180.00, '2026-08-01 09:30:00', '2026-08-20 00:00:00', 'parcelada', 'pendente', 5, null);

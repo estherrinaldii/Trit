@@ -127,7 +127,7 @@
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_saida$$
-    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pPrazo datetime, pTipo enum('fixa','parcelada','controlada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
+    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pPrazo datetime, pTipo enum('fixa','parcelada','categorizada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
     BEGIN
 		DECLARE pCodigoSaida INT DEFAULT 0; 
         DECLARE maiorCodigo INT DEFAULT 0;
@@ -159,13 +159,13 @@
 			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'parcelado', pStatus, pCarteira, null);
          END IF; 
          
-         IF pTipo = 'controlada' THEN
+         IF pTipo = 'categorizada' THEN
 			SELECT COUNT(*) INTO qtdCategoria
 				FROM categoria_gasto
 				WHERE cd_categoria_gasto = pCategoriaGasto AND FK_nm_email = pEmail;
                 
 			INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
-				VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'controlada', pStatus, pCarteira, pCategoriaGasto);
+				VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'categorizada', pStatus, pCarteira, pCategoriaGasto);
 			IF qtdCategoria = 0 THEN
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria não encontrada para este usuário';
 			END IF;
@@ -212,7 +212,10 @@
         IF pValor <= 0 THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
         END IF;
-         
+        
+        INSERT INTO entrada(cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira)
+				VALUES (pCodigoEntrada,  pNomeEntrada, pValor, current_timestamp, pCarteira);
+          
          UPDATE Carteira
 			SET vl_carteira = vl_carteira + pValor
 			WHERE cd_carteira = pCarteira;
@@ -230,5 +233,5 @@
 			e.cd_entrada, e.nm_entrada, e.vl_entrada, e.dt_entrada
 			from carteira c join entrada e on c.cd_carteira = e.FK_cd_carteira 
 			where c.cd_carteira = pCarteira; 
-	END$$
+	END$$    
 delimiter ;
