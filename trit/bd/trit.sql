@@ -32,9 +32,9 @@ CREATE TABLE Carteira (
 
 CREATE TABLE Entrada (
   cd_entrada INT NOT NULL,
+   nm_entrada VARCHAR(100) NULL,
   vl_entrada DECIMAL(10,2) NOT NULL,
   dt_entrada TIMESTAMP NOT NULL,
-  nm_entrada VARCHAR(100) NULL,
   FK_cd_carteira INT NOT NULL,
   CONSTRAINT PK_Entrada PRIMARY KEY (cd_entrada, FK_cd_carteira),
   CONSTRAINT FK_Entrada_Carteira
@@ -111,11 +111,11 @@ CREATE TABLE  Saida (
   vl_saida DECIMAL(10,2) NOT NULL,
   dt_saida TIMESTAMP NOT NULL,
   dt_prazo_saida DATETIME NULL,
-  ic_tipo_saida ENUM('fixa', 'parcelada', 'controlada') NOT NULL,
+  ic_tipo_saida ENUM('fixa', 'parcelada', 'categorizada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
   FK_cd_carteira INT NOT NULL,
-  FK_cd_categoria_gasto INT NOT NULL,
-  CONSTRAINT PK_Saida PRIMARY KEY (cd_saida, FK_cd_carteira, FK_cd_categoria_gasto),
+  FK_cd_categoria_gasto INT DEFAULT NULL,
+  CONSTRAINT PK_Saida PRIMARY KEY (cd_saida, FK_cd_carteira),
   CONSTRAINT FK_Saida_Carteira
     FOREIGN KEY (FK_cd_carteira)
     REFERENCES Carteira (cd_carteira),
