@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 }
 
 body{
@@ -13,14 +18,259 @@ body{
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 16px;
     display: flex;
-    gap: 32px;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    height: fit-content;
+    background-color: white;
+}
+
+a{
+    padding: 6px;
+    border-top: solid 2px transparent;
+}
+
+a img{
+    height: 48px;
+}
+
+.selecionado{
+    background-color: rgb(204, 246, 162);
+    border-top: solid 2px rgb(9, 95, 184);
 }
 
 header{
     width: 100%;
     padding: 16px;
+}
+
+.guia{
+    font-size: 16px;
+    color: rgb(29, 59, 90);
+    padding-left: 16px;
+}
+
+.areaGalho{
+    min-height: 145px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.areaRenda{
+    padding: 24px;
+    font-size: 20px;
+    color: rgb(9, 95, 184);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.linha{
+    height: 2px;
+    width: 100%;
+    background-color: rgb(9, 95, 184);
+}
+
+.valor{
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.areaBotoes{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+button{
+    width: 40%;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 10px;
+    background-color: white;
+    color: rgb(9, 95, 184);
+    border: solid rgb(9, 95, 184) 2px;
+    font-weight: 450;
+}
+
+button:active{
+    background-color: rgb(9, 95, 184, 0.05);
+}
+
+.titulo{
+    font-size: 20px;
+    font-weight: 550;
+    font-family: "Bricolage Grotesque", sans-serif !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.tituloPagina{
+    color: rgb(9, 95, 184);
+}
+
+.tituloPopup{
+    color: rgb(29, 59, 90);
+}
+
+.semRegistro{
+    font-size: 16px;
+    color: rgb(29, 59, 90, 0.57);
+}
+
+section{
+    padding: 16px;
+    font-size: 16px;
+    color: rgb(29, 59, 90);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card{
+    display: flex;
+    padding: 8px;
+    border-radius: 10px;
+    gap: 8px;
+    align-items: center;
+}
+
+.controlado{
+    border: solid rgb(9, 95, 184) 2px;
+}
+
+.infosControlado{
+    width: 100%;
+}
+
+.tituloControlado{
+    display: flex;
+    justify-content: space-between;
+}
+
+.valorControlado{
+    display: flex;
+    gap: 8px;
+}
+
+.valorControlado div{
+    display: flex;
+    gap: 4px;
+}
+
+progress {
+  border-radius: 50%; 
+  width: 100%;
+  height: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: rgb(9, 95, 184, 0.21);
+  border-radius: 4px;
+}
+progress::-webkit-progress-value {
+  background-color: rgb(131, 9, 184);
+  border-radius: 4px;
+}
+
+.fixo{
+    background-color: rgb(9, 95, 184, 0.21);
+}
+
+.infosFixo{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.infosFixo div{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.left{
+    text-align: left;
+}
+
+.center{
+    text-align: center;
+}
+
+.right{
+    text-align: right;
+}
+
+.subtxt{
+    font-size: 12px;
+}
+
+.bloqueio{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(29, 59, 90, 0.46);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup{
+    background-color: white;
+    position: fixed;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    width: 80%;
+}
+
+.areaTitulo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btnSair{
+    width: 48px;
+    height: 48px;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imgSair{
+    height: 80%;
+}
+
+.opcoesSaida{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opcoesSaida button{
+    width: 100%;
+}
+
+.areaDigitar{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+}
+
+.iconAddCategoria{
+    background-color: rgb(204, 246, 162);
+    padding: 3px;
+    border-radius: 50%;
 }
