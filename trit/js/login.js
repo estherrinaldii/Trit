@@ -247,6 +247,7 @@ btnGoogle.addEventListener('click', function(e){
 
 let pagina = 1
 let categoriaCriada = false;
+let msgErroClick = false;
 
 btnContinuar.addEventListener('click', function(e){
     e.preventDefault();
@@ -441,10 +442,15 @@ btnContinuar.addEventListener('click', function(e){
         const categoriasSelecionadas = document.querySelectorAll('.selecionado');
         const areaTodasCategorias = document.querySelector('.areaTodasCategorias');
 
-        if(categoriasSelecionadas.length == 0)
+        if(msgErroClick)
         {
-            erro(null, 'Selecione seus gastos!', areaTodasCategorias);
+            if(categoriasSelecionadas.length == 0)
+            {
+                erro(null, 'Selecione seus gastos!', areaTodasCategorias);
+            }
         }
+        
+        msgErroClick = true;
 
         console.log(emailUsuario, senhaUsuario, nomeUsuario, rendaUsuario, categoriasUsuario);
         //filtrar categorias selecionadas
@@ -827,27 +833,27 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
         {
             console.log(categoriasUsuario);
 
-            let alteracao = false
+            let categoriaInclusa = false
 
             for (let i = 0; i < categoriasUsuario.length; i++) {
                 
                 if(codigoCategoria == categoriasUsuario[i].codigoCategoriaUsuario)
                 {
+                    categoriaInclusa = true;
+
                     if(txtNomeCategoria.value != categoriasUsuario[i].nomeCategoriaUsuario)
                     {
                         categoriasUsuario[i].nomeCategoriaUsuario = txtNomeCategoria.value;
-                        alteracao = true;
                     }
                     
                     if(txtValorCategoria.value != categoriasUsuario[i].valorCategoriaUsuario)
                     {
                         categoriasUsuario[i].valorCategoriaUsuario = txtValorCategoria.value
-                        alteracao = true;
                     }   
                 }
             }
 
-            if(!alteracao)
+            if(!categoriaInclusa)
             {
                 let categoriaUsuario = {nomeCategoriaUsuario, valorCategoriaUsuario, codigoCategoriaUsuario};
                 categoriasUsuario.push(categoriaUsuario);
@@ -865,6 +871,7 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
 
         if(categoriaCriada)
         {
+            console.log('add classe')
             const todasCategorias = document.querySelector('.todasCategorias');
 
             const categoria = document.createElement('div');
@@ -903,6 +910,7 @@ function clickCategorias(categoriasSugeridas){
 
             if(!btnCategoria.classList.contains('selecionado'))
             {
+                console.log('add class selecionado')
                 btnCategoria.classList.add('selecionado');
                 click = true
     
@@ -913,13 +921,16 @@ function clickCategorias(categoriasSugeridas){
 
                 if(btnCategoria.getAttribute('id') == 'sugerida')
                 {
+                console.log('1')
+
                     txtNomeCategoria.disabled = true;
                 }
 
                 for (let index = 0; index < categoriasUsuario.length; index++) {
 
                     if(btnCategoria.textContent == categoriasUsuario[index].nomeCategoriaUsuario)
-                    {
+                    { 
+                    console.log('2')
                         const txtValorCategoria = document.querySelector('#txtValorCategoria');
                         txtValorCategoria.value = categoriasUsuario[index].valorCategoriaUsuario;
 
@@ -930,6 +941,8 @@ function clickCategorias(categoriasSugeridas){
             }
             else
             {
+                console.log('3')
+
                 btnCategoria.classList.remove('selecionado');
                 click = false
             }
