@@ -114,8 +114,8 @@ CREATE TABLE  Saida (
   ic_tipo_saida ENUM('fixa', 'parcelada', 'controlada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
   FK_cd_carteira INT NOT NULL,
-  FK_cd_categoria_gasto INT NOT NULL,
-  CONSTRAINT PK_Saida PRIMARY KEY (cd_saida, FK_cd_carteira, FK_cd_categoria_gasto),
+  FK_cd_categoria_gasto INT DEFAULT NULL,
+  CONSTRAINT PK_Saida PRIMARY KEY (cd_saida, FK_cd_carteira),
   CONSTRAINT FK_Saida_Carteira
     FOREIGN KEY (FK_cd_carteira)
     REFERENCES Carteira (cd_carteira),

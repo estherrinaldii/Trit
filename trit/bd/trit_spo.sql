@@ -127,7 +127,7 @@
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_saida$$
-    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pPrazo datetime, pTipo enum('fixa','parcelado','controlada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
+    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pPrazo datetime, pTipo enum('fixa','parcelada','controlada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
     BEGIN
 		DECLARE pCodigoSaida INT DEFAULT 0; 
         DECLARE maiorCodigo INT DEFAULT 0;
@@ -154,7 +154,7 @@
 			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, null, 'fixa', pStatus, pCarteira, null);
          END IF; 
          
-         IF  pTipo = 'parcelado' THEN 
+         IF  pTipo = 'parcelada' THEN 
 		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
 			VALUES (pCodigoSaida, pNomeSaida, pValor, current_timestamp, pPrazo, 'parcelado', pStatus, pCarteira, null);
          END IF; 
@@ -184,10 +184,10 @@
         SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
         
 		select  
-		c.cd_carteira, c.FK_nm_email,
-		s.cd_saida, s.nm_saida, s.dt_saida, s.FK_cd_categoria_gasto
-		from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
-		where c.cd_carteira = pCarteira; 
+			c.cd_carteira, c.FK_nm_email,
+			s.cd_saida, s.nm_saida, s.dt_saida, s.dt_prazo_saida, s.FK_cd_categoria_gasto
+			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
+			where c.cd_carteira = pCarteira; 
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_entrada$$
