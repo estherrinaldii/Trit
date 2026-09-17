@@ -23,12 +23,12 @@
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
 		END IF;
 		
-		select cd_categoria_gasto, nm_categoria_gasto from categoria_gasto 
+		select cd_categoria_gasto, nm_categoria_gasto, vl_limite from categoria_gasto 
 			where FK_nm_email = pEmail;    
 	end$$
 
 	DROP PROCEDURE IF EXISTS selecionar_categoria$$
-	CREATE PROCEDURE selecionar_categoria(pNomeCategoria varchar(100), pEmail varchar(200))
+	CREATE PROCEDURE selecionar_categoria(pNomeCategoria varchar(100), pEmail varchar(200), pValorLimite DECIMAL(10,2))
 	begin
 		declare qtdUsuario int default 0;
 		DECLARE maiorCodigo INT DEFAULT 0;
@@ -72,14 +72,18 @@
 			
 			SELECT IFNULL(MAX(cd_categoria_gasto), 0) INTO maiorCodigo FROM categoria_gasto;
 			SET pCodigoCategoria = maiorCodigo + 1;
+            
+            IF pValorLimite <= 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+			END IF;
 			
-			INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, FK_nm_email, ic_tipo_categoria) 
-			VALUES (pCodigoCategoria, pNomeCategoria, pEmail, 'fixa');
+			INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) 
+			VALUES (pCodigoCategoria, pNomeCategoria, pValorLimite, pEmail, 'fixa');
 		
 	end$$
 
 	DROP PROCEDURE IF EXISTS criar_categoria$$
-	CREATE PROCEDURE criar_categoria(pNomeCategoria varchar(100), pEmail varchar(200))
+	CREATE PROCEDURE criar_categoria(pNomeCategoria varchar(100), pEmail varchar(200), pValorLimite DECIMAL(10,2))
 	begin
 		DECLARE qtdUsuario INT DEFAULT 0;
 		DECLARE pCodigoCategoria INT DEFAULT 0;
@@ -99,7 +103,7 @@
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuário já possui essa categoria';
 			END IF;
 			
-			INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, FK_nm_email, ic_tipo_categoria) VALUES(pCodigoCategoria, pNomeCategoria, pEmail, 'personalizada');    
+			INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) VALUES(pCodigoCategoria, pNomeCategoria, pValorLimite,pEmail, 'personalizada');    
 	end$$
 	   
 	DROP PROCEDURE IF EXISTS editar_categoria$$
