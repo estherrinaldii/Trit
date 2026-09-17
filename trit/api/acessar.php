@@ -12,10 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 
-if ($metodo != 'POST') 
-{ 
-	http_response_code(400); 
-	echo json_encode(['mensagem' => 'Método Inválido']); 
+if ($metodo != 'POST') {
+	http_response_code(400);
+	echo json_encode(['mensagem' => 'Método Inválido']);
 	return;
 }
 
@@ -24,7 +23,7 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','senha'];
+	$chaves = ['email', 'senha'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
@@ -50,30 +49,29 @@ try {
 	echo json_encode(['status' => 'false']);
 }
 
-function validaCorpoRequisicao($corpo) {
-	if (is_null($corpo))
-	{
+function validaCorpoRequisicao($corpo)
+{
+	if (is_null($corpo)) {
 		http_response_code(400);
-		echo json_encode(['mensagem'=>'Dados Inválidos!']);
+		echo json_encode(['mensagem' => 'Dados Inválidos!']);
 		return false;
 	}
 	return true;
 }
 
-function validaChaves($corpo, $campos) {
-	for ($i=0; $i < count($campos); $i++) { 
-		if (!array_key_exists($campos[$i], $corpo))
-		{
+function validaChaves($corpo, $campos)
+{
+	for ($i = 0; $i < count($campos); $i++) {
+		if (!array_key_exists($campos[$i], $corpo)) {
 			http_response_code(400);
-			echo json_encode(['mensagem'=>'Dados incorretos. Verifique a documentação da API e tente novamente!']);
+			echo json_encode(['mensagem' => 'Dados incorretos. Verifique a documentação da API e tente novamente!']);
 			return false;
 		}
-		if ($corpo[$campos[$i]] == ''){
+		if ($corpo[$campos[$i]] == '') {
 			http_response_code(400);
-			echo json_encode(['mensagem'=>'Dados incorretos. Verifique a documentação da API e tente novamente!']);
+			echo json_encode(['mensagem' => 'Dados incorretos. Verifique a documentação da API e tente novamente!']);
 			return false;
 		}
 	}
 	return true;
 }
-?>

@@ -106,6 +106,7 @@ input:disabled{
     padding: 4px;
     display: flex;
     justify-content: center;
+    text-align: center;
 }
 
 button{
