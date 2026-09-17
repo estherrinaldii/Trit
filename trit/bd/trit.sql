@@ -45,6 +45,7 @@ CREATE TABLE Entrada (
 CREATE TABLE Categoria_Gasto (
   cd_categoria_gasto INT NOT NULL,
   nm_categoria_gasto VARCHAR(100) NOT NULL,
+  vl_limite DECIMAL(10,2) NOT NULL,
   FK_nm_email VARCHAR(200) NOT NULL,
   ic_tipo_categoria enum('fixa', 'personalizada') NOT NULL DEFAULT 'fixa',
   CONSTRAINT PK_categoria_gasto PRIMARY KEY (cd_categoria_gasto),
