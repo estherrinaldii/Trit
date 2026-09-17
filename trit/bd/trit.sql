@@ -32,9 +32,9 @@ CREATE TABLE Carteira (
 
 CREATE TABLE Entrada (
   cd_entrada INT NOT NULL,
+   nm_entrada VARCHAR(100) NULL,
   vl_entrada DECIMAL(10,2) NOT NULL,
   dt_entrada TIMESTAMP NOT NULL,
-  nm_entrada VARCHAR(100) NULL,
   FK_cd_carteira INT NOT NULL,
   CONSTRAINT PK_Entrada PRIMARY KEY (cd_entrada, FK_cd_carteira),
   CONSTRAINT FK_Entrada_Carteira

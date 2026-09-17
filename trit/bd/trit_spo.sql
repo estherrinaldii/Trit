@@ -217,4 +217,18 @@
 			SET vl_carteira = vl_carteira + pValor
 			WHERE cd_carteira = pCarteira;
 	END$$
+    
+	DROP PROCEDURE IF EXISTS listar_entradas$$
+    CREATE PROCEDURE listar_entradas(pEmail VARCHAR(200))
+    BEGIN
+		DECLARE pCarteira INT DEFAULT 0;
+        
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+		select  
+			c.cd_carteira, c.FK_nm_email,
+			e.cd_entrada, e.nm_entrada, e.vl_entrada, e.dt_entrada
+			from carteira c join entrada e on c.cd_carteira = e.FK_cd_carteira 
+			where c.cd_carteira = pCarteira; 
+	END$$
 delimiter ;
