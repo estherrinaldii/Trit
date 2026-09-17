@@ -218,7 +218,7 @@
         END IF;
         
         INSERT INTO entrada(cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira)
-				VALUES (pCodigoEntrada,  pNomeEntrada, pValor, current_timestamp, pCarteira);
+				VALUES (pCodigoEntrada,  pNomeEntrada, pValor, pData, pCarteira);
           
          UPDATE Carteira
 			SET vl_carteira = vl_carteira + pValor
