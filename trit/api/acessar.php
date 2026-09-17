@@ -24,18 +24,18 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['nome'];
+	$chaves = ['email','senha'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
 	$email = $corpo['email'];
 	$senha = $corpo['senha'];
-	
-	$controller = new UsuarioController();
-	$controller->Acessar($email, $senha);
+
+	$usuario = UsuarioController::Acessar($email, $senha);
+	$_SESSION['logado'] = $usuario;
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true', 'usuario'=> $controller]);
+	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();
 	if (strpos($mensagemCompleta, 'SQLSTATE') !== false && strpos($mensagemCompleta, '1644') !== false) {
@@ -45,8 +45,9 @@ try {
 	} else {
 		$mensagem = $mensagemCompleta;
 	}
+
 	http_response_code(500);
-	echo json_encode(['status' => 'false', 'mensagem'=> $mensagem]);
+	echo json_encode(['status' => 'false']);
 }
 
 function validaCorpoRequisicao($corpo) {
