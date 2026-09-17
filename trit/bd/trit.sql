@@ -34,7 +34,7 @@ CREATE TABLE Entrada (
   cd_entrada INT NOT NULL,
    nm_entrada VARCHAR(100) NULL,
   vl_entrada DECIMAL(10,2) NOT NULL,
-  dt_entrada TIMESTAMP NOT NULL,
+  dt_entrada DATE NOT NULL,
   FK_cd_carteira INT NOT NULL,
   CONSTRAINT PK_Entrada PRIMARY KEY (cd_entrada, FK_cd_carteira),
   CONSTRAINT FK_Entrada_Carteira
@@ -110,7 +110,7 @@ CREATE TABLE  Saida (
   cd_saida INT NOT NULL,
   nm_saida VARCHAR(100) NOT NULL,
   vl_saida DECIMAL(10,2) NOT NULL,
-  dt_saida TIMESTAMP NOT NULL,
+  dt_saida DATE NOT NULL,
   dt_prazo_saida DATETIME NULL,
   ic_tipo_saida ENUM('fixa', 'parcelada', 'categorizada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
