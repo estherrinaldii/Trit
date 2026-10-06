@@ -111,7 +111,7 @@ CREATE TABLE  Saida (
   nm_saida VARCHAR(100) NOT NULL,
   vl_saida DECIMAL(10,2) NOT NULL,
   dt_saida DATE NOT NULL,
-  dt_prazo_saida DATETIME NULL,
+  dt_prazo_saida DATE NULL,
   ic_tipo_saida ENUM('fixa', 'parcelada', 'categorizada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
   FK_cd_carteira INT NOT NULL,

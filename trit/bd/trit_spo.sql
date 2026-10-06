@@ -194,6 +194,20 @@
 			where c.cd_carteira = pCarteira; 
 	END$$
     
+        DROP PROCEDURE IF EXISTS listar_saidas_por_tipo$$
+    CREATE PROCEDURE listar_saidas_por_tipo(pEmail VARCHAR(200), pTipo ENUM ('fixa','parcelada','categorizada'))
+    BEGIN
+		DECLARE pCarteira INT DEFAULT 0;
+        
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+		select  
+			c.cd_carteira, c.FK_nm_email,
+			s.cd_saida, s.nm_saida, s.dt_saida, s.dt_prazo_saida, s.vl_saida,  s.FK_cd_categoria_gasto, s.ic_status_saida
+			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira
+			where c.cd_carteira = pCarteira and s.ic_tipo_saida = pTipo; 
+	END$$
+    
     DROP PROCEDURE IF EXISTS criar_entrada$$
     CREATE PROCEDURE criar_entrada(pEmail VARCHAR(200), pNomeEntrada varchar(100), pValor decimal(10,2), pData DATE)
     BEGIN

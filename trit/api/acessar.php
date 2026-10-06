@@ -34,6 +34,7 @@ try {
 
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
+	
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();
 	if (strpos($mensagemCompleta, 'SQLSTATE') !== false && strpos($mensagemCompleta, '1644') !== false) {

@@ -32,17 +32,22 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','nome','valor','tipo','categoria','data'];
+	$chaves = ['email','nome','valor','data','prazo','tipo','status','categoria'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
 	$email = $corpo['email'];
 	$nome = $corpo['nome'];
 	$valor = $corpo['valor'];
-	$tipo = $corpo['tipo'];
-	$categoria = $corpo['categoria'];
 	$data = $corpo['data'];
+	$prazo = $corpo['prazo'];
+	$tipo = $corpo['tipo'];
+	$status = $corpo['status'];
+	$categoria = $corpo['categoria'];
 	
+	$saida = new SaidaController(); 
+	$saida->CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria);
+
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
@@ -58,6 +63,8 @@ function validaCorpoRequisicao($corpo) {
 		return false;
 	}
 	return true;
+
+	//qq deu no cors?
 }
 
 function validaChaves($corpo, $campos) {
