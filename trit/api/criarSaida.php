@@ -42,7 +42,7 @@ try {
 	$tipo = $corpo['tipo'];
 	$categoria = $corpo['categoria'];
 	$data = $corpo['data'];
-
+	
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {

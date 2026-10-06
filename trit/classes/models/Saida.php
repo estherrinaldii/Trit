@@ -19,16 +19,16 @@ class Saida extends Banco {
 		$this->Categoria = $categoria;
 	}
 
-	public static function CriarSaidaCategorizada($email, $nome, $valor, $tipo, $categoria, $data){
+	public static function CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria){
 		$parametros = [
 			'pEmail' => $email,
 			'pNomeSaida' => $nome,
 			'pValor' => $valor,
-			'pPrazo' => null,
+			'pData' => $data,
+			'pPrazo' => $prazo,
 			'pTipo' => $tipo,
-			'pStatus' => null,
-			'pCategoriaGasto' => $categoria,
-			'????' => $data
+			'pStatus' => $status,
+			'pCategoriaGasto' => $categoria
 		];
 
 		return self::Executar('criar_saida', $parametros);
