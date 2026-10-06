@@ -11,5 +11,14 @@ class SaidaController {
 
         return $saida;
     }
+
+    public static function Listar($email){
+        $resultado = Saida::Listar($email);
+        $saidas = [];
+
+        // foreach ($resultado as $linha) {
+        //     $saida = new Saida($linha['cd_saida'], $linha[''], $linha[''], $linha[''])
+        // }
+    }
 }
 ?>

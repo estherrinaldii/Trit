@@ -33,5 +33,15 @@ class Saida extends Banco {
 
 		return self::Executar('criar_saida', $parametros);
 	}
+
+	public static function Listar($email){
+		$parametros = [
+			'pEmail' => $email
+		];
+		
+		return self::Consultar('listar_saidas', $parametros);
+	}
+
+	
 }
 ?>
