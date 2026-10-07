@@ -24,5 +24,14 @@ class Categoria extends Banco
 		];
 		return self::Consultar('listar_categorias', $parametros);
 	}
+
+	public static function Criar($nome, $email, $valorLimite){
+		$parametros = [
+			'pNomeCategoria'=> $nome,
+			'pEmail'=> $email,
+			'pValorLimite'=> $valorLimite
+		];
+		return self::Executar('criar_categoria', $parametros);
+	}
 }
 ?>

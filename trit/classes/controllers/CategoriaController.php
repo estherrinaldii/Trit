@@ -11,5 +11,9 @@ class CategoriaController {
         }
         return $categorias;
     }
+
+    public static function Criar($nome, $email, $valorLimite){
+        return Categoria::Criar($nome, $email, $valorLimite);
+    }
 }
 ?>
