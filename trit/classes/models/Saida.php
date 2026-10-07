@@ -3,6 +3,7 @@ class Saida extends Banco {
 	public $Codigo;
 	public $Nome;
 	public $Valor;
+	public $Data;
 	public $Prazo;
 	public $Tipo;
 	public $Status;
@@ -10,10 +11,11 @@ class Saida extends Banco {
 	public $Categoria;
 
 	
-	public function __construct($codigo = null, $nome = null, $valor = null, $prazo = null, $tipo = null, $status = null, $carteira = null, $categoria = null) {
+	public function __construct($codigo = null, $nome = null, $valor = null, $data = null, $prazo = null, $tipo = null, $status = null, $carteira = null, $categoria = null) {
 		$this->Codigo = $codigo;
 		$this->Nome = $nome;
 		$this->Valor = $valor;
+		$this->Data = $data;
 		$this->Prazo = $prazo;
 		$this->Tipo = $tipo;
 		$this->Status = $status;
@@ -36,14 +38,14 @@ class Saida extends Banco {
 		return self::Executar('criar_saida', $parametros);
 	}
 
-	// public static function ListarCategorizadas($email, $tipo){
-	// 	$parametros = [
-	// 		'pEmail' => $email,
-	// 		'pTipo' => $tipo
-	// 	];
+	public static function CalcularValorGastoCategoria($email, $categoria){
+		$parametros = [
+			'pEmail' => $email,
+			'pcategoria' => $categoria
+		];
 		
-	// 	return self::Consultar('listar_saidas_por_tipo', $parametros);
-	// }
+		return self::Consultar('calcularValorGastoCategoria', $parametros);
+	}
 
 	
 }

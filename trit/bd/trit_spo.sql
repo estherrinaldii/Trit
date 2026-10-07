@@ -193,8 +193,7 @@
 			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
 			where c.cd_carteira = pCarteira; 
 	END$$
-    
-        DROP PROCEDURE IF EXISTS listar_saidas_por_tipo$$
+    DROP PROCEDURE IF EXISTS listar_saidas_por_tipo$$
     CREATE PROCEDURE listar_saidas_por_tipo(pEmail VARCHAR(200), pTipo ENUM ('fixa','parcelada','categorizada'))
     BEGIN
 		DECLARE pCarteira INT DEFAULT 0;
@@ -208,6 +207,18 @@
 			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira
             left join categoria_gasto cg on cg.cd_categoria_gasto = s.FK_cd_categoria_gasto
             where c.cd_carteira = pCarteira and s.ic_tipo_saida = pTipo; 
+	END$$
+    
+    DROP PROCEDURE IF EXISTS calcularValorGastoCategoria$$
+	CREATE PROCEDURE calcularValorGastoCategoria(pEmail VARCHAR(200), pCategoria int)
+	BEGIN
+		DECLARE pCarteira INT DEFAULT 0;
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+		select  				
+			sum(s.vl_saida) AS total
+			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira 
+			where c.cd_carteira = pCarteira and s.FK_cd_categoria_gasto = pCategoria; 
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_entrada$$

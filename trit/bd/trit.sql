@@ -47,7 +47,7 @@ CREATE TABLE Categoria_Gasto (
   nm_categoria_gasto VARCHAR(100) NOT NULL,
   vl_limite DECIMAL(10,2) NOT NULL,
   FK_nm_email VARCHAR(200) NOT NULL,
-  ic_tipo_categoria enum('fixa', 'personalizada') NOT NULL DEFAULT 'fixa',
+  ic_tipo_categoria enum('nativa', 'personalizada') NOT NULL DEFAULT 'nativa',
   CONSTRAINT PK_categoria_gasto PRIMARY KEY (cd_categoria_gasto),
   CONSTRAINT FK_Categoria_Gasto_Usuario
   FOREIGN KEY (FK_nm_email)
@@ -175,4 +175,5 @@ INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_ti
 (7, 'Assinatura streaming', 39.90, '2026-08-06', '2026-08-06', 'fixa', 'finalizada', 4, null),
 (8, 'Roupas inverno', 210.00, '2026-08-04', NULL, 'categorizada', 'finalizada', 4, 6),
 (9, 'Ração e petiscos', 89.50, '2026-08-07', NULL, 'categorizada', 'finalizada', 5, 20),
-(10, 'Parcela celular 6/12', 180.00, '2026-08-01', '2026-08-20', 'parcelada', 'pendente', 5, null);
+(10, 'Parcela celular 6/12', 180.00, '2026-08-01', '2026-08-20', 'parcelada', 'pendente', 5, null),
+(11, 'teste', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 16);

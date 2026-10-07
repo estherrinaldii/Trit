@@ -43,6 +43,8 @@ try {
 	$tipo = $corpo['tipo'];
 	$status = $corpo['status'];
 	$categoria = $corpo['categoria'];
+
+	$email = $_SESSION['logado'];
 	
 	$saida = new SaidaController(); 
 	$saida->CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria);
