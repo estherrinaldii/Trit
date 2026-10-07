@@ -46,8 +46,7 @@ try {
 
 	$email = $_SESSION['logado'];
 	
-	$saida = new SaidaController(); 
-	$saida->CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria);
+	SaidaController::CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria);
 
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
