@@ -4,6 +4,9 @@ if(sessionStorage['logado']){
     let valorAtualExibir = document.querySelector('#valorAtual');
     let valorTotalExibir = document.querySelector('#valorTotal');
 
+    let valorAtual = 0;
+    let valorTotal = 0;
+
     fetch("http://localhost/trit/api/buscarDadosUsuario.php", {
     method: "GET",
         credentials: "include",
@@ -17,9 +20,13 @@ if(sessionStorage['logado']){
     .then(function (dadosJSON) {
         if (dadosJSON) {
         console.log(dadosJSON);
-        // A resposta veio SEM erros
+            valorAtual = dadosJSON.usuario[1].Valor;
+            valorTotal = dadosJSON.usuario[0].Renda;
+
+            valorTotalExibir.textContent = vlRenda.replace('.',',');
+            valorAtualExibir.textContent = vlCarteira.replace('.',',');
         } else {
-        // A resposta veio COM erro lógico
+            window.location.href = "http://localhost/trit/login.html";
         }
     })
     .catch(function (error) {
@@ -29,9 +36,6 @@ if(sessionStorage['logado']){
     .finally(function () {
         // O que fazer independente de ter dado erro ou não
     });
-
-    let valorAtual = valorAtualExibir.textContent;
-    let valorTotal = valorTotalExibir.textContent;
 
     valorAtual = valorAtual.replace(',','.');
     valorTotal = valorTotal.replace(',','.');
