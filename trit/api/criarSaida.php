@@ -30,24 +30,41 @@ if(!isset($_SESSION['logado'])){
 try {
 	$corpo = json_decode(file_get_contents("php://input"), true);
 	if (!validaCorpoRequisicao($corpo)) {
-		return;
+		exit();
 	}
-	$chaves = ['nome','valor','data','prazo','tipo','status','categoria'];
-	if (!validaChaves($corpo, $chaves)) {
-		return;
+ 
+	// Campos que precisam vir sempre
+	$obrigatorios = ['nome', 'valor', 'data'];
+	// Campos que podem faltar ou vir vazios (viram NULL)
+	$opcionais = ['prazo', 'tipo', 'status', 'categoria'];
+ 
+	if (!validaChaves($corpo, $obrigatorios)) {
+		exit();
 	}
+ 
 	$nome = $corpo['nome'];
 	$valor = $corpo['valor'];
 	$data = $corpo['data'];
-	$prazo = $corpo['prazo'];
-	$tipo = $corpo['tipo'];
-	$status = $corpo['status'];
-	$categoria = $corpo['categoria'];
-
+ 
+	$opcional = [];
+	foreach ($opcionais as $campo) {
+		$v = $corpo[$campo] ?? null;
+		$opcional[$campo] = ($v === '') ? null : $v;
+	}
+ 
 	$email = $_SESSION['logado'];
-	
-	SaidaController::CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria);
-
+ 
+	SaidaController::CriarSaida(
+		$email,
+		$nome,
+		$valor,
+		$data,
+		$opcional['prazo'],
+		$opcional['tipo'],
+		$opcional['status'],
+		$opcional['categoria']
+	);
+ 
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
