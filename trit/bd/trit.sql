@@ -127,7 +127,7 @@ CREATE TABLE  Saida (
 
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('joao.silva@gmail.com', 'João Silva', md5(123), 3500.00, 120);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('maria.souza@gmail.com', 'Maria Souza', md5(123), 4200.50, 85);
-INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('pedro.oliveira@gmail.comsaida', 'Pedro Oliveira', md5(123), 2800.75, 0);
+INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('pedro.oliveira@gmail.com', 'Pedro Oliveira', md5(123), 2800.75, 0);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('ana.costa@gmail.com', 'Ana Costa', md5(123), 5100.00, 340);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('carlos.pereira@gmail.com', 'Carlos Pereira', md5(123), 3990.20, 15);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('fernanda.lima@gmail.com', 'Fernanda Lima', md5(123), 6200.00, 500);

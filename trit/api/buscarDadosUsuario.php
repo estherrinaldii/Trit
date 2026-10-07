@@ -15,9 +15,17 @@ if ($metodo != 'GET')
 }
 
 try {
-	// Código da sua API
+	if (!isset($_SESSION['logado']) || $_SESSION['logado'] == '') {
+		http_response_code(400);
+		echo json_encode(['mensagem' => 'Parâmetros obrigatórios insuficientes']);
+		return;
+	}
+	$email = $_SESSION['logado'];
+
+	$dadosUsuario = UsuarioController::Buscar($email);
+
 	http_response_code(200);
-	echo json_encode(['status' => 'true']);
+	echo json_encode(['status' => 'true', 'usuario'=>$dadosUsuario]);
 } catch (Exception $erro) {
 	http_response_code(500);
 	echo json_encode(['status' => 'false']);

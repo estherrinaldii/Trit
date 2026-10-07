@@ -256,7 +256,7 @@
     DROP PROCEDURE IF EXISTS buscar_dados_usuario$$
     CREATE PROCEDURE buscar_dados_usuario(pEmail varchar(200))
     BEGIN
-		Select u.nm_usuario, c.vl_carteira, c.cd_carteira, u.vl_renda, u.qt_pontos from usuario u
+		Select u.nm_email, u.nm_usuario, c.vl_carteira, c.cd_carteira, u.vl_renda, u.qt_pontos from usuario u
 		join carteira c on (c.FK_nm_email = u.nm_email) 
 		where u.nm_email = pEmail;
     END$$

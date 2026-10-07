@@ -226,8 +226,7 @@ btnEntrar.addEventListener('click', function(e){
         })
         .then(function (dadosJSON) {
             if (dadosJSON) {
-                console.log(dadosJSON);
-                sessionStorage['logado'] = txtEmail.value;
+                sessionStorage['logado'] = dadosJSON.usuario.Email;
                 if(sessionStorage['logado'] != null){
                     window.location.href = "http://localhost/trit/home.html";
                 }

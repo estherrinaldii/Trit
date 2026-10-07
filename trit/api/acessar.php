@@ -30,10 +30,10 @@ try {
 	$senha = $corpo['senha'];
 
 	$usuario = UsuarioController::Acessar($email, $senha);
-	$_SESSION['logado'] = $usuario;
+	$_SESSION['logado'] = $usuario->Email;
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true']);
+	echo json_encode(['status' => 'true', 'usuario' => $usuario]);
 	
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();

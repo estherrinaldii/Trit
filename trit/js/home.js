@@ -4,6 +4,32 @@ if(sessionStorage['logado']){
     let valorAtualExibir = document.querySelector('#valorAtual');
     let valorTotalExibir = document.querySelector('#valorTotal');
 
+    fetch("http://localhost/trit/api/buscarDadosUsuario.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        console.log(dadosJSON);
+        // A resposta veio SEM erros
+        } else {
+        // A resposta veio COM erro lógico
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+        // O que fazer se der erro na requisição
+    })
+    .finally(function () {
+        // O que fazer independente de ter dado erro ou não
+    });
+
     let valorAtual = valorAtualExibir.textContent;
     let valorTotal = valorTotalExibir.textContent;
 
