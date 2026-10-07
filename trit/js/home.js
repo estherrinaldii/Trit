@@ -456,6 +456,126 @@ if(sessionStorage['logado']){
 
 
     const areaControlados = document.querySelector('#areaControlados');
+    fetch("http://localhost/trit/api/listarCategorias.php", {
+        method: "GET",
+            credentials: "include",
+        })
+        .then(function (resposta) {
+            if (!resposta.ok) {
+            throw new Error("Erro HTTP: " + resposta.status);
+            }
+            return resposta.json();
+        })
+        .then(function (dadosJSON) {
+            if (dadosJSON) {
+            console.log(dadosJSON);
+                for (let i = 0; i < dadosJSON.categorias.length; i++) {
+                    const categoria = dadosJSON.categorias[i];
+                    fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(
+                        {
+                            "categoria":categoria.Codigo
+                        }
+                    ),
+                    })
+                    .then(function (resposta) {
+                        if (!resposta.ok) {
+                        throw new Error("Erro HTTP: " + resposta.status);
+                        }
+                        return resposta.json();
+                    })
+                    .then(function (dadosJSON) {
+                        if (dadosJSON) {
+                        console.log(dadosJSON);
+                        criarGastoControlado(areaControlados, categoria.Nome, dadosJSON.Valor, categoria.ValorLimite);
+
+                        }
+                    })
+                    .catch(function (error) {
+                        console.warn(error);
+                        // O que fazer se der erro na requisição
+                    })
+                    .finally(function () {
+                        // O que fazer independente de ter dado erro ou não
+                    });         
+                }
+            }
+        })
+        .catch(function (error) {
+            console.warn(error);
+            // O que fazer se der erro na requisição
+        })
+        .finally(function () {
+            // O que fazer independente de ter dado erro ou não
+        });
+
+    function criarGastoControlado(local, txtTitulo, valorAtual, valorLimite){
+        const cardControlado = document.createElement('div');
+        cardControlado.classList.add("card");
+        cardControlado.classList.add("controlado");
+
+            const infosControlado = document.createElement('div');
+            infosControlado.classList.add("infosControlado");
+
+                const tituloControlado = document.createElement('div');
+                tituloControlado.classList.add("tituloControlado");
+                    const titulo = document.createElement('p');
+                    titulo.textContent = txtTitulo;
+                tituloControlado.appendChild(titulo);
+
+                    const valorControlado = document.createElement('div');
+                    valorControlado.classList.add("valorControlado");
+                        let caixa = document.createElement('div');
+                            let texto = document.createElement('p');
+                            texto.id = "valorAtualControladoMoeda";
+                            texto.textContent = "R$";
+                        caixa.appendChild(texto);
+
+                            texto = document.createElement('p');
+                            texto.id = "valorAtualControlado";
+                            texto.textContent = valorAtual;
+                        caixa.appendChild(texto);
+                    valorControlado.appendChild(caixa);
+
+                    texto = document.createElement('p');
+                    texto.textContent = "/";
+                    valorControlado.appendChild(texto);
+
+                    caixa = document.createElement('div');
+                            texto = document.createElement('p');
+                            texto.textContent = "R$";
+                        caixa.appendChild(texto);
+
+                            texto = document.createElement('p');
+                            texto.id = "valorTotalControlado";
+                            texto.textContent = valorLimite;
+                        caixa.appendChild(texto);
+                    valorControlado.appendChild(caixa);
+
+                tituloControlado.appendChild(valorControlado);
+
+                const progresso = document.createElement('progress');
+                progresso.setAttribute('value', 0);
+                progresso.max = 100;
+            
+            infosControlado.appendChild(tituloControlado);
+            infosControlado.appendChild(progresso);
+
+            const icone = document.createElement('img');
+            icone.src = "img/seta.png";
+
+        cardControlado.appendChild(infosControlado);
+        cardControlado.appendChild(icone);
+        
+        local.appendChild(cardControlado);
+    }
+
+
 
     const valorTotalControlados = document.querySelectorAll('#valorTotalControlado');
     const valorAtualControlados = document.querySelectorAll('#valorAtualControlado');

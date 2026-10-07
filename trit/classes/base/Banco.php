@@ -11,7 +11,7 @@ class Banco
 
 		try {
 			self::$conexao = new PDO(
-				'mysql:host=localhost;dbname=trit;charset=utf8mb4', 'root', 'root',
+				'mysql:host=localhost;dbname=trit;charset=utf8mb4', 'root', 's#M98773',
 				[
 					PDO::ATTR_ERRMODE			=> PDO::ERRMODE_EXCEPTION,
 					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
