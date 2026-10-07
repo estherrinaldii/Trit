@@ -23,7 +23,7 @@
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
 		END IF;
 		
-		select cd_categoria_gasto, nm_categoria_gasto, vl_limite from categoria_gasto 
+		select cd_categoria_gasto, nm_categoria_gasto, vl_limite, ic_tipo_categoria  from categoria_gasto 
 			where FK_nm_email = pEmail;    
 	end$$
 
@@ -203,9 +203,11 @@
         
 		select  
 			c.cd_carteira, c.FK_nm_email,
-			s.cd_saida, s.nm_saida, s.dt_saida, s.dt_prazo_saida, s.vl_saida,  s.FK_cd_categoria_gasto, s.ic_status_saida
+			s.cd_saida, s.nm_saida, s.dt_saida, s.dt_prazo_saida, s.vl_saida,  s.FK_cd_categoria_gasto, s.ic_status_saida,
+            cg.vl_limite, cg.nm_categoria_gasto
 			from carteira c join saida s on c.cd_carteira = s.FK_cd_carteira
-			where c.cd_carteira = pCarteira and s.ic_tipo_saida = pTipo; 
+            left join categoria_gasto cg on cg.cd_categoria_gasto = s.FK_cd_categoria_gasto
+            where c.cd_carteira = pCarteira and s.ic_tipo_saida = pTipo; 
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_entrada$$

@@ -32,11 +32,10 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','nome','valor','data','prazo','tipo','status','categoria'];
+	$chaves = ['nome','valor','data','prazo','tipo','status','categoria'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
-	$email = $corpo['email'];
 	$nome = $corpo['nome'];
 	$valor = $corpo['valor'];
 	$data = $corpo['data'];
