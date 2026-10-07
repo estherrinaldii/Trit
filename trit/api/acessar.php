@@ -33,7 +33,7 @@ try {
 	$_SESSION['logado'] = $usuario->Email;
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true', 'usuario' => $usuario]);
+	echo json_encode(['status' => 'true']);
 	
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();

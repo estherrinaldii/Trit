@@ -19,12 +19,11 @@ if(sessionStorage['logado']){
     })
     .then(function (dadosJSON) {
         if (dadosJSON) {
-        console.log(dadosJSON);
-            valorAtual = dadosJSON.usuario[1].Valor;
-            valorTotal = dadosJSON.usuario[0].Renda;
-
-            valorTotalExibir.textContent = vlRenda.replace('.',',');
-            valorAtualExibir.textContent = vlCarteira.replace('.',',');
+                valorAtual = dadosJSON.usuario[1].Valor;
+                valorTotal = dadosJSON.usuario[0].Renda;
+    
+                valorAtualExibir.textContent = String(valorAtual).replace('.',',');
+                valorTotalExibir.textContent = String(valorTotal).replace('.',',');
         } else {
             window.location.href = "http://localhost/trit/login.html";
         }
@@ -36,12 +35,6 @@ if(sessionStorage['logado']){
     .finally(function () {
         // O que fazer independente de ter dado erro ou não
     });
-
-    valorAtual = valorAtual.replace(',','.');
-    valorTotal = valorTotal.replace(',','.');
-
-    valorAtual = Number(valorAtual);
-    valorTotal = Number(valorTotal);
 
     let porcentagem = (valorAtual * 100) / valorTotal;
 
@@ -267,7 +260,8 @@ if(sessionStorage['logado']){
         btnSalvar.addEventListener('click', function(e){
             e.preventDefault();
             
-            if(txtTipoSaida.value == 'Categorizada')
+            if(txtTipoSaida.value == 'CATEGORIZADA') 
+                // MUDEI
             {
 
                 if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')

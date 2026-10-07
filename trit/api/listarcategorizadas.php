@@ -24,8 +24,6 @@ $corpo = json_decode(file_get_contents("php://input"), true);
 	$email = $corpo['email'];
 	$tipo = $corpo['tipo'];
 
-	$email = $_SESSION['logado'];
-
 try {
 	http_response_code(200);
 
