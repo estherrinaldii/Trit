@@ -36,14 +36,14 @@ class Saida extends Banco {
 		return self::Executar('criar_saida', $parametros);
 	}
 
-	public static function ListarCategorizadas($email, $tipo){
-		$parametros = [
-			'pEmail' => $email,
-			'pTipo' => $tipo
-		];
+	// public static function ListarCategorizadas($email, $tipo){
+	// 	$parametros = [
+	// 		'pEmail' => $email,
+	// 		'pTipo' => $tipo
+	// 	];
 		
-		return self::Consultar('listar_saidas_por_tipo', $parametros);
-	}
+	// 	return self::Consultar('listar_saidas_por_tipo', $parametros);
+	// }
 
 	
 }
