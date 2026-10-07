@@ -131,7 +131,7 @@
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_saida$$
-    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pData DATE, pPrazo datetime, pTipo enum('fixa','parcelada','categorizada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
+    CREATE PROCEDURE criar_saida(pEmail VARCHAR(200), pNomeSaida varchar(100), pValor decimal(10,2), pData DATE, pPrazo date, pTipo enum('fixa','parcelada','categorizada'), pStatus enum('pendente','finalizada'), pCategoriaGasto int)
     BEGIN
 		DECLARE pCodigoSaida INT DEFAULT 0; 
         DECLARE maiorCodigo INT DEFAULT 0;
@@ -160,7 +160,7 @@
          
          IF  pTipo = 'parcelada' THEN 
 		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
-			VALUES (pCodigoSaida, pNomeSaida, pValor, pData, pPrazo, 'parcelado', pStatus, pCarteira, null);
+			VALUES (pCodigoSaida, pNomeSaida, pValor, pData, pPrazo, 'parcelada', pStatus, pCarteira, null);
          END IF; 
          
          IF pTipo = 'categorizada' THEN
