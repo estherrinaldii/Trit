@@ -260,13 +260,4 @@
 		join carteira c on (c.FK_nm_email = u.nm_email) 
 		where u.nm_email = pEmail;
     END$$
-    
-    DROP PROCEDURE IF EXISTS buscar_vl_total_gastos$$
-    CREATE PROCEDURE buscar_vl_total_gastos(pEmail varchar(200))
-    BEGIN
-		Select SUM(s.vl_saida) as total from saida s 
-		join carteira c on (s.FK_cd_carteira = c.cd_carteira) 
-		join usuario u on (c.FK_nm_email = u.nm_email) 
-		where u.nm_email = pEmail;
-    END$$
 delimiter ;
