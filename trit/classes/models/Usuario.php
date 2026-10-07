@@ -22,5 +22,13 @@ class Usuario extends Banco{
 
 		return self::Consultar('acessar', $parametros);
 	}
+
+	public static function Buscar($email){
+		$parametros = [
+			'pEmail' => $email
+		];
+
+		return self::Consultar('buscar_dados_usuario', $parametros);
+	}
 }
 ?>
