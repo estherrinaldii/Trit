@@ -157,6 +157,8 @@ INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, 
 INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (18, 'Manutenção', 450.00, 'patricia.gomes@gmail.com');
 INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (19, 'Utilidades', 350.00, 'pedro.oliveira@gmail.com');
 INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (20, 'Pets', 400.00, 'rafael.santos@gmail.com');
+INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (21, 'Alimentação', 50.00, 'sabrina.carpinteira@gmail.com');
+
 
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES (1, 1400.00, 'sabrina.carpinteira@gmail.com');
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(2, 2500.50, 'maria.souza@gmail.com');
@@ -176,4 +178,6 @@ INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_ti
 (8, 'Roupas inverno', 210.00, '2026-08-04', NULL, 'categorizada', 'finalizada', 4, 6),
 (9, 'Ração e petiscos', 89.50, '2026-08-07', NULL, 'categorizada', 'finalizada', 5, 20),
 (10, 'Parcela celular 6/12', 180.00, '2026-08-01', '2026-08-20', 'parcelada', 'pendente', 5, null),
-(11, 'teste', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 16);
+(11, 'Parcela do aluguel', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 3),
+(12, 'Compra da feira', 10, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 21),
+(13, 'Banana', 1, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 21);

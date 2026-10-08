@@ -1,4 +1,4 @@
-	delimiter $$
+delimiter $$
 	DROP PROCEDURE IF EXISTS acessar$$
 	CREATE PROCEDURE acessar(pEmail VARCHAR(200), pSenha VARCHAR(200))
 	begin

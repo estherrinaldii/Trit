@@ -69,7 +69,7 @@ try {
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
 	http_response_code(500);
-	echo json_encode(['status' => 'false']);
+	echo json_encode(['status' => 'false', 'mensagem'=>$erro->getMessage()]);
 }
 
 function validaCorpoRequisicao($corpo) {

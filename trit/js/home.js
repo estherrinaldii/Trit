@@ -1,13 +1,618 @@
-if(sessionStorage['logado']){
-    const galho = document.querySelector('#galho');
+if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
+    window.location.href = "http://localhost/trit/login.html";
+}
 
-    let valorAtualExibir = document.querySelector('#valorAtual');
-    let valorTotalExibir = document.querySelector('#valorTotal');
+const galho = document.querySelector('#galho');
+function mudaFaseArvore(valorAtual, valorTotal){
+    let porcentagem = (valorAtual * 100) / valorTotal;
 
-    let valorAtual = 0;
-    let valorTotal = 0;
+        if(porcentagem >= 75)
+        {
+            galho.setAttribute('src', 'img/galho/galho-f1.png');
+        }
+        else
+        {
+            if(porcentagem < 75 && porcentagem >= 50)
+            {
+                galho.setAttribute('src', 'img/galho/galho-f2.png');
+            }
+            else
+            {
+                if(porcentagem < 50 && porcentagem >= 25)
+                {
+                    galho.setAttribute('src', 'img/galho/galho-f3.png');
+                }
+                else
+                {
+                    if(porcentagem < 25 && porcentagem > 0)
+                    {
+                        galho.setAttribute('src', 'img/galho/galho-f4.png');
+                    }
+                    else
+                    {
+                        galho.setAttribute('src', 'img/galho/galho-f5.png');
+                    }
+                }
+            }
+        }
+}
+let valorAtual = 0;
+let valorTotal = 0;
 
-    fetch("http://localhost/trit/api/buscarDadosUsuario.php", {
+fetch("http://localhost/trit/api/buscarDadosUsuario.php", {
+method: "GET",
+    credentials: "include",
+})
+.then(function (resposta) {
+    if (!resposta.ok) {
+    throw new Error("Erro HTTP: " + resposta.status);
+    }
+    return resposta.json();
+})
+.then(function (dadosJSON) {
+    if (dadosJSON) {
+            document.querySelector('#valorAtual').textContent = String(dadosJSON.usuario[1].Valor).replace('.',',');
+            document.querySelector('#valorTotal').textContent = String(dadosJSON.usuario[0].Renda).replace('.',',');
+
+            valorAtual = dadosJSON.usuario[1].Valor;
+            valorTotal = dadosJSON.usuario[0].Renda;
+
+            mudaFaseArvore(valorAtual, valorTotal);
+    } else {
+        window.location.href = "http://localhost/trit/login.html";
+    }
+})
+.catch(function (error) {
+    console.warn(error);
+    // O que fazer se der erro na requisição
+})
+.finally(function () {
+    // O que fazer independente de ter dado erro ou não
+});
+
+const body = document.querySelector('body');
+const btnNovaSaida = document.querySelector('#novaSaida');
+const btnNovaEntrada = document.querySelector('#novaEntrada');
+
+const msgErro = document.createElement('p');
+msgErro.classList.add('erro');
+
+const bloqueio = document.createElement('div');
+bloqueio.classList.add('bloqueio');
+
+btnNovaSaida.addEventListener('click', function(e){
+    e.preventDefault();
+
+    const areaNovaSaida = document.createElement('div');
+    areaNovaSaida.classList.add('popup');
+
+    const areaTitulo = document.createElement('div');
+    areaTitulo.classList.add('areaTitulo');
+
+    const tituloNovaSaida = document.createElement('p');
+    tituloNovaSaida.classList.add('titulo');
+    tituloNovaSaida.classList.add('tituloPopup');
+    tituloNovaSaida.textContent = 'Nova saída';
+
+    btnSair = botaoSair();
+
+    const opcoesSaida = document.createElement('div');
+    opcoesSaida.classList.add('opcoesSaida');
+
+    const btnCategorizado = document.createElement('button');
+    btnCategorizado.textContent = 'Categorizada';
+
+    const btnFixo = document.createElement('button');
+    btnFixo.textContent = 'Fixa';
+
+    const btnParcelado = document.createElement('button');
+    btnParcelado.textContent = 'Parcelada';
+
+    areaTitulo.append(tituloNovaSaida, btnSair);
+
+    opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
+
+    areaNovaSaida.append(areaTitulo, opcoesSaida);
+
+    bloqueio.appendChild(areaNovaSaida)
+
+    body.append(bloqueio);
+
+    btnSair.addEventListener('click', function(e){
+        e.preventDefault();
+
+        areaNovaSaida.remove();
+        bloqueio.remove();
+    })
+
+    const areaInfos = document.createElement('div');
+    areaInfos.classList.add('infos');
+
+    const areaNomeSaida = document.createElement('div');
+    areaNomeSaida.classList.add('areaDigitar');
+
+    const labelNomeSaida = document.createElement('label');
+    labelNomeSaida.textContent = 'Nome:'
+
+    const txtNomeSaida = document.createElement('input');
+    txtNomeSaida.type = 'text';
+    txtNomeSaida.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtNomeSaida);
+
+    areaNomeSaida.append(labelNomeSaida, areaRight);
+
+    const divAlinhamento = document.createElement('div');
+    divAlinhamento.classList.add('divAlinhamento');
+
+    const areaTipoSaida = document.createElement('div');
+    areaTipoSaida.classList.add('areaDigitar');
+
+    const labelTipoSaida = document.createElement('label');
+    labelTipoSaida.textContent = 'Tipo:'
+
+    const txtTipoSaida = document.createElement('input');
+    txtTipoSaida.type = 'text';
+    txtTipoSaida.disabled = true;
+
+    areaTipoSaida.append(labelTipoSaida, txtTipoSaida);
+
+    const areaDataSaida = document.createElement('div');
+    areaDataSaida.classList.add('areaDigitar');
+
+    const labelDataSaida = document.createElement('label');
+    labelDataSaida.textContent = 'Data:'
+
+    const txtDataSaida = document.createElement('input');
+    txtDataSaida.type = 'text';
+    txtDataSaida.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtDataSaida);
+    areaDataSaida.append(labelDataSaida, areaRight);
+
+    const areaDataLimite = document.createElement('div');
+    areaDataLimite.classList.add('areaDigitar');
+
+    const labelDataLimite = document.createElement('label');
+    labelDataLimite.textContent = 'Data Limite:'
+
+    const txtDataLimite = document.createElement('input');
+    txtDataLimite.type = 'text';
+    txtDataLimite.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtDataLimite);
+    areaDataLimite.append(labelDataLimite, areaRight);
+
+    const areaValorSaida = document.createElement('div');
+    areaValorSaida.classList.add('areaDigitar');
+
+    const labelValorSaida = document.createElement('label');
+    labelValorSaida.textContent = 'Valor:'
+
+    const areaLeft = document.createElement('div');
+    areaLeft.classList.add('areaLeft');
+
+    const txtValorSaida = document.createElement('input');
+    txtValorSaida.type = 'number';
+    txtValorSaida.classList.add('recuoPopup');
+    txtValorSaida.classList.add('inputMoeda');
+
+    const moeda = document.createElement('p');
+    moeda.textContent = 'R$';
+    moeda.classList.add('moeda');
+
+    areaLeft.append(txtValorSaida, moeda);
+    areaValorSaida.append(labelValorSaida, obrigatorioIcon(areaLeft));
+
+    const areaParcelas = document.createElement('div');
+    areaParcelas.classList.add('areaDigitar');
+
+    const labelParcelas = document.createElement('label');
+    labelParcelas.textContent = 'Nº de parcelas:'
+
+    const txtParcelas = document.createElement('input');
+    txtParcelas.type = 'number';
+    txtParcelas.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtParcelas);
+    areaParcelas.append(labelParcelas, areaRight);
+
+    const btnSalvar = document.createElement('button');
+    btnSalvar.textContent = 'Salvar';
+    btnSalvar.classList.add('btnSalvar');
+
+    btnCategorizado.addEventListener('click', function(e){
+        e.preventDefault();
+
+        opcoesSaida.remove();
+        divAlinhamento.innerHTML = '';
+        areaInfos.innerHTML = '';
+        txtTipoSaida.value = 'Categorizada';
+
+        divAlinhamento.append(areaTipoSaida, areaDataSaida);
+
+        areaSelecao(areaInfos, areaNovaSaida);
+        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+        areaNovaSaida.append(areaInfos, btnSalvar);
+    })
+
+    btnFixo.addEventListener('click', function(e){
+
+        opcoesSaida.remove();
+        divAlinhamento.innerHTML = '';
+        areaInfos.innerHTML = '';
+        txtTipoSaida.value = 'Fixa';
+
+        divAlinhamento.append(areaTipoSaida, areaDataSaida);
+
+        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+        areaNovaSaida.append(areaInfos, btnSalvar);
+    })
+
+    btnParcelado.addEventListener('click', function(e){
+        e.preventDefault();
+
+        opcoesSaida.remove();
+        divAlinhamento.innerHTML = '';
+        areaInfos.innerHTML = '';
+        txtTipoSaida.value = 'Parcelada';
+
+        divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
+
+        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+        areaNovaSaida.append(areaInfos, btnSalvar);
+    })
+
+    btnSalvar.addEventListener('click', function(e){
+        e.preventDefault();
+        
+        if(txtTipoSaida.value == 'Categorizada') 
+        {
+
+            if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')
+            {
+                erro(null, 'Selecione uma categoria!', areaInfos);
+                return;
+            }
+        }
+
+        if(txtNomeSaida.value == '')
+        {
+            erro(txtNomeSaida, 'Nome não foi informado!', areaInfos);
+            return;
+        }
+
+        if(txtDataSaida.value == '')
+        {
+            erro(txtDataSaida, 'Data não foi informada!', areaInfos);
+            return;
+        }
+
+        if(txtTipoSaida.value == 'Parcelada')
+        {
+
+            if(txtDataLimite.value == '')
+            {
+                erro(txtDataLimite, 'Data limite não foi informada!', areaInfos);
+                return; 
+            }
+
+            if(txtParcelas.value == '')
+            {
+                erro(txtParcelas, 'Número de parcelas não informado!', areaInfos);
+                return;
+            }
+        }
+
+        if(txtValorSaida.value == '')
+        {
+            erro(txtValorSaida, 'Valor não foi informado!', areaInfos);
+            return;
+        }
+
+        const selecionado = document.querySelector('.areaOpcaoSelecionada p');
+        if(txtTipoSaida.value == 'Categorizada'){
+            let categoria = selecionado.getAttribute('codigo');
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, txtDataSaida.value, txtValorSaida.value, null, null, categoria);
+        }
+
+        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtParcelas, txtCategoria){
+            fetch("http://localhost/trit/api/criarSaida.php", {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    "nome":txtNome,
+                    "valor":txtValor,
+                    "data":txtData,
+                    "prazo":txtDataLimite,
+                    "tipo":txtTipo.toLowerCase(),
+                    "status":txtParcelas,
+                    "categoria":txtCategoria
+                }
+            ),
+            })
+            .then(function (resposta) {
+                if (!resposta.ok) {
+                throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+            })
+            .then(function (dadosJSON) {
+                if (dadosJSON) {
+                areaNomeSaida.remove();
+                bloqueio.remove();
+                bloqueio.innerHTML = '';
+                    if(txtCategoria != null || txtCategoria != ''){
+                        let nomeCategoria = selecionado.textContent;
+                        let categorias = document.querySelectorAll('.controlado');
+                        for (let i = 0; i < categorias.length; i++) {
+                            const categoria = categorias[i];
+                            if(categoria.querySelector('.tituloControlado p').textContent == nomeCategoria){
+                                let valorAtual = categoria.querySelector('#valorAtualControlado').textContent.replace(',','.');
+                                let valorTotal = categoria.querySelector('#valorTotalControlado').textContent.replace(',','.');
+                                valorAtual = Number(valorAtual);
+                                valorTotal = Number(valorTotal);
+                                
+                                let valorAdicionado = valorAtual + Number(txtValor);
+
+                                
+                                let progressoAtual = categoria.querySelector('progress');
+                                let valorProgresso = (valorAdicionado * 100) / valorTotal;
+                                progressoAtual.setAttribute('value', valorProgresso);
+                                
+                                if(valorProgresso <= 100)
+                                    {
+                                        progressoAtual.setAttribute('value', valorProgresso);
+                                    }
+                                    else
+                                    {
+                                        progressoAtual.setAttribute('value', 100);
+                                        categoria.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
+                                        categoria.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
+                                    }
+
+                                    if(!String(valorAdicionado).includes('.'))
+                                    {
+                                        valorAdicionado = valorAdicionado + ',00';
+                                    }
+                                    categoria.querySelector('#valorAtualControlado').textContent = String(valorAdicionado).replace('.',',');
+                                        
+                                let carteira = document.getElementById('valorAtual').textContent.replace(',','.');
+                                let carteiraTotal = document.getElementById('valorTotal').textContent.replace(',','.');
+                                carteira = Number(carteira);
+                                carteiraTotal = Number(carteiraTotal);
+                                carteira = carteira - Number(txtValor);
+                                mudaFaseArvore(carteira, carteiraTotal);
+
+                                if(!String(carteira).includes('.'))
+                                {
+                                    carteira = carteira + ',00';
+                                }
+                                document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
+
+                            }
+                        }
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.warn(error);
+                // O que fazer se der erro na requisição
+            })
+            .finally(function () {
+                // O que fazer independente de ter dado erro ou não
+            });
+        }
+
+        // fazer um axios onde
+        //
+        // as variaveis enviadas são:
+        // txtNomeSaida.value (referente ao titulo da saida para o extrato)
+        // txtTipoSaida.value (Fixa, Parcelada ou Categorizada)
+        // txtDataSaida.value (referente a data q foi realixado o gasto)
+        // txtValorSaida.value (referente ao valor gasto)
+        // 
+        // nessa parte eu recomendo fazer um if que verifica o tipo da saída (Parcelada ou Categorizada, primeira letra maiúscula!)
+        // o fixa não precisa pq não tem nenhuma variavel diferente
+        // se for categorizada também vai precisar ser enviada a varíavel:
+        // document.querySelector('.areaOpcaoSelecionada').textContent (referente a categoria selecionada)
+        // se for parcelada, também precisam ser enviadas as variaveis:
+        // txtDatalimite.value (eu não lembro pra que serve esse campo bjooo)
+        // txtParcelas.value (referente a quantidade de parcelas) 
+
+    })
+})
+
+btnNovaEntrada.addEventListener('click', function(e){
+    e.preventDefault();
+
+    const areaNovaEntrada = document.createElement('div');
+    areaNovaEntrada.classList.add('popup');
+
+    const areaTitulo = document.createElement('div');
+    areaTitulo.classList.add('areaTitulo');
+
+    const areaInfos = document.createElement('div');
+    areaInfos.classList.add('infos');
+
+    const tituloNovaEntrada = document.createElement('p');
+    tituloNovaEntrada.textContent = 'Nova Entrada';
+    tituloNovaEntrada.classList.add('titulo');
+    tituloNovaEntrada.classList.add('tituloPopup');
+
+    btnSair = botaoSair();
+
+    areaTitulo.append(tituloNovaEntrada, btnSair);
+
+    const areaNomeEntrada = document.createElement('div');
+    areaNomeEntrada.classList.add('areaDigitar');
+
+    const labelNomeEntrada = document.createElement('label');
+    labelNomeEntrada.textContent = 'Nome:'
+
+    const txtNomeEntrada = document.createElement('input');
+    txtNomeEntrada.type = 'text';
+    txtNomeEntrada.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtNomeEntrada);
+
+    areaNomeEntrada.append(labelNomeEntrada, areaRight);
+
+    const divAlinhamento = document.createElement('div');
+    divAlinhamento.classList.add('divAlinhamento');
+
+    const areaDataEntrada = document.createElement('div');
+    areaDataEntrada.classList.add('areaDigitar');
+
+    const labelDataEntrada = document.createElement('label');
+    labelDataEntrada.textContent = 'Data:'
+
+    const txtDataEntrada = document.createElement('input');
+    txtDataEntrada.type = 'text';
+    txtDataEntrada.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtDataEntrada);
+    areaDataEntrada.append(labelDataEntrada, areaRight);
+
+    const areaValorEntrada = document.createElement('div');
+    areaValorEntrada.classList.add('areaDigitar');
+
+    const labelValorEntrada = document.createElement('label');
+    labelValorEntrada.textContent = 'Valor:'
+
+    const areaLeft = document.createElement('div');
+    areaLeft.classList.add('areaLeft');
+
+    const txtValorEntrada = document.createElement('input');
+    txtValorEntrada.type = 'number';
+    txtValorEntrada.classList.add('recuoPopup');
+    txtValorEntrada.classList.add('inputMoeda');
+
+    const moeda = document.createElement('p');
+    moeda.textContent = 'R$';
+    moeda.classList.add('moeda');
+
+    areaLeft.append(txtValorEntrada, moeda);
+    areaValorEntrada.append(labelValorEntrada, obrigatorioIcon(areaLeft));
+
+    const btnSalvar = document.createElement('button');
+    btnSalvar.textContent = 'Salvar';
+    btnSalvar.classList.add('btnSalvar');
+
+    divAlinhamento.append(areaDataEntrada, areaValorEntrada);
+    areaInfos.append(areaNomeEntrada, divAlinhamento);
+
+    areaNovaEntrada.append(areaTitulo, areaInfos, btnSalvar);
+    bloqueio.appendChild(areaNovaEntrada);
+    body.appendChild(bloqueio);
+
+    btnSair.addEventListener('click', function(e){
+        e.preventDefault();
+
+        areaNovaEntrada.remove();
+        bloqueio.remove();
+    })
+
+    btnSalvar.addEventListener('click', function(e){
+        e.preventDefault();
+
+        if(txtNomeEntrada.value == '')
+        {
+            erro(txtNomeEntrada, 'Nome não foi informado!', areaInfos);
+            return;
+        }
+
+        if(txtDataEntrada.value == '')
+        {
+            erro(txtDataEntrada, 'Data não foi informada!', areaInfos);
+            return;
+        }
+
+        if(txtValorEntrada.value == '')
+        {
+            erro(txtValorEntrada, 'Valor não foi informado', areaInfos)
+            return;
+        }
+
+        let valor = Number(txtValorEntrada.value);
+
+        fetch("http://localhost/trit/api/criarEntrada.php", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+            {
+                "nome":txtNomeEntrada.value,
+                "data":txtDataEntrada.value,
+                "valor":valor
+            }
+        ),
+        })
+        .then(function (resposta) {
+            if (!resposta.ok) {
+            throw new Error("Erro HTTP: " + resposta.status);
+            }
+            return resposta.json();
+        })
+        .then(function (dadosJSON) {
+            if (dadosJSON) {
+                areaNovaEntrada.remove();
+                bloqueio.remove();
+
+                let carteira = document.getElementById('valorAtual').textContent.replace(',','.');
+                let carteiraTotal = document.getElementById('valorTotal').textContent.replace(',','.');
+                carteira = Number(carteira);
+                carteiraTotal = Number(carteiraTotal);
+
+                carteira = carteira + valor;
+                mudaFaseArvore(carteira, carteiraTotal);
+
+                if(!String(carteira).includes('.'))
+                {
+                    carteira = carteira + ',00';
+                }
+
+                if(!String(carteiraTotal).includes('.'))
+                {
+                    carteiraTotal = carteiraTotal + ',00';
+                }
+
+                document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
+            }
+        })
+        .catch(function (error) {
+            console.warn(error);
+            // O que fazer se der erro na requisição
+        })
+        .finally(function () {
+            // O que fazer independente de ter dado erro ou não
+        });
+
+        // fazer um axios onde uma nova entrada é criada para ser salva no extrato
+        // as variaveis sao:
+        // txtNomeEntrada.value (referente ao nome da entrada)
+        // txtDataEntrada.value (referente a data em que o dinheiro foi recebido)
+        // txtValorEntrada.value (referente ao valor adicionado)
+
+
+        //fazer outro fetch para valores!!!!!!!!!
+        // valorAtual = valorAtual + Number(txtValorEntrada.value);
+
+        // if(!String(valorAtual).includes('.'))
+        // {
+        //     valorAtual = valorAtual + ',00';
+        // }
+
+        // valorAtualExibir.textContent = valorAtual;
+
+        
+    })
+})
+
+
+
+const areaControlados = document.querySelector('#areaControlados');
+fetch("http://localhost/trit/api/listarCategorias.php", {
     method: "GET",
         credentials: "include",
     })
@@ -19,13 +624,45 @@ if(sessionStorage['logado']){
     })
     .then(function (dadosJSON) {
         if (dadosJSON) {
-                valorAtual = dadosJSON.usuario[1].Valor;
-                valorTotal = dadosJSON.usuario[0].Renda;
-    
-                valorAtualExibir.textContent = String(valorAtual).replace('.',',');
-                valorTotalExibir.textContent = String(valorTotal).replace('.',',');
-        } else {
-            window.location.href = "http://localhost/trit/login.html";
+        console.log(dadosJSON);
+            for (let i = 0; i < dadosJSON.categorias.length; i++) {
+                const categoria = dadosJSON.categorias[i];
+                fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(
+                    {
+                        "categoria":categoria.Codigo
+                    }
+                ),
+                })
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                    if (dadosJSON) {
+                    let valor = dadosJSON.Valor;
+                    if(valor === 0){
+                        valor = 0 + ',00';
+                    }
+                    criarGastoControlado(areaControlados, categoria.Nome, valor, categoria.ValorLimite);
+
+                    }
+                })
+                .catch(function (error) {
+                    console.warn(error);
+                    // O que fazer se der erro na requisição
+                })
+                .finally(function () {
+                    // O que fazer independente de ter dado erro ou não
+                });         
+            }
         }
     })
     .catch(function (error) {
@@ -36,880 +673,433 @@ if(sessionStorage['logado']){
         // O que fazer independente de ter dado erro ou não
     });
 
-    let porcentagem = (valorAtual * 100) / valorTotal;
+function criarGastoControlado(local, txtTitulo, valorAtual, valorLimite){
+    const cardControlado = document.createElement('div');
+    cardControlado.classList.add("card");
+    cardControlado.classList.add("controlado");
 
-    if(porcentagem >= 75)
-    {
-        galho.setAttribute('src', 'img/galho/galho-f1.png');
-    }
-    else
-    {
-        if(porcentagem < 75 && porcentagem >= 50)
-        {
-            galho.setAttribute('src', 'img/galho/galho-f2.png');
-        }
-        else
-        {
-            if(porcentagem < 50 && porcentagem >= 25)
+        const infosControlado = document.createElement('div');
+        infosControlado.classList.add("infosControlado");
+
+            const tituloControlado = document.createElement('div');
+            tituloControlado.classList.add("tituloControlado");
+                const titulo = document.createElement('p');
+                titulo.textContent = txtTitulo;
+            tituloControlado.appendChild(titulo);
+
+                const valorControlado = document.createElement('div');
+                valorControlado.classList.add("valorControlado");
+                    let caixa = document.createElement('div');
+                        let moedaAtual = document.createElement('p');
+                        moedaAtual.id = "valorAtualControladoMoeda";
+                        moedaAtual.textContent = "R$";
+                    caixa.appendChild(moedaAtual);
+
+                        let textoAtual = document.createElement('p');
+                        textoAtual.id = "valorAtualControlado";
+                        textoAtual.textContent = valorAtual;
+                    caixa.appendChild(textoAtual);
+                valorControlado.appendChild(caixa);
+
+                let texto = document.createElement('p');
+                texto.textContent = "/";
+                valorControlado.appendChild(texto);
+
+                caixa = document.createElement('div');
+                        let moedaLimite = document.createElement('p');
+                        moedaLimite.textContent = "R$";
+                    caixa.appendChild(moedaLimite);
+
+                        let textoLimite = document.createElement('p');
+                        textoLimite.id = "valorTotalControlado";
+                        textoLimite.textContent = valorLimite;
+                    caixa.appendChild(textoLimite);
+                valorControlado.appendChild(caixa);
+
+            tituloControlado.appendChild(valorControlado);
+
+            const barraProgresso = document.createElement('progress');
+            barraProgresso.setAttribute('max', 100);
+            let progresso = (valorAtual * 100) / valorLimite;
+        
+            if(progresso <= 100)
             {
-                galho.setAttribute('src', 'img/galho/galho-f3.png');
+                barraProgresso.setAttribute('value', progresso);
             }
             else
             {
-                if(porcentagem < 25 && porcentagem > 0)
-                {
-                    galho.setAttribute('src', 'img/galho/galho-f4.png');
-                }
-                else
-                {
-                    galho.setAttribute('src', 'img/galho/galho-f5.png');
-                }
+                barraProgresso.setAttribute('value', 100);
+                textoAtual.style.color = 'rgb(255, 85, 85)';
+                moedaAtual.style.color = 'rgb(255, 85, 85)';
             }
-        }
-    }
-
-    const body = document.querySelector('body');
-    const btnNovaSaida = document.querySelector('#novaSaida');
-    const btnNovaEntrada = document.querySelector('#novaEntrada');
-
-    const msgErro = document.createElement('p');
-    msgErro.classList.add('erro');
-
-    const bloqueio = document.createElement('div');
-    bloqueio.classList.add('bloqueio');
-
-    btnNovaSaida.addEventListener('click', function(e){
-        e.preventDefault();
-
-        const areaNovaSaida = document.createElement('div');
-        areaNovaSaida.classList.add('popup');
-
-        const areaTitulo = document.createElement('div');
-        areaTitulo.classList.add('areaTitulo');
-
-        const tituloNovaSaida = document.createElement('p');
-        tituloNovaSaida.classList.add('titulo');
-        tituloNovaSaida.classList.add('tituloPopup');
-        tituloNovaSaida.textContent = 'Nova saída';
-
-        btnSair = botaoSair();
-
-        const opcoesSaida = document.createElement('div');
-        opcoesSaida.classList.add('opcoesSaida');
-
-        const btnCategorizado = document.createElement('button');
-        btnCategorizado.textContent = 'Categorizada';
-
-        const btnFixo = document.createElement('button');
-        btnFixo.textContent = 'Fixa';
-
-        const btnParcelado = document.createElement('button');
-        btnParcelado.textContent = 'Parcelada';
-
-        areaTitulo.append(tituloNovaSaida, btnSair);
-
-        opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
-
-        areaNovaSaida.append(areaTitulo, opcoesSaida);
-
-        bloqueio.appendChild(areaNovaSaida)
-
-        body.append(bloqueio);
-
-        btnSair.addEventListener('click', function(e){
-            e.preventDefault();
-
-            areaNovaSaida.remove();
-            bloqueio.remove();
-        })
-
-        const areaInfos = document.createElement('div');
-        areaInfos.classList.add('infos');
-
-        const areaNomeSaida = document.createElement('div');
-        areaNomeSaida.classList.add('areaDigitar');
-
-        const labelNomeSaida = document.createElement('label');
-        labelNomeSaida.textContent = 'Nome:'
-
-        const txtNomeSaida = document.createElement('input');
-        txtNomeSaida.type = 'text';
-        txtNomeSaida.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtNomeSaida);
-
-        areaNomeSaida.append(labelNomeSaida, areaRight);
-
-        const divAlinhamento = document.createElement('div');
-        divAlinhamento.classList.add('divAlinhamento');
-
-        const areaTipoSaida = document.createElement('div');
-        areaTipoSaida.classList.add('areaDigitar');
-
-        const labelTipoSaida = document.createElement('label');
-        labelTipoSaida.textContent = 'Tipo:'
-
-        const txtTipoSaida = document.createElement('input');
-        txtTipoSaida.type = 'text';
-        txtTipoSaida.disabled = true;
-
-        areaTipoSaida.append(labelTipoSaida, txtTipoSaida);
-
-        const areaDataSaida = document.createElement('div');
-        areaDataSaida.classList.add('areaDigitar');
-
-        const labelDataSaida = document.createElement('label');
-        labelDataSaida.textContent = 'Data:'
-
-        const txtDataSaida = document.createElement('input');
-        txtDataSaida.type = 'text';
-        txtDataSaida.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtDataSaida);
-        areaDataSaida.append(labelDataSaida, areaRight);
-
-        const areaDataLimite = document.createElement('div');
-        areaDataLimite.classList.add('areaDigitar');
-
-        const labelDataLimite = document.createElement('label');
-        labelDataLimite.textContent = 'Data Limite:'
-
-        const txtDataLimite = document.createElement('input');
-        txtDataLimite.type = 'text';
-        txtDataLimite.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtDataLimite);
-        areaDataLimite.append(labelDataLimite, areaRight);
-
-        const areaValorSaida = document.createElement('div');
-        areaValorSaida.classList.add('areaDigitar');
-
-        const labelValorSaida = document.createElement('label');
-        labelValorSaida.textContent = 'Valor:'
-
-        const areaLeft = document.createElement('div');
-        areaLeft.classList.add('areaLeft');
-
-        const txtValorSaida = document.createElement('input');
-        txtValorSaida.type = 'number';
-        txtValorSaida.classList.add('recuoPopup');
-        txtValorSaida.classList.add('inputMoeda');
-
-        const moeda = document.createElement('p');
-        moeda.textContent = 'R$';
-        moeda.classList.add('moeda');
-
-        areaLeft.append(txtValorSaida, moeda);
-        areaValorSaida.append(labelValorSaida, obrigatorioIcon(areaLeft));
-
-        const areaParcelas = document.createElement('div');
-        areaParcelas.classList.add('areaDigitar');
-
-        const labelParcelas = document.createElement('label');
-        labelParcelas.textContent = 'Nº de parcelas:'
-
-        const txtParcelas = document.createElement('input');
-        txtParcelas.type = 'number';
-        txtParcelas.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtParcelas);
-        areaParcelas.append(labelParcelas, areaRight);
-
-        const btnSalvar = document.createElement('button');
-        btnSalvar.textContent = 'Salvar';
-        btnSalvar.classList.add('btnSalvar');
-
-        btnCategorizado.addEventListener('click', function(e){
-            e.preventDefault();
-
-            opcoesSaida.remove();
-            divAlinhamento.innerHTML = '';
-            areaInfos.innerHTML = '';
-            txtTipoSaida.value = 'Categorizada';
-
-            divAlinhamento.append(areaTipoSaida, areaDataSaida);
-
-            areaSelecao(areaInfos, areaNovaSaida);
-            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-            areaNovaSaida.append(areaInfos, btnSalvar);
-        })
-
-        btnFixo.addEventListener('click', function(e){
-
-            opcoesSaida.remove();
-            divAlinhamento.innerHTML = '';
-            areaInfos.innerHTML = '';
-            txtTipoSaida.value = 'Fixa';
-
-            divAlinhamento.append(areaTipoSaida, areaDataSaida);
-
-            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-            areaNovaSaida.append(areaInfos, btnSalvar);
-        })
-
-        btnParcelado.addEventListener('click', function(e){
-            e.preventDefault();
-
-            opcoesSaida.remove();
-            divAlinhamento.innerHTML = '';
-            areaInfos.innerHTML = '';
-            txtTipoSaida.value = 'Parcelada';
-
-            divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
-
-            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-            areaNovaSaida.append(areaInfos, btnSalvar);
-        })
-
-        btnSalvar.addEventListener('click', function(e){
-            e.preventDefault();
-            
-            if(txtTipoSaida.value == 'CATEGORIZADA') 
-                // MUDEI
-            {
-
-                if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')
-                {
-                    erro(null, 'Selecione uma categoria!', areaInfos);
-                    return;
-                }
-            }
-
-            if(txtNomeSaida.value == '')
-            {
-                erro(txtNomeSaida, 'Nome não foi informado!', areaInfos);
-                return;
-            }
-
-            if(txtDataSaida.value == '')
-            {
-                erro(txtDataSaida, 'Data não foi informada!', areaInfos);
-                return;
-            }
-
-            if(txtTipoSaida.value == 'Parcelada')
-            {
-
-                if(txtDataLimite.value == '')
-                {
-                    erro(txtDataLimite, 'Data limite não foi informada!', areaInfos);
-                    return; 
-                }
-
-                if(txtParcelas.value == '')
-                {
-                    erro(txtParcelas, 'Número de parcelas não informado!', areaInfos);
-                    return;
-                }
-            }
-
-            if(txtValorSaida.value == '')
-            {
-                erro(txtValorSaida, 'Valor não foi informado!', areaInfos);
-                return;
-            }
-
-            // fazer um axios onde
-            //
-            // as variaveis enviadas são:
-            // txtNomeSaida.value (referente ao titulo da saida para o extrato)
-            // txtTipoSaida.value (Fixa, Parcelada ou Categorizada)
-            // txtDataSaida.value (referente a data q foi realixado o gasto)
-            // txtValorSaida.value (referente ao valor gasto)
-            // 
-            // nessa parte eu recomendo fazer um if que verifica o tipo da saída (Parcelada ou Categorizada, primeira letra maiúscula!)
-            // o fixa não precisa pq não tem nenhuma variavel diferente
-            // se for categorizada também vai precisar ser enviada a varíavel:
-            // document.querySelector('.areaOpcaoSelecionada').textContent (referente a categoria selecionada)
-            // se for parcelada, também precisam ser enviadas as variaveis:
-            // txtDatalimite.value (eu não lembro pra que serve esse campo bjooo)
-            // txtParcelas.value (referente a quantidade de parcelas) 
-
-        })
-    })
-
-    btnNovaEntrada.addEventListener('click', function(e){
-        e.preventDefault();
-
-        const areaNovaEntrada = document.createElement('div');
-        areaNovaEntrada.classList.add('popup');
-
-        const areaTitulo = document.createElement('div');
-        areaTitulo.classList.add('areaTitulo');
-
-        const areaInfos = document.createElement('div');
-        areaInfos.classList.add('infos');
-
-        const tituloNovaEntrada = document.createElement('p');
-        tituloNovaEntrada.textContent = 'Nova Entrada';
-        tituloNovaEntrada.classList.add('titulo');
-        tituloNovaEntrada.classList.add('tituloPopup');
-
-        btnSair = botaoSair();
-
-        areaTitulo.append(tituloNovaEntrada, btnSair);
-
-        const areaNomeEntrada = document.createElement('div');
-        areaNomeEntrada.classList.add('areaDigitar');
-
-        const labelNomeEntrada = document.createElement('label');
-        labelNomeEntrada.textContent = 'Nome:'
-
-        const txtNomeEntrada = document.createElement('input');
-        txtNomeEntrada.type = 'text';
-        txtNomeEntrada.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtNomeEntrada);
-
-        areaNomeEntrada.append(labelNomeEntrada, areaRight);
-
-        const divAlinhamento = document.createElement('div');
-        divAlinhamento.classList.add('divAlinhamento');
-
-        const areaDataEntrada = document.createElement('div');
-        areaDataEntrada.classList.add('areaDigitar');
-
-        const labelDataEntrada = document.createElement('label');
-        labelDataEntrada.textContent = 'Data:'
-
-        const txtDataEntrada = document.createElement('input');
-        txtDataEntrada.type = 'text';
-        txtDataEntrada.classList.add('recuoPopup');
-        areaRight = obrigatorioIcon(txtDataEntrada);
-        areaDataEntrada.append(labelDataEntrada, areaRight);
-
-        const areaValorEntrada = document.createElement('div');
-        areaValorEntrada.classList.add('areaDigitar');
-
-        const labelValorEntrada = document.createElement('label');
-        labelValorEntrada.textContent = 'Valor:'
-
-        const areaLeft = document.createElement('div');
-        areaLeft.classList.add('areaLeft');
-
-        const txtValorEntrada = document.createElement('input');
-        txtValorEntrada.type = 'number';
-        txtValorEntrada.classList.add('recuoPopup');
-        txtValorEntrada.classList.add('inputMoeda');
-
-        const moeda = document.createElement('p');
-        moeda.textContent = 'R$';
-        moeda.classList.add('moeda');
-
-        areaLeft.append(txtValorEntrada, moeda);
-        areaValorEntrada.append(labelValorEntrada, obrigatorioIcon(areaLeft));
-
-        const btnSalvar = document.createElement('button');
-        btnSalvar.textContent = 'Salvar';
-        btnSalvar.classList.add('btnSalvar');
-
-        divAlinhamento.append(areaDataEntrada, areaValorEntrada);
-        areaInfos.append(areaNomeEntrada, divAlinhamento);
-
-        areaNovaEntrada.append(areaTitulo, areaInfos, btnSalvar);
-        bloqueio.appendChild(areaNovaEntrada);
-        body.appendChild(bloqueio);
-
-        btnSair.addEventListener('click', function(e){
-            e.preventDefault();
-
-            areaNovaEntrada.remove();
-            bloqueio.remove();
-        })
-
-        btnSalvar.addEventListener('click', function(e){
-            e.preventDefault();
-
-            if(txtNomeEntrada.value == '')
-            {
-                erro(txtNomeEntrada, 'Nome não foi informado!', areaInfos);
-                return;
-            }
-
-            if(txtDataEntrada.value == '')
-            {
-                erro(txtDataEntrada, 'Data não foi informada!', areaInfos);
-                return;
-            }
-
-            if(txtValorEntrada.value == '')
-            {
-                erro(txtValorEntrada, 'Valor não foi informado', areaInfos)
-                return;
-            }
-
-            // fazer um axios onde uma nova entrada é criada para ser salva no extrato
-            // as variaveis sao:
-            // txtNomeEntrada.value (referente ao nome da entrada)
-            // txtDataEntrada.value (referente a data em que o dinheiro foi recebido)
-            // txtValorEntrada.value (referente ao valor adicionado)
-
-            valorAtual = valorAtual + Number(txtValorEntrada.value);
-
-            if(!String(valorAtual).includes('.'))
-            {
-                valorAtual = valorAtual + ',00';
-            }
-
-            valorAtualExibir.textContent = valorAtual;
-
-            areaNovaEntrada.remove();
-            bloqueio.remove();
-        })
-    })
-
-
-
-    const areaControlados = document.querySelector('#areaControlados');
-    fetch("http://localhost/trit/api/listarCategorias.php", {
-        method: "GET",
-            credentials: "include",
-        })
-        .then(function (resposta) {
-            if (!resposta.ok) {
-            throw new Error("Erro HTTP: " + resposta.status);
-            }
-            return resposta.json();
-        })
-        .then(function (dadosJSON) {
-            if (dadosJSON) {
-            console.log(dadosJSON);
-                for (let i = 0; i < dadosJSON.categorias.length; i++) {
-                    const categoria = dadosJSON.categorias[i];
-                    fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(
-                        {
-                            "categoria":categoria.Codigo
-                        }
-                    ),
-                    })
-                    .then(function (resposta) {
-                        if (!resposta.ok) {
-                        throw new Error("Erro HTTP: " + resposta.status);
-                        }
-                        return resposta.json();
-                    })
-                    .then(function (dadosJSON) {
-                        if (dadosJSON) {
-                        console.log(dadosJSON);
-                        criarGastoControlado(areaControlados, categoria.Nome, dadosJSON.Valor, categoria.ValorLimite);
-
-                        }
-                    })
-                    .catch(function (error) {
-                        console.warn(error);
-                        // O que fazer se der erro na requisição
-                    })
-                    .finally(function () {
-                        // O que fazer independente de ter dado erro ou não
-                    });         
-                }
-            }
-        })
-        .catch(function (error) {
-            console.warn(error);
-            // O que fazer se der erro na requisição
-        })
-        .finally(function () {
-            // O que fazer independente de ter dado erro ou não
-        });
-
-    function criarGastoControlado(local, txtTitulo, valorAtual, valorLimite){
-        const cardControlado = document.createElement('div');
-        cardControlado.classList.add("card");
-        cardControlado.classList.add("controlado");
-
-            const infosControlado = document.createElement('div');
-            infosControlado.classList.add("infosControlado");
-
-                const tituloControlado = document.createElement('div');
-                tituloControlado.classList.add("tituloControlado");
-                    const titulo = document.createElement('p');
-                    titulo.textContent = txtTitulo;
-                tituloControlado.appendChild(titulo);
-
-                    const valorControlado = document.createElement('div');
-                    valorControlado.classList.add("valorControlado");
-                        let caixa = document.createElement('div');
-                            let texto = document.createElement('p');
-                            texto.id = "valorAtualControladoMoeda";
-                            texto.textContent = "R$";
-                        caixa.appendChild(texto);
-
-                            texto = document.createElement('p');
-                            texto.id = "valorAtualControlado";
-                            texto.textContent = valorAtual;
-                        caixa.appendChild(texto);
-                    valorControlado.appendChild(caixa);
-
-                    texto = document.createElement('p');
-                    texto.textContent = "/";
-                    valorControlado.appendChild(texto);
-
-                    caixa = document.createElement('div');
-                            texto = document.createElement('p');
-                            texto.textContent = "R$";
-                        caixa.appendChild(texto);
-
-                            texto = document.createElement('p');
-                            texto.id = "valorTotalControlado";
-                            texto.textContent = valorLimite;
-                        caixa.appendChild(texto);
-                    valorControlado.appendChild(caixa);
-
-                tituloControlado.appendChild(valorControlado);
-
-                const progresso = document.createElement('progress');
-                progresso.setAttribute('value', 0);
-                progresso.max = 100;
-            
-            infosControlado.appendChild(tituloControlado);
-            infosControlado.appendChild(progresso);
-
-            const icone = document.createElement('img');
-            icone.src = "img/seta.png";
-
-        cardControlado.appendChild(infosControlado);
-        cardControlado.appendChild(icone);
         
-        local.appendChild(cardControlado);
-    }
+        infosControlado.appendChild(tituloControlado);
+        infosControlado.appendChild(barraProgresso);
 
+        const icone = document.createElement('img');
+        icone.src = "img/seta.png";
 
+    cardControlado.appendChild(infosControlado);
+    cardControlado.appendChild(icone);
+    
+    local.appendChild(cardControlado);
+}
 
-    const valorTotalControlados = document.querySelectorAll('#valorTotalControlado');
-    const valorAtualControlados = document.querySelectorAll('#valorAtualControlado');
-    const barraProgresso = document.querySelectorAll('progress');
-    const moeda = document.querySelectorAll('#valorAtualControladoMoeda');
+// for (let i = 0; i < valorTotalControlados.length; i++) {
+//     let totalControlado = valorTotalControlados[i];
+//     let atualControlado = valorAtualControlados[i];
 
-    for (let i = 0; i < valorTotalControlados.length; i++) {
-        let totalControlado = valorTotalControlados[i];
-        let atualControlado = valorAtualControlados[i];
+//     atualControlado = atualControlado.textContent;
+//     totalControlado = totalControlado.textContent;
 
-        atualControlado = atualControlado.textContent;
-        totalControlado = totalControlado.textContent;
+//     atualControlado = atualControlado.replace(',','.');
+//     totalControlado = totalControlado.replace(',','.');
 
-        atualControlado = atualControlado.replace(',','.');
-        totalControlado = totalControlado.replace(',','.');
+//     atualControlado = Number(atualControlado);
+//     totalControlado = Number(totalControlado);
 
-        atualControlado = Number(atualControlado);
-        totalControlado = Number(totalControlado);
+//     let progresso = (atualControlado * 100) / totalControlado;
+        
+//     if(progresso <= 100)
+//     {
+//         barraProgresso[i].setAttribute('value', progresso);
+//     }
+//     else
+//     {
+//         barraProgresso[i].setAttribute('value', 100);
+//         valorAtualControlados[i].style.color = 'rgb(255, 85, 85)';
+//         moeda[i].style.color = 'rgb(255, 85, 85)';
+//     }
+// }
 
-        let progresso = (atualControlado * 100) / totalControlado;
-            
-        if(progresso <= 100)
-        {
-            barraProgresso[i].setAttribute('value', progresso);
+function botaoSair()
+{
+    const btnSair = document.createElement('button');
+    btnSair.classList.add('btnSair');
+
+    const imgSair = document.createElement('img');
+    imgSair.src = 'img/sair.png';
+    imgSair.alt = 'icone sair';
+    imgSair.classList.add('imgSair');
+
+    btnSair.appendChild(imgSair);
+
+    return btnSair;
+}
+
+function areaSelecao(local, areaNovaSaida)
+{
+    const selecionarCategorias = document.createElement('div');
+    selecionarCategorias.classList.add('selecionarCategorias');
+
+    const areaOpcaoSelecionada = document.createElement('div');
+    areaOpcaoSelecionada.classList.add('areaOpcaoSelecionada');
+
+    const opcaoSelecionada = document.createElement('p');
+    opcaoSelecionada.classList.add('opcao');
+    opcaoSelecionada.classList.add('opcaoSelecionada');
+    opcaoSelecionada.textContent = '- Selecione a categoria -';
+    opcaoSelecionada.setAttribute('codigo', 0);
+
+    const btnMaisOpcoes = document.createElement('button');
+    btnMaisOpcoes.classList.add('btnMaisOpcoes');
+
+    const iconMaisOpcoes = document.createElement('img');
+    iconMaisOpcoes.src = "img/seta.png";
+    iconMaisOpcoes.classList.add('maisOpcoes');
+
+    const naoSelecionado = document.createElement('div');
+    naoSelecionado.classList.add('naoSelecionado');
+
+    let opcaoEscolher = document.createElement('p');
+
+    const btnNovaCategoria = document.createElement('div');
+    btnNovaCategoria.classList.add('btnNovaCategoria');
+
+    const imgNovaCategoria = document.createElement('img');
+    imgNovaCategoria.src = 'img/adicionar_verde.svg';
+    imgNovaCategoria.classList.add('imgNovaCategoria');
+
+    const opcaoNovaCategoria = document.createElement('p');
+    opcaoNovaCategoria.classList.add('opcao');
+    opcaoNovaCategoria.textContent = 'Nova categoria';
+
+    btnMaisOpcoes.appendChild(iconMaisOpcoes);
+    areaOpcaoSelecionada.append(opcaoSelecionada, btnMaisOpcoes);
+
+    btnNovaCategoria.append(imgNovaCategoria, opcaoNovaCategoria);
+
+    fetch("http://localhost/trit/api/listarCategorias.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
         }
-        else
-        {
-            barraProgresso[i].setAttribute('value', 100);
-            valorAtualControlados[i].style.color = 'rgb(255, 85, 85)';
-            moeda[i].style.color = 'rgb(255, 85, 85)';
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        for (let i = 0; i < dadosJSON.categorias.length; i++) {
+            const opcao = dadosJSON.categorias[i];
+            opcaoEscolher = document.createElement('p');
+            opcaoEscolher.classList.add('opcao');
+            opcaoEscolher.classList.add('opcaoEscolher');
+            opcaoEscolher.textContent = opcao.Nome;
+            opcaoEscolher.setAttribute('codigo', opcao.Codigo);
+            naoSelecionado.appendChild(opcaoEscolher);
         }
-    }
+        naoSelecionado.appendChild(btnNovaCategoria);
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+        // O que fazer se der erro na requisição
+    })
+    .finally(function () {
+        // O que fazer independente de ter dado erro ou não
+    });
 
-    function botaoSair()
-    {
-        const btnSair = document.createElement('button');
-        btnSair.classList.add('btnSair');
+    selecionarCategorias.append(areaOpcaoSelecionada, naoSelecionado);
 
-        const imgSair = document.createElement('img');
-        imgSair.src = 'img/sair.png';
-        imgSair.alt = 'icone sair';
-        imgSair.classList.add('imgSair');
+    local.appendChild(selecionarCategorias);
 
-        btnSair.appendChild(imgSair);
+    let abaAberta = false;
+    let opcoes = '';
 
-        return btnSair;
-    }
+    btnMaisOpcoes.addEventListener('click', function(e){
 
-    function areaSelecao(local, areaNovaSaida)
-    {
-        const selecionarCategorias = document.createElement('div');
-        selecionarCategorias.classList.add('selecionarCategorias');
+        abaOpcoes();
+        
+        opcoes = document.querySelectorAll('.opcaoEscolher');
 
-        const areaOpcaoSelecionada = document.createElement('div');
-        areaOpcaoSelecionada.classList.add('areaOpcaoSelecionada');
+        for (let i = 0; i < opcoes.length; i++) {
+            const opcaoAtual = opcoes[i];
+            let txtOpcaoAtual = opcaoAtual.textContent;
 
-        const opcaoSelecionada = document.createElement('p');
-        opcaoSelecionada.classList.add('opcao');
-        opcaoSelecionada.classList.add('opcaoSelecionada');
-        opcaoSelecionada.textContent = '- Selecione a categoria -';
+            opcaoAtual.addEventListener('click', function(e){
 
-        const btnMaisOpcoes = document.createElement('button');
-        btnMaisOpcoes.classList.add('btnMaisOpcoes');
-
-        const iconMaisOpcoes = document.createElement('img');
-        iconMaisOpcoes.src = "img/seta.png";
-        iconMaisOpcoes.classList.add('maisOpcoes');
-
-        const naoSelecionado = document.createElement('div');
-        naoSelecionado.classList.add('naoSelecionado');
-
-        const opcaoEscolher = document.createElement('p');
-        opcaoEscolher.classList.add('opcao');
-        opcaoEscolher.classList.add('opcaoEscolher');
-        opcaoEscolher.textContent = 'Lazer';
-
-        const btnNovaCategoria = document.createElement('div');
-        btnNovaCategoria.classList.add('btnNovaCategoria');
-
-        const imgNovaCategoria = document.createElement('img');
-        imgNovaCategoria.src = 'img/adicionar_verde.svg';
-        imgNovaCategoria.classList.add('imgNovaCategoria');
-
-        const opcaoNovaCategoria = document.createElement('p');
-        opcaoNovaCategoria.classList.add('opcao');
-        opcaoNovaCategoria.textContent = 'Nova categoria';
-
-        btnMaisOpcoes.appendChild(iconMaisOpcoes);
-        areaOpcaoSelecionada.append(opcaoSelecionada, btnMaisOpcoes);
-
-        btnNovaCategoria.append(imgNovaCategoria, opcaoNovaCategoria);
-        naoSelecionado.append(opcaoEscolher, btnNovaCategoria);
-
-        selecionarCategorias.append(areaOpcaoSelecionada, naoSelecionado);
-
-        local.appendChild(selecionarCategorias);
-
-        let abaAberta = false;
-        let opcoes = '';
-
-        btnMaisOpcoes.addEventListener('click', function(e){
-
-            abaOpcoes();
-            
-            opcoes = document.querySelectorAll('.opcaoEscolher');
-
-            for (let i = 0; i < opcoes.length; i++) {
-                const opcaoAtual = opcoes[i];
-                let txtOpcaoAtual = opcaoAtual.textContent;
-
-                opcaoAtual.addEventListener('click', function(e){
-
-                    opcaoSelecionada.textContent = txtOpcaoAtual;
-                    selecionada();
-
-                    abaAberta = true;
-                    abaOpcoes();
-                })
-                
-            }
-        })
-
-        function abaOpcoes(){
-            if(abaAberta == false)
-            {
-                naoSelecionado.style.display = 'block';
-                iconMaisOpcoes.style.transform = 'rotate(270deg)';
-                areaOpcaoSelecionada.style.borderBottom = 'solid rgb(9, 95, 184) 2px';
+                opcaoSelecionada.textContent = txtOpcaoAtual;
+                opcaoSelecionada.setAttribute('codigo', opcaoAtual.getAttribute('codigo'));
+                selecionada();
 
                 abaAberta = true;
-            }
-            else
-            {
-                naoSelecionado.style.display = 'none';
-                iconMaisOpcoes.style.transform = 'rotate(90deg)';
-                areaOpcaoSelecionada.style.borderBottom = 'none';
-
-                abaAberta = false;
-            }
+                abaOpcoes();
+            })
+            
         }
+    })
 
-        btnNovaCategoria.addEventListener('click', function(e){
-            e.preventDefault();
+    function abaOpcoes(){
+        if(abaAberta == false)
+        {
+            naoSelecionado.style.display = 'block';
+            iconMaisOpcoes.style.transform = 'rotate(270deg)';
+            areaOpcaoSelecionada.style.borderBottom = 'solid rgb(9, 95, 184) 2px';
 
-            areaNovaSaida.style.display = 'none';
-
+            abaAberta = true;
+        }
+        else
+        {
             naoSelecionado.style.display = 'none';
             iconMaisOpcoes.style.transform = 'rotate(90deg)';
             areaOpcaoSelecionada.style.borderBottom = 'none';
+
             abaAberta = false;
+        }
+    }
 
-            btnSair = botaoSair();
+    btnNovaCategoria.addEventListener('click', function(e){
+        e.preventDefault();
 
-            const areaNovaCategoria = document.createElement('div');
-            areaNovaCategoria.classList.add('popup');
+        areaNovaSaida.style.display = 'none';
 
-            const areaInfos = document.createElement('div');
-            areaInfos.classList.add('infos');
+        naoSelecionado.style.display = 'none';
+        iconMaisOpcoes.style.transform = 'rotate(90deg)';
+        areaOpcaoSelecionada.style.borderBottom = 'none';
+        abaAberta = false;
 
-            const areaTitulo = document.createElement('div');
-            areaTitulo.classList.add('areaTitulo');
+        btnSair = botaoSair();
 
-            const tituloNovaCategoria = document.createElement('p');
-            tituloNovaCategoria.classList.add('titulo');
-            tituloNovaCategoria.classList.add('tituloPopup');
-            tituloNovaCategoria.textContent = 'Nova categoria';
+        const areaNovaCategoria = document.createElement('div');
+        areaNovaCategoria.classList.add('popup');
 
-            areaTitulo.append(tituloNovaCategoria, btnSair);
+        const areaInfos = document.createElement('div');
+        areaInfos.classList.add('infos');
 
-            const areaNomeCategoria = document.createElement('div');
-            areaNomeCategoria.classList.add('areaDigitar');
+        const areaTitulo = document.createElement('div');
+        areaTitulo.classList.add('areaTitulo');
 
-            const labelNomeCategoria = document.createElement('label');
-            labelNomeCategoria.textContent = 'Nome da categoria:';
+        const tituloNovaCategoria = document.createElement('p');
+        tituloNovaCategoria.classList.add('titulo');
+        tituloNovaCategoria.classList.add('tituloPopup');
+        tituloNovaCategoria.textContent = 'Nova categoria';
 
-            const txtNomeCategoria = document.createElement('input');
-            txtNomeCategoria.type = 'text';
-            txtNomeCategoria.classList.add('recuoPopup');
-            areaRight = obrigatorioIcon(txtNomeCategoria);
+        areaTitulo.append(tituloNovaCategoria, btnSair);
 
-            areaNomeCategoria.append(labelNomeCategoria, areaRight);
+        const areaNomeCategoria = document.createElement('div');
+        areaNomeCategoria.classList.add('areaDigitar');
 
-            const areaValorLimite = document.createElement('div');
-            areaValorLimite.classList.add('areaDigitar');
+        const labelNomeCategoria = document.createElement('label');
+        labelNomeCategoria.textContent = 'Nome da categoria:';
 
-            const labelValorLimite = document.createElement('label');
-            labelValorLimite.textContent = 'Nome da categoria:';
+        const txtNomeCategoria = document.createElement('input');
+        txtNomeCategoria.type = 'text';
+        txtNomeCategoria.classList.add('recuoPopup');
+        areaRight = obrigatorioIcon(txtNomeCategoria);
 
-            const areaLeft = document.createElement('div');
-            areaLeft.classList.add('areaLeft');
+        areaNomeCategoria.append(labelNomeCategoria, areaRight);
 
-            const txtValorLimite = document.createElement('input');
-            txtValorLimite.type = 'number';
-            txtValorLimite.classList.add('recuoPopup');
-            txtValorLimite.classList.add('inputMoeda');
-            areaRight = obrigatorioIcon(txtValorLimite);
+        const areaValorLimite = document.createElement('div');
+        areaValorLimite.classList.add('areaDigitar');
 
-            const moeda = document.createElement('p');
-            moeda.textContent = 'R$';
-            moeda.classList.add('moeda');
+        const labelValorLimite = document.createElement('label');
+        labelValorLimite.textContent = 'Nome da categoria:';
 
-            areaLeft.append(areaRight, moeda);
-            areaValorLimite.append(labelValorLimite, areaLeft);
+        const areaLeft = document.createElement('div');
+        areaLeft.classList.add('areaLeft');
 
-            const btnSalvar = document.createElement('button');
-            btnSalvar.textContent = 'Salvar';
-            btnSalvar.classList.add('btnSalvar');
+        const txtValorLimite = document.createElement('input');
+        txtValorLimite.type = 'number';
+        txtValorLimite.classList.add('recuoPopup');
+        txtValorLimite.classList.add('inputMoeda');
+        areaRight = obrigatorioIcon(txtValorLimite);
 
-            areaInfos.append(areaNomeCategoria, areaValorLimite);
-            areaNovaCategoria.append(areaTitulo, areaInfos, btnSalvar);
-            bloqueio.appendChild(areaNovaCategoria);
+        const moeda = document.createElement('p');
+        moeda.textContent = 'R$';
+        moeda.classList.add('moeda');
 
-            btnSair.addEventListener('click', function(e){
-                e.preventDefault();
+        areaLeft.append(areaRight, moeda);
+        areaValorLimite.append(labelValorLimite, areaLeft);
 
-                areaNovaCategoria.remove();
-                areaNovaSaida.style.display = 'flex';
-            })
+        const btnSalvar = document.createElement('button');
+        btnSalvar.textContent = 'Salvar';
+        btnSalvar.classList.add('btnSalvar');
 
-            btnSalvar.addEventListener('click', function(e){
-                e.preventDefault();
+        areaInfos.append(areaNomeCategoria, areaValorLimite);
+        areaNovaCategoria.append(areaTitulo, areaInfos, btnSalvar);
+        bloqueio.appendChild(areaNovaCategoria);
 
-                if(txtNomeCategoria.value == '')
-                {
-                    erro(txtNomeCategoria, 'Nome não foi informado!', areaInfos);
-                    return;
-                }
+        btnSair.addEventListener('click', function(e){
+            e.preventDefault();
 
-                if(txtValorLimite.value == '')
-                {
-                    erro(txtValorLimite, 'Valor não foi informado!', areaInfos);
-                    return;
-                }
-
-                // fazer axios onde
-
-                // é criada uma nova categoria com as variaveis:
-                // txtNomeCategoria.value (referente ao nome da categoria)
-                // txtValorLimite.value (referente ao valor máximo estabelecido para a categoria)
-
-                let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
-
-                areaNovaCategoria.remove();
-                areaNovaSaida.style.display = 'flex';
-                opcaoSelecionada.textContent = nomeCategoriaAtual;
-
-                const opcaoCriada = document.createElement('p');
-                opcaoCriada.classList.add('opcao');
-                opcaoCriada.classList.add('opcaoEscolher');
-                opcaoCriada.textContent = nomeCategoriaAtual;
-
-                naoSelecionado.prepend(opcaoCriada);
-                selecionada();
-            })
-
+            areaNovaCategoria.remove();
+            areaNovaSaida.style.display = 'flex';
         })
 
-        function selecionada()
-        {
-            const opcoesEscolher = document.querySelectorAll('.opcaoEscolher');
+        btnSalvar.addEventListener('click', function(e){
+            e.preventDefault();
 
-            for (let i = 0; i < opcoesEscolher.length; i++) {
+            if(txtNomeCategoria.value == '')
+            {
+                erro(txtNomeCategoria, 'Nome não foi informado!', areaInfos);
+                return;
+            }
 
-                opcoesEscolher[i].style.backgroundColor = 'transparent';
-                
-                if(opcoesEscolher[i].textContent == opcaoSelecionada.textContent)
-                {
-                    opcoesEscolher[i].style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
-                }
+            if(txtValorLimite.value == '')
+            {
+                erro(txtValorLimite, 'Valor não foi informado!', areaInfos);
+                return;
+            }
+
+            // fazer axios onde
+
+            // é criada uma nova categoria com as variaveis:
+            // txtNomeCategoria.value (referente ao nome da categoria)
+            // txtValorLimite.value (referente ao valor máximo estabelecido para a categoria)
+
+            let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
+
+            areaNovaCategoria.remove();
+            areaNovaSaida.style.display = 'flex';
+            opcaoSelecionada.textContent = nomeCategoriaAtual;
+
+            const opcaoCriada = document.createElement('p');
+            opcaoCriada.classList.add('opcao');
+            opcaoCriada.classList.add('opcaoEscolher');
+            opcaoCriada.textContent = nomeCategoriaAtual;
+
+            naoSelecionado.prepend(opcaoCriada);
+            selecionada();
+        })
+
+    })
+
+    function selecionada()
+    {
+        const opcoesEscolher = document.querySelectorAll('.opcaoEscolher');
+
+        for (let i = 0; i < opcoesEscolher.length; i++) {
+
+            opcoesEscolher[i].style.backgroundColor = 'transparent';
+            
+            if(opcoesEscolher[i].textContent == opcaoSelecionada.textContent)
+            {
+                opcoesEscolher[i].style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
             }
         }
     }
+}
 
-    function erro(input, mensagem, local){
-        
-        if(input)
-        {
-            input.classList.add('inputErro');
-            setTimeout(() => {
-                input.classList.remove('inputErro');
-            }, 2000); 
-        }
-        
-        if(mensagem)
-        {
-            msgErro.textContent = mensagem;
-            local.appendChild(msgErro);
-
-            setTimeout(() => {
-                msgErro.remove();
-            }, 2000); 
-        }  
+function erro(input, mensagem, local){
+    
+    if(input)
+    {
+        input.classList.add('inputErro');
+        setTimeout(() => {
+            input.classList.remove('inputErro');
+        }, 2000); 
     }
+    
+    if(mensagem)
+    {
+        msgErro.textContent = mensagem;
+        local.appendChild(msgErro);
 
-    function obrigatorioIcon(input){
+        setTimeout(() => {
+            msgErro.remove();
+        }, 2000); 
+    }  
+}
 
-        const areaRight = document.createElement('div');
-        areaRight.classList.add('areaRight');
+function obrigatorioIcon(input){
 
-        const obrigatorio = document.createElement('p');
-        obrigatorio.textContent = '•'
-        obrigatorio.classList.add('obrigatorio');
+    const areaRight = document.createElement('div');
+    areaRight.classList.add('areaRight');
 
-        areaRight.append(input, obrigatorio);
+    const obrigatorio = document.createElement('p');
+    obrigatorio.textContent = '•'
+    obrigatorio.classList.add('obrigatorio');
 
-        input.addEventListener('input', function(e){
+    areaRight.append(input, obrigatorio);
 
-            if(input.getAttribute('type') == 'text' || input.getAttribute('type') == 'password')
+    input.addEventListener('input', function(e){
+
+        if(input.getAttribute('type') == 'text' || input.getAttribute('type') == 'password')
+        {
+            if(input.value.trim() != "")
             {
-                if(input.value.trim() != "")
-                {
-                    obrigatorio.remove();
-                }
-                else
-                {
-                    areaRight.appendChild(obrigatorio);
-                }
+                obrigatorio.remove();
             }
             else
             {
-                if(input.value != "")
-                {
-                    obrigatorio.remove();
-                }
-                else
-                {
-                    areaRight.appendChild(obrigatorio);
-                }
+                areaRight.appendChild(obrigatorio);
             }
-            
-        })
+        }
+        else
+        {
+            if(input.value != "")
+            {
+                obrigatorio.remove();
+            }
+            else
+            {
+                areaRight.appendChild(obrigatorio);
+            }
+        }
+        
+    })
 
-        return areaRight;
-    }
-}else{
-    window.location.href = "http://localhost/trit/login.html";
+    return areaRight;
 }

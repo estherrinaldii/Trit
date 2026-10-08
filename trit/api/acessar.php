@@ -33,7 +33,7 @@ try {
 	$_SESSION['logado'] = $usuario->Email;
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true']);
+	echo json_encode(['status' => 'true', 'usuario'=>$usuario]);
 	
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();
@@ -46,7 +46,7 @@ try {
 	}
 
 	http_response_code(500);
-	echo json_encode(['status' => 'false']);
+	echo json_encode(['status' => 'false', 'mensagem'=> $erro->getMessage()]);
 }
 
 function validaCorpoRequisicao($corpo)
