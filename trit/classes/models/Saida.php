@@ -23,7 +23,7 @@ class Saida extends Banco {
 		$this->Categoria = $categoria;
 	}
 
-	public static function CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria){
+	public static function CriarSaida($email, $nome, $valor, $data, $prazo, $tipo, $status, $categoria, $parcelas = null){
 		$parametros = [
 			'pEmail' => $email,
 			'pNomeSaida' => $nome,
@@ -32,7 +32,8 @@ class Saida extends Banco {
 			'pPrazo' => $prazo,
 			'pTipo' => $tipo,
 			'pStatus' => $status,
-			'pCategoriaGasto' => $categoria
+			'pCategoriaGasto' => $categoria,
+			'pParcelas' => $parcelas
 		];
 		
 		return self::Executar('criar_saida', $parametros);

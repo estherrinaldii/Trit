@@ -57,12 +57,6 @@ CREATE TABLE Categoria_Gasto (
 CREATE TABLE Planta (
   cd_planta INT NOT NULL,
   nm_planta VARCHAR(100) NOT NULL,
-  img_fase1 BLOB NULL,
-  img_fase2 BLOB NULL,
-  img_fase3 BLOB NULL,
-  img_fase4 BLOB NULL,
-  img_fase5 BLOB NULL,
-  ic_fase_atual ENUM('fase 1', 'fase 2', 'fase 3', 'fase 4', 'fase 5') NULL,
   CONSTRAINT PK_Planta PRIMARY KEY (cd_planta)
 );
 
@@ -114,6 +108,7 @@ CREATE TABLE  Saida (
   dt_prazo_saida DATE NULL,
   ic_tipo_saida ENUM('fixa', 'parcelada', 'categorizada') NOT NULL,
   ic_status_saida ENUM('pendente', 'finalizada') NULL,
+  qt_parcelas INT NULL,
   FK_cd_carteira INT NOT NULL,
   FK_cd_categoria_gasto INT DEFAULT NULL,
   CONSTRAINT PK_Saida PRIMARY KEY (cd_saida, FK_cd_carteira),
@@ -167,17 +162,16 @@ INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(4, 3400.75, 
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(5, 1200.00, 'joao.silva@gmail.com');
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(6, 950.20, 'carlos.pereira@gmail.com');
 
-INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto) VALUES
-(1, 'Aluguel Agosto', 1500.00, '2026-08-05', '2026-08-10', 'fixa', 'finalizada', 1, null),
-(2, 'Supermercado semanal', 320.75, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 16),
-(3, 'Parcela notebook 3/10', 250.00, '2026-08-01', '2026-08-15', 'parcelada', 'pendente', 2, null),
-(4, 'Plano de saúde', 480.00, '2026-08-03', '2026-08-05', 'fixa', 'finalizada', 2, null),
-(5, 'Uber para o trabalho', 45.90, '2026-08-09', NULL, 'categorizada', 'finalizada', 3, 3),
-(6, 'Academia mensalidade', 99.90, '2026-08-02', '2026-08-10', 'fixa', 'pendente', 3, null),
-(7, 'Assinatura streaming', 39.90, '2026-08-06', '2026-08-06', 'fixa', 'finalizada', 4, null),
-(8, 'Roupas inverno', 210.00, '2026-08-04', NULL, 'categorizada', 'finalizada', 4, 6),
-(9, 'Ração e petiscos', 89.50, '2026-08-07', NULL, 'categorizada', 'finalizada', 5, 20),
-(10, 'Parcela celular 6/12', 180.00, '2026-08-01', '2026-08-20', 'parcelada', 'pendente', 5, null),
-(11, 'Parcela do aluguel', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 3),
-(12, 'Compra da feira', 10, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 21),
-(13, 'Banana', 1, '2026-08-08', NULL, 'categorizada', 'finalizada', 1, 21);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (1, 'Aluguel Agosto', 1500.00, '2026-08-05', '2026-08-10', 'fixa', 'finalizada', NULL, 1, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (2, 'Supermercado semanal', 320.75, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 16);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (3, 'Parcela notebook 3/10', 250.00, '2026-08-01', '2026-08-15', 'parcelada', 'pendente', 10, 2, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (4, 'Plano de saúde', 480.00, '2026-08-03', '2026-08-05', 'fixa', 'finalizada', NULL, 2, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (5, 'Uber para o trabalho', 45.90, '2026-08-09', NULL, 'categorizada', 'finalizada', NULL, 3, 3);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (6, 'Academia mensalidade', 99.90, '2026-08-02', '2026-08-10', 'fixa', 'pendente', NULL, 3, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (7, 'Assinatura streaming', 39.90, '2026-08-06', '2026-08-06', 'fixa', 'finalizada', NULL, 4, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (8, 'Roupas inverno', 210.00, '2026-08-04', NULL, 'categorizada', 'finalizada', NULL, 4, 6);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (9, 'Ração e petiscos', 89.50, '2026-08-07', NULL, 'categorizada', 'finalizada', NULL, 5, 20);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (10, 'Parcela celular 6/12', 180.00, '2026-08-01', '2026-08-20', 'parcelada', 'pendente', 12, 5, null);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (11, 'Parcela do aluguel', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 3);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (12, 'Compra da feira', 10, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);
+INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (13, 'Banana', 1, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);

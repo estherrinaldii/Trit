@@ -36,7 +36,7 @@ try {
 	// Campos que precisam vir sempre
 	$obrigatorios = ['nome', 'valor', 'data'];
 	// Campos que podem faltar ou vir vazios (viram NULL)
-	$opcionais = ['prazo', 'tipo', 'status', 'categoria'];
+	$opcionais = ['prazo', 'tipo', 'status', 'categoria', 'parcelas'];
  
 	if (!validaChaves($corpo, $obrigatorios)) {
 		exit();
@@ -52,6 +52,19 @@ try {
 		$opcional[$campo] = ($v === '') ? null : $v;
 	}
  
+	// Parcelas: obrigatório (inteiro >= 1) só quando a saída é parcelada
+	if (strtolower((string)$opcional['tipo']) === 'parcelada') {
+		$parcelas = filter_var($opcional['parcelas'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+		if ($parcelas === false) {
+			http_response_code(400);
+			echo json_encode(['mensagem' => 'Número de parcelas inválido ou não informado.']);
+			exit();
+		}
+		$opcional['parcelas'] = $parcelas;
+	} else {
+		$opcional['parcelas'] = null;
+	}
+
 	$email = $_SESSION['logado'];
  
 	SaidaController::CriarSaida(
@@ -62,7 +75,8 @@ try {
 		$opcional['prazo'],
 		$opcional['tipo'],
 		$opcional['status'],
-		$opcional['categoria']
+		$opcional['categoria'],
+		$opcional['parcelas']
 	);
  
 	http_response_code(200);
