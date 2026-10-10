@@ -67,7 +67,7 @@ delimiter $$
 			'Utilidades',
 			'Pets'
 		) THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria fixa inválida';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria nativa inválida';
 		END IF;
 			
 			SELECT IFNULL(MAX(cd_categoria_gasto), 0) INTO maiorCodigo FROM categoria_gasto;
@@ -78,7 +78,7 @@ delimiter $$
 			END IF;
 			
 			INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) 
-			VALUES (pCodigoCategoria, pNomeCategoria, pValorLimite, pEmail, 'fixa');
+			VALUES (pCodigoCategoria, pNomeCategoria, pValorLimite, pEmail, 'nativa');
 		
 	end$$
 
@@ -128,6 +128,27 @@ delimiter $$
 		UPDATE categoria_gasto 
 		SET nm_categoria_gasto = pNovoNome 
 		WHERE cd_categoria_gasto = pCodigoCategoria AND FK_nm_email = pEmail;
+	END$$
+    
+    DROP PROCEDURE IF EXISTS deletar_categoria$$
+	CREATE PROCEDURE deletar_categoria(pEmail VARCHAR(200), pCodigoCategoria int)
+	BEGIN
+		DECLARE qtdCategoria INT DEFAULT 0;
+        
+        DECLARE qtdUsuario INT DEFAULT 0;
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+        
+		SELECT COUNT(*) INTO qtdCategoria 
+			FROM categoria_gasto 
+			WHERE cd_categoria_gasto = pCodigoCategoria AND FK_nm_email = pEmail;
+		IF qtdCategoria = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Categoria não encontrada para esse usuário';
+		END IF;
+        
+        delete from categoria_gasto where cd_categoria_gasto = pCodigoCategoria and FK_nm_email = pEmail;
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_saida$$
@@ -276,5 +297,5 @@ delimiter $$
 		Select u.nm_email, u.nm_usuario, c.vl_carteira, c.cd_carteira, u.vl_renda, u.qt_pontos from usuario u
 		join carteira c on (c.FK_nm_email = u.nm_email) 
 		where u.nm_email = pEmail;
-    END$$
+    END$$    
 delimiter ;

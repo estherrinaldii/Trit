@@ -116,8 +116,9 @@ CREATE TABLE  Saida (
     FOREIGN KEY (FK_cd_carteira)
     REFERENCES Carteira (cd_carteira),
   CONSTRAINT FK_Saida_categoria_gasto
-    FOREIGN KEY (FK_cd_categoria_gasto)
-    REFERENCES categoria_gasto (cd_categoria_gasto)
+	FOREIGN KEY (FK_cd_categoria_gasto)
+	REFERENCES categoria_gasto (cd_categoria_gasto)
+	ON DELETE SET NULL
 );
 
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('joao.silva@gmail.com', 'João Silva', md5(123), 3500.00, 120);
