@@ -20,6 +20,19 @@ if ($metodo != 'DELETE')
 }
 
 try { 
+	$corpo = json_decode(file_get_contents("php://input"), true);
+	if (!validaCorpoRequisicao($corpo)) {
+		return;
+	}
+	$chaves = ['email','codigo'];
+	if (!validaChaves($corpo, $chaves)) {
+		return;
+	}
+	$email = $corpo['email'];
+	$codigo = $corpo['codigo'];
+
+	CategoriaController::Deletar($email, $codigo);
+
 	http_response_code(200);
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
