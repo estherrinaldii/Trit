@@ -311,6 +311,49 @@ delimiter $$
         
 		select cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta
 			from cofrinho where fk_nm_email = pEmail;
-
 	END$$
+    
+         DROP PROCEDURE IF EXISTS criar_cofrinho$$
+    CREATE PROCEDURE criar_cofrinho(pEmail VARCHAR(200), pNomeCofrinho VARCHAR(100), pTipo ENUM('determinado','indeterminado'), pValorFinal DECIMAL(10,2), pPrazo DATE, pPlanta INT)
+    BEGIN
+        DECLARE pCodigoCofrinho INT DEFAULT 0;
+        DECLARE maiorCodigo INT DEFAULT 0;
+        DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE qtdPlanta INT DEFAULT 0;
+
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+            IF qtdUsuario = 0 THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+        END IF;
+
+        IF pValorFinal <= 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+        END IF;
+
+        SELECT COUNT(*) INTO qtdPlanta FROM Planta WHERE cd_planta = pPlanta;
+        IF qtdPlanta = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Planta não encontrada';
+        END IF;
+
+        SELECT IFNULL(MAX(cd_cofrinho), 0) INTO maiorCodigo FROM cofrinho;
+        SET pCodigoCofrinho = maiorCodigo + 1;
+
+        IF pTipo = 'determinado' THEN
+            IF pPrazo IS NULL THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho determinado precisa de um prazo';
+            END IF;
+            IF pPrazo < CURDATE() THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Prazo não pode ser uma data passada';
+            END IF;
+
+            INSERT INTO cofrinho(cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta)
+                VALUES (pCodigoCofrinho, pNomeCofrinho, NOW(), pPrazo, pValorFinal, 'determinado', 0.00, pEmail, pPlanta);
+        END IF;
+
+        IF pTipo = 'indeterminado' THEN
+            INSERT INTO cofrinho(cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta)
+                VALUES (pCodigoCofrinho, pNomeCofrinho, NOW(), NULL, pValorFinal, 'indeterminado', 0.00, pEmail, pPlanta);
+        END IF;
+    END$$    
+    
 delimiter ;
