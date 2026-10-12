@@ -354,6 +354,79 @@ delimiter $$
             INSERT INTO cofrinho(cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta)
                 VALUES (pCodigoCofrinho, pNomeCofrinho, NOW(), NULL, pValorFinal, 'indeterminado', 0.00, pEmail, pPlanta);
         END IF;
-    END$$    
+    END$$
+    
+        DROP PROCEDURE IF EXISTS editar_cofrinho$$
+    CREATE PROCEDURE editar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT, pNovoNome VARCHAR(100), pNovoValorFinal DECIMAL(10,2), pNovoPrazo DATE, pNovaPlanta INT)
+    BEGIN
+        DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE qtdCofrinho INT DEFAULT 0;
+        DECLARE qtdPlanta INT DEFAULT 0;
+        DECLARE vTipo VARCHAR(20);
+        DECLARE vPrazoAtual DATE;
+
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+            IF qtdUsuario = 0 THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+        END IF;
+
+        SELECT COUNT(*) INTO qtdCofrinho
+            FROM cofrinho
+            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+        IF qtdCofrinho = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+        END IF;
+
+        IF pNovoValorFinal <= 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+        END IF;
+
+        SELECT COUNT(*) INTO qtdPlanta FROM Planta WHERE cd_planta = pNovaPlanta;
+        IF qtdPlanta = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Planta não encontrada';
+        END IF;
+
+        SELECT ic_tipo_cofrinho, dt_prazo INTO vTipo, vPrazoAtual
+            FROM cofrinho
+            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+
+        IF vTipo = 'determinado' THEN
+            IF pNovoPrazo IS NULL THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho determinado precisa de um prazo';
+            END IF;
+            IF NOT (pNovoPrazo <=> vPrazoAtual) AND pNovoPrazo < CURDATE() THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Prazo não pode ser uma data passada';
+            END IF;
+
+            UPDATE cofrinho
+                SET nm_cofrinho = pNovoNome, vl_cofrinho_final = pNovoValorFinal, dt_prazo = pNovoPrazo, FK_cd_planta = pNovaPlanta
+                WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+        ELSE
+            UPDATE cofrinho
+                SET nm_cofrinho = pNovoNome, vl_cofrinho_final = pNovoValorFinal, FK_cd_planta = pNovaPlanta
+                WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+        END IF;
+    END$$
+
+    DROP PROCEDURE IF EXISTS deletar_cofrinho$$
+    CREATE PROCEDURE deletar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT)
+    BEGIN
+        DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE qtdCofrinho INT DEFAULT 0;
+
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+            IF qtdUsuario = 0 THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+        END IF;
+
+        SELECT COUNT(*) INTO qtdCofrinho
+            FROM cofrinho
+            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+        IF qtdCofrinho = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+        END IF;
+
+        DELETE FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+    END$$
     
 delimiter ;
