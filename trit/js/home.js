@@ -314,7 +314,7 @@ btnNovaSaida.addEventListener('click', function(e){
 
         function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtParcelas, txtCategoria){
             fetch("http://localhost/trit/api/criarSaida.php", {
-            method: "PUT",
+            method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",

@@ -37,7 +37,7 @@ class Categoria extends Banco
 	public static function Deletar($email, $codigo){
 		$parametros = [
 			'pEmail' => $email,
-			'pCodigo' => $codigo
+			'pCodigoCategoria' => $codigo
 		];
 		return self::Executar('deletar_categoria', $parametros);
 	}
