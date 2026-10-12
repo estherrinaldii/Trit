@@ -298,4 +298,19 @@ delimiter $$
 		join carteira c on (c.FK_nm_email = u.nm_email) 
 		where u.nm_email = pEmail;
     END$$    
+    
+    DROP PROCEDURE IF EXISTS listar_cofrinhos$$
+	CREATE PROCEDURE listar_cofrinhos(pEmail varchar(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF; 
+        
+		select cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta
+			from cofrinho where fk_nm_email = pEmail;
+
+	END$$
 delimiter ;
