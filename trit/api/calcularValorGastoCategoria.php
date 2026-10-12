@@ -19,7 +19,18 @@ if ($metodo != 'POST')
 	return;
 }
 
-$corpo = json_decode(file_get_contents("php://input"), true);
+
+if(!isset($_SESSION['logado'])){
+	http_response_code(401);
+    echo json_encode([
+		'status' => 'error',
+        'mensagem' => 'Sessão inválida ou não encontrada.'
+		]);
+		exit;
+		}
+		
+try {
+	$corpo = json_decode(file_get_contents("php://input"), true);
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
@@ -27,24 +38,12 @@ $corpo = json_decode(file_get_contents("php://input"), true);
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
+
 	$categoria = $corpo['categoria'];
-
-	if(!isset($_SESSION['logado'])){
-	http_response_code(401);
-    echo json_encode([
-        'status' => 'error',
-        'mensagem' => 'Sessão inválida ou não encontrada.'
-    ]);
-    exit;
-}
-
-try {
-	// Código da sua API
-	http_response_code(200);
 	$email = $_SESSION['logado'];
 	$valor = SaidaController::CalcularValorGastoCategoria($email, $categoria);
-
-
+		
+	http_response_code(200);
 	echo json_encode(['status' => 'true', 'Valor' => $valor]);
 } catch (Exception $erro) {
 	http_response_code(500);

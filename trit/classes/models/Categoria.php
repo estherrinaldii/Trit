@@ -33,5 +33,13 @@ class Categoria extends Banco
 		];
 		return self::Executar('criar_categoria', $parametros);
 	}
+
+	public static function Deletar($email, $codigo){
+		$parametros = [
+			'pEmail' => $email,
+			'pCodigo' => $codigo
+		];
+		return self::Executar('deletar_categoria', $parametros);
+	}
 }
 ?>

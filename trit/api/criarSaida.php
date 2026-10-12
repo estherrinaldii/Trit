@@ -35,6 +35,7 @@ try {
  
 	// Campos que precisam vir sempre
 	$obrigatorios = ['nome', 'valor', 'data'];
+	
 	// Campos que podem faltar ou vir vazios (viram NULL)
 	$opcionais = ['prazo', 'tipo', 'status', 'categoria', 'parcelas'];
  

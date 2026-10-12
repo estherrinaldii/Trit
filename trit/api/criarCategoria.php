@@ -17,16 +17,6 @@ if ($metodo != 'POST') {
 	echo json_encode(['mensagem' => 'Método Inválido']);
 	return;
 }
-$corpo = json_decode(file_get_contents("php://input"), true);
-if (!validaCorpoRequisicao($corpo)) {
-	return;
-}
-$chaves = ['nome', 'valorLimite'];
-if (!validaChaves($corpo, $chaves)) {
-	return;
-}
-$nome = $corpo['nome'];
-$valorLimite = $corpo['valorLimite'];
 
 if (!isset($_SESSION['logado'])) {
 	http_response_code(401);
@@ -38,10 +28,22 @@ if (!isset($_SESSION['logado'])) {
 }
 
 try {
-	http_response_code(200);
-	$email = $_SESSION['logado'];
-	CategoriaController::Criar($nome, $email, $valorLimite);
+	$corpo = json_decode(file_get_contents("php://input"), true);
+	if (!validaCorpoRequisicao($corpo)) {
+		return;
+	}
+	$chaves = ['nome', 'valorLimite'];
+	if (!validaChaves($corpo, $chaves)) {
+		return;
+	}
+	$nome = $corpo['nome'];
+	$valorLimite = $corpo['valorLimite'];
 
+	$email = $_SESSION['logado'];
+	
+	CategoriaController::Criar($nome, $email, $valorLimite);
+	
+	http_response_code(200);
 	echo json_encode(['status' => 'true']);
 } catch (Exception $erro) {
 	http_response_code(500);

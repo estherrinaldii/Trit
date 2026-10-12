@@ -15,5 +15,9 @@ class CategoriaController {
     public static function Criar($nome, $email, $valorLimite){
         return Categoria::Criar($nome, $email, $valorLimite);
     }
+
+    public static function Deletar($email, $codigo){
+        return Categoria::Deletar($email, $codigo);
+    }
 }
 ?>
