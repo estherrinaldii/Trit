@@ -120,6 +120,21 @@ CREATE TABLE  Saida (
 	ON DELETE SET NULL
 );
 
+CREATE TABLE Movimentacao_Cofrinho(
+	cd_movimentacao int not null,
+    vl_movimentacao DECIMAL(10,2) NOT NULL,
+    dt_movimentacao date not null,
+    ic_tipo_movimentacao ENUM('depositar', 'resgatar') NOT NULL,
+     FK_nm_email VARCHAR(200) NOT NULL,
+     FK_cd_cofrinho INT NOT NULL,
+	CONSTRAINT FK_Movimentacao_Usuario
+		FOREIGN KEY (FK_nm_email)
+		REFERENCES usuario (nm_email),
+        CONSTRAINT FK_Movimentacao_Cofrinho
+		FOREIGN KEY (FK_cd_cofrinho)
+		REFERENCES Cofrinho (cd_cofrinho)
+);
+
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('joao.silva@gmail.com', 'João Silva', md5(123), 3500.00, 120);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('maria.souza@gmail.com', 'Maria Souza', md5(123), 4200.50, 85);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('pedro.oliveira@gmail.com', 'Pedro Oliveira', md5(123), 2800.75, 0);
