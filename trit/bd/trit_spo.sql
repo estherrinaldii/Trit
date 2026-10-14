@@ -429,4 +429,86 @@ delimiter $$
         DELETE FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
     END$$
     
+    DROP PROCEDURE IF EXISTS depositar_cofrinho$$
+    CREATE PROCEDURE  depositar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
+    BEGIN
+			DECLARE pCarteira INT DEFAULT 0;
+			DECLARE qtdUsuario INT DEFAULT 0;
+			DECLARE qtdCofrinho INT DEFAULT 0;
+			DECLARE pCodigoMovimentacao INT DEFAULT 0;
+			DECLARE maiorCodigo INT DEFAULT 0;
+            			
+			SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+				IF qtdUsuario = 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+			END IF;
+
+			SELECT COUNT(*) INTO qtdCofrinho
+				FROM cofrinho
+				WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+			IF qtdCofrinho = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+			END IF;
+            
+                IF pValor <= 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+				END IF;
+            
+            SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
+				SET pCodigoMovimentacao = maiorCodigo + 1;
+			
+			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+            
+            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'depositar', pEmail, pCodigoCofrinho);
+            			
+			UPDATE carteira
+				SET vl_carteira = vl_carteira - pValor
+				WHERE cd_carteira = pCarteira;
+				
+			 UPDATE cofrinho
+				SET vl_cofrinho_atual = vl_cofrinho_atual + pValor
+				WHERE  cd_cofrinho = pCodigoCofrinho;
+		END$$
+        
+	DROP PROCEDURE IF EXISTS resgatar_cofrinho$$
+    CREATE PROCEDURE  resgatar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
+    BEGIN
+			DECLARE pCarteira INT DEFAULT 0;
+			DECLARE qtdUsuario INT DEFAULT 0;
+			DECLARE qtdCofrinho INT DEFAULT 0;
+			DECLARE pCodigoMovimentacao INT DEFAULT 0;
+			DECLARE maiorCodigo INT DEFAULT 0;
+            			
+			SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+				IF qtdUsuario = 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+			END IF;
+
+			SELECT COUNT(*) INTO qtdCofrinho
+				FROM cofrinho
+				WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+			IF qtdCofrinho = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+			END IF;
+            
+            IF pValor <= 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
+				END IF;
+            
+            SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
+				SET pCodigoMovimentacao = maiorCodigo + 1;
+			
+			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+            
+            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'resgatar', pEmail, pCodigoCofrinho);
+            			
+			UPDATE carteira
+				SET vl_carteira = vl_carteira + pValor
+				WHERE cd_carteira = pCarteira;
+				
+			 UPDATE cofrinho
+				SET vl_cofrinho_atual = vl_cofrinho_atual - pValor
+				WHERE  cd_cofrinho = pCodigoCofrinho;
+		END$$
+    
 delimiter ;
