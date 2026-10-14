@@ -411,6 +411,8 @@ delimiter $$
     DROP PROCEDURE IF EXISTS deletar_cofrinho$$
     CREATE PROCEDURE deletar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT)
     BEGIN
+    
+		DECLARE pCarteira INT DEFAULT 0;
         DECLARE qtdUsuario INT DEFAULT 0;
         DECLARE qtdCofrinho INT DEFAULT 0;
 
@@ -425,6 +427,11 @@ delimiter $$
         IF qtdCofrinho = 0 THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
         END IF;
+        
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        SELECT vl_cofrinho_atual FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho;
+        
+        INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES (pCarteira, pValorAtual, pEmail);
 
         DELETE FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
     END$$
