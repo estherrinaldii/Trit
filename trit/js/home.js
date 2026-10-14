@@ -309,10 +309,16 @@ btnNovaSaida.addEventListener('click', function(e){
         const selecionado = document.querySelector('.areaOpcaoSelecionada p');
         if(txtTipoSaida.value == 'Categorizada'){
             let categoria = selecionado.getAttribute('codigo');
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, txtDataSaida.value, txtValorSaida.value, null, null, categoria);
+            let dataSaida = FormatarData(txtDataSaida);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, txtValorSaida.value, null, null, null, categoria);
         }
 
-        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtParcelas, txtCategoria){
+        if(txtTipoSaida.value == 'Fixa'){
+            let dataSaida = FormatarData(txtDataSaida);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, txtValorSaida.value, null, null, null, null);
+        }
+
+        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria){
             fetch("http://localhost/trit/api/criarSaida.php", {
             method: "POST",
             credentials: "include",
@@ -326,7 +332,8 @@ btnNovaSaida.addEventListener('click', function(e){
                     "data":txtData,
                     "prazo":txtDataLimite,
                     "tipo":txtTipo.toLowerCase(),
-                    "status":txtParcelas,
+                    "status":txtStatus,
+                    "parcelas":txtParcelas,
                     "categoria":txtCategoria
                 }
             ),
@@ -391,6 +398,11 @@ btnNovaSaida.addEventListener('click', function(e){
                                 document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
 
                             }
+                        }
+
+                        // nova fixa
+                        if(txtTipoSaida.value == 'Fixa'){
+
                         }
                     }
                 }
@@ -533,6 +545,7 @@ btnNovaEntrada.addEventListener('click', function(e){
         }
 
         let valor = Number(txtValorEntrada.value);
+        let dataEntrada = FormatarData(txtDataEntrada);
 
         fetch("http://localhost/trit/api/criarEntrada.php", {
         method: "PUT",
@@ -543,7 +556,7 @@ btnNovaEntrada.addEventListener('click', function(e){
         body: JSON.stringify(
             {
                 "nome":txtNomeEntrada.value,
-                "data":txtDataEntrada.value,
+                "data":dataEntrada,
                 "valor":valor
             }
         ),
@@ -651,7 +664,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
                     if(valor === 0){
                         valor = 0 + ',00';
                     }
-                    criarGastoControlado(areaControlados, categoria.Nome, valor, categoria.ValorLimite);
+                    criarCategorias(areaControlados, categoria.Nome, valor, categoria.ValorLimite);
 
                     }
                 })
@@ -673,7 +686,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
         // O que fazer independente de ter dado erro ou não
     });
 
-function criarGastoControlado(local, txtTitulo, valorAtual, valorLimite){
+function criarCategorias(local, txtTitulo, valorAtual, valorLimite){
     const cardControlado = document.createElement('div');
     cardControlado.classList.add("card");
     cardControlado.classList.add("controlado");
@@ -743,6 +756,78 @@ function criarGastoControlado(local, txtTitulo, valorAtual, valorLimite){
     cardControlado.appendChild(icone);
     
     local.appendChild(cardControlado);
+}
+
+function criarFixoEParcelado(tipo, local, txtTitulo, txtValor, txtParcelas, txtDataInicio, txtVencimento){
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.classList.add('fixo');
+
+    const infosFixos = document.createElement('div');
+    infosFixos.classList.add('infosFixos');
+        const areaLeft = document.createElement('div');
+        areaLeft.classList.add('left');
+
+            let titulo = document.createElement('p');
+            titulo.textContent = txtTitulo;
+
+            const areaValor = document.createElement('p');
+            areaValor.classList.add('subtxt');
+                let i = 0;
+                let valorFormatado = '';
+                do {
+                    let procuraVirgula = txtValor.charAt(i);
+                    if(procuraVirgula != ','){
+                        valorFormatado = txtValor + ',00';
+                        return valorFormatado;
+                    }
+                    i++;
+                } while (i<txtValor.length);
+            areaValor.textContent = valorFormatado;
+
+        areaLeft.appendChild(titulo);
+        areaLeft.appendChild(areaValor);
+    infosFixos.appendChild(areaLeft);
+
+        if(tipo == 'Parcelado'){
+            const areaCenter = document.createElement('div');
+            areaCenter.classList.add('center');
+
+            titulo = document.createElement('p');
+            titulo.textContent = "Frequência";
+
+            const areaParcelas = document.createElement('p');
+            areaParcelas.classList.add('subtxt');
+            if(Number(txtParcelas) < 10){
+                let parcela = '0' + String(txtParcelas);
+                areaParcelas.textContent = `00/${parcela}`;
+            }
+            
+            areaCenter.appendChild(titulo);
+            areaCenter.appendChild(areaParcelas);
+            infosFixos.appendChild(areaCenter);
+        }
+    
+        const areaRight = document.createElement('div');
+        areaRight.classList.add('right');
+
+            titulo = document.createElement('p');
+            titulo.textContent = "Vencimento";
+
+            const areaData = document.createElement('p');
+            areaData.classList.add('subtxt');
+            areaData.textContent = txtVencimento;
+
+        areaRight.appendChild(titulo);
+        areaRight.appendChild(areaData);
+    infosFixos.appendChild(areaRight);
+
+    const icone = document.createElement('img');
+    icone.src = "img/seta.png";
+
+    card.appendChild(infosFixos);
+    card.appendChild(icone);
+    local.appendChild(card);
 }
 
 // for (let i = 0; i < valorTotalControlados.length; i++) {
@@ -1102,4 +1187,11 @@ function obrigatorioIcon(input){
     })
 
     return areaRight;
+}
+
+function FormatarData(txtData){
+    let data = txtData.value;
+    let conjuntoData = data.split("/");
+    let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
+    return dataFormatada;
 }
