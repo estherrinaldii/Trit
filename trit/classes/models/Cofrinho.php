@@ -28,5 +28,14 @@ class Cofrinho extends Banco {
 
 		return self::Consultar('listar_cofrinhos', $parametros);
 	}
+
+	public static function Deletar($email, $codigo){
+		$parametros = [
+			'pEmail' => $email,
+			'pCodigo' => $codigo
+		];
+
+		return self::Executar('deletar_cofrinho', $parametros);
+	}
 }
 ?>

@@ -14,5 +14,9 @@ class CofrinhoController {
 
         return $cofrinhos;
     }
+
+    public static function Deletar($email, $codigo){
+        return Cofrinho::Deletar($email, $codigo);
+    }
 }
 ?>
