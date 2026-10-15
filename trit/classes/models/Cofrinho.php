@@ -32,10 +32,24 @@ class Cofrinho extends Banco {
 	public static function Deletar($email, $codigo){
 		$parametros = [
 			'pEmail' => $email,
-			'pCodigo' => $codigo
+			'pCodigoCofrinho' => $codigo
 		];
 
 		return self::Executar('deletar_cofrinho', $parametros);
 	}
+
+	public static function Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta){
+		$parametros = [
+			'pEmail' => $email,
+			'pCodigoCofrinho' => $codigo,
+			'pNovoNome' => $nome,
+			'pNovoValorFinal' => $valorFinal,
+			'pNovoPrazo' => $prazo,
+			'pNovaPlanta' => $planta
+		];
+
+		return self::Executar('editar_cofrinho', $parametros);
+	}
+
 }
 ?>
