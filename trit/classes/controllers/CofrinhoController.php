@@ -30,5 +30,13 @@ class CofrinhoController {
     public static function Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta){
         return Cofrinho::Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta);
     }
+
+    public static function Criar($email, $nome, $tipo, $valorFinal, $prazo, $planta){
+        if($tipo === 'indeterminado' || $prazo === ''){
+            $prazo = null;
+        }
+
+        return Cofrinho::Criar($email, $nome, $tipo, $valorFinal, $prazo, $planta);
+    }
 }
 ?>

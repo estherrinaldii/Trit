@@ -51,5 +51,17 @@ class Cofrinho extends Banco {
 		return self::Executar('editar_cofrinho', $parametros);
 	}
 
+	public static function Criar($email, $nome, $tipo, $valorFinal, $prazo, $planta){
+	$parametros = [
+		'pEmail' => $email,
+		'pNomeCofrinho' => $nome,
+		'pTipo' => $tipo,
+		'pValorFinal' => $valorFinal,
+		'pPrazo' => $prazo,
+		'pPlanta' => $planta
+	];
+
+	return self::Executar('criar_cofrinho', $parametros);
+}
 }
 ?>
