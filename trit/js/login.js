@@ -401,7 +401,7 @@ btnContinuar.addEventListener('click', function(e){
         btnNovaCategoria.textContent = 'Novo gasto';
 
         const imgAdicionar = document.createElement('img');
-        imgAdicionar.src = 'img/adicionar.png';
+        imgAdicionar.src = 'img/adicionar.svg';
         imgAdicionar.alt = 'icone adicionar';
 
         btnNovaCategoria.prepend(imgAdicionar);
