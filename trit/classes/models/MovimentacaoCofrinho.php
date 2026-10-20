@@ -24,5 +24,15 @@ class MovimentacaoCofrinho extends Banco {
 
 		return self::Executar('guardar_cofrinho', $parametros);
 	}
+
+	public static function Resgatar($email, $codigoCofrinho, $valor){
+		$parametros = [
+			'pEmail' => $email,
+			'pCodigoCofrinho' => $codigoCofrinho,
+			'pValor' => $valor
+		];
+
+		return self::Executar('guardar_cofrinho', $parametros);
+	}
 }
 ?>
