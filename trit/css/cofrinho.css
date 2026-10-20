@@ -232,17 +232,22 @@ button{
     gap: 16px;
 }
 
-.btnOk, .btnSalvar, .btnGuardar{
+.btnOk, .btnSalvar, .btnGuardar, .btnCancelar{
     background-color: rgb(9, 95, 184);
     color: white;
 }
 
-.btnOk:active, .btnSalvar:active, .btnGuardar:active{
+.btnOk:active, .btnSalvar:active, .btnGuardar:active, .btnCancelar:active{
     background-color: rgb(29, 59, 90);
-    border: none;
+    border: solid transparent 2px;
 }
 
-.btnResgatar:active{
+.btnExcluirConfirma{
+    border: solid, rgb(255, 85, 85), 2px;
+    color: rgb(255, 85, 85);
+}
+
+.btnResgatar:active, .btnExcluirConfirma:active{
     background-color: rgb(9, 95, 184, 0.05);
 }
 
@@ -474,7 +479,7 @@ select{
     gap: 8px;
 }
 
-.btnEditar, .btnExcluir{
+.btnEditar, .btnExcluir, .areaBotoesExcluir{
     display: flex;
     gap: 8px;
 }

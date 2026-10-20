@@ -18,6 +18,9 @@ if(!document.querySelector('.planta'))
     main.appendChild(areaSemCofre);
 }
 
+const msgErro = document.createElement('p');
+msgErro.classList.add('erro');
+
 const btnAdicionar = document.querySelector('.btnAdicionar');
 
 const bloqueio = document.createElement('div');
@@ -311,6 +314,52 @@ for (let i = 0; i < plantas.length; i++) {
             areaConsultarCofre.remove();
             bloqueio.remove();
         })
+
+        btnExcluir.addEventListener('click',function(e){
+            e.preventDefault();
+
+            areaConsultarCofre.remove();
+
+            const areaAviso = document.createElement('div');
+            areaAviso.classList.add('popup');
+            areaAviso.classList.add('areaAviso');
+
+            const aviso = document.createElement('p');
+            aviso.textContent = 'Gostaria de excluir esse cofrinho?'
+
+            const areaBotoesExcluir = document.createElement('div');
+            areaBotoesExcluir.classList.add('areaBotoesExcluir');
+
+            const btnCancelar = document.createElement('button');
+            btnCancelar.classList.add('btnCancelar');
+            btnCancelar.textContent = 'Cancelar';
+            btnCancelar.classList.add('btnCancelar');
+
+            const btnExcluirConfirma = document.createElement('button');
+            btnExcluirConfirma.classList.add('btnExcluirConfirma');
+            btnExcluirConfirma.textContent = 'Excluir';
+            btnExcluirConfirma.classList.add('btnExcluirConfirma');
+
+            areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
+            areaAviso.append(aviso, areaBotoesExcluir);
+            bloqueio.appendChild(areaAviso);
+
+            btnCancelar.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaAviso.remove();
+                bloqueio.appendChild(areaConsultarCofre);
+            });
+
+            btnExcluirConfirma.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaAviso.remove();
+                bloqueio.remove();
+                plantaSelecionada.remove();
+            })
+
+        })
     })
 }
 
@@ -354,9 +403,6 @@ function avisoSair(bloqueio)
 }
 
 function erro(input, mensagem, local){
-
-    const msgErro = document.createElement('p');
-    msgErro.classList.add('erro');
     
     if(input)
     {
