@@ -219,14 +219,14 @@ btnNovaSaida.addEventListener('click', function(e){
 
     btnCategorizado.addEventListener('click', function(e){
         e.preventDefault();
-
+        
         opcoesSaida.remove();
         divAlinhamento.innerHTML = '';
         areaInfos.innerHTML = '';
         txtTipoSaida.value = 'Categorizada';
-
+        
         divAlinhamento.append(areaTipoSaida, areaDataSaida);
-
+        
         areaSelecao(areaInfos, areaNovaSaida);
         areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
         areaNovaSaida.append(areaInfos, btnSalvar);
@@ -564,73 +564,53 @@ btnNovaEntrada.addEventListener('click', function(e){
 
 
 
-const areaControlados = document.querySelector('#areaControlados');
+const areaCategorias = document.querySelector('.areaCategorias');
 let btnMais = document.createElement('button');
 btnMais.textContent = 'Ver Mais';
 btnMais.classList.add('verMais');
 
+
 fetch("http://localhost/trit/api/listarCategorias.php", {
     method: "GET",
-        credentials: "include",
-    })
-    .then(function (resposta) {
-        if (!resposta.ok) {
+    credentials: "include",
+})
+.then(function (resposta) {
+    if (!resposta.ok) {
         throw new Error("Erro HTTP: " + resposta.status);
-        }
-        return resposta.json();
-    })
-    .then(function (dadosJSON) {
-        if (dadosJSON) {
-            let indiceLimite = 4;
-            if(dadosJSON.categorias.length > 4){
+    }
+    return resposta.json();
+})
+.then(function (dadosJSON) {
+    if (dadosJSON) {
+        let indiceLimite = 4;
+        if(dadosJSON.categorias.length > 4){
+            areaCategorias.appendChild(btnMais);
                 indiceLimite = 4;
+                listarCategorias(indiceLimite, dadosJSON.categorias);
                 btnMais.addEventListener('click', function(e){
                     e.preventDefault();
-                    console.log('clicou');
+                    btnMais.remove();
                     indiceLimite = dadosJSON.categorias.length;
+                    areaCategorias.textContent = '';
+                    listarCategorias(indiceLimite, dadosJSON.categorias);
+                    let btnMenos = document.createElement('button');
+                    btnMenos.textContent = 'Ver Menos';
+                    btnMenos.classList.add('verMais');
+                    areaCategorias.appendChild(btnMenos);
+                    
+                    btnMenos.addEventListener('click', function(e){
+                        e.preventDefault();
+                        indiceLimite = 4;
+                        areaCategorias.textContent = '';
+                        listarCategorias(indiceLimite, dadosJSON.categorias);
+                        btnMenos.remove();
+                        areaCategorias.appendChild(btnMais);
+                    })
                 })
             }else{
                 indiceLimite = dadosJSON.categorias.length;
-            }
-
-            for (let i = 0; i < indiceLimite; i++) {
-                const categoria = dadosJSON.categorias[i];
-                fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(
-                    {
-                        "categoria":categoria.Codigo
-                    }
-                ),
-                })
-                .then(function (resposta) {
-                    if (!resposta.ok) {
-                    throw new Error("Erro HTTP: " + resposta.status);
-                    }
-                    return resposta.json();
-                })
-                .then(function (dadosJSON) {
-                    if (dadosJSON) {
-                        let valor = dadosJSON.Valor;
-                        let valorLimite = String(categoria.ValorLimite).replace(',','.');
-                        valor = Number(valor);
-                        valorLimite = Number(valorLimite);
-                        criarCategorias(areaControlados, categoria.Nome, valor, valorLimite);
-
-                    }
-                    areaControlados.appendChild(btnMais);
-
-                })
-                .catch(function (error) {
-                    console.warn(error);
-                })
-                .finally(function () {
-                });         
-            }
+                listarCategorias(indiceLimite, dadosJSON.categorias);
+            }     
         }
     })
     .catch(function (error) {
@@ -638,7 +618,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
     })
     .finally(function () {
     });
-
+    
 function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
     let valorAtualEx = String(txtValorAtual).replace('.',',');
     let valorLimiteEx = String(txtValorLimite).replace('.',',');
@@ -714,7 +694,7 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
     cardControlado.appendChild(infosControlado);
     cardControlado.appendChild(icone);
     
-    local.appendChild(cardControlado);
+    local.prepend(cardControlado);
 }
 
 function alterarCarteira(txtValor){
@@ -759,7 +739,6 @@ function areaSelecao(local, areaNovaSaida)
     opcaoSelecionada.classList.add('opcao');
     opcaoSelecionada.classList.add('opcaoSelecionada');
     opcaoSelecionada.textContent = '- Selecione a categoria -';
-    opcaoSelecionada.setAttribute('codigo', 0);
 
     const btnMaisOpcoes = document.createElement('button');
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
@@ -803,6 +782,7 @@ function areaSelecao(local, areaNovaSaida)
         if (dadosJSON) {
         for (let i = 0; i < dadosJSON.categorias.length; i++) {
             const opcao = dadosJSON.categorias[i];
+            opcaoSelecionada.setAttribute('codigo', opcao.Codigo);
             opcaoEscolher = document.createElement('p');
             opcaoEscolher.classList.add('opcao');
             opcaoEscolher.classList.add('opcaoEscolher');
@@ -815,10 +795,8 @@ function areaSelecao(local, areaNovaSaida)
     })
     .catch(function (error) {
         console.warn(error);
-        // O que fazer se der erro na requisição
     })
     .finally(function () {
-        // O que fazer independente de ter dado erro ou não
     });
 
     selecionarCategorias.append(areaOpcaoSelecionada, naoSelecionado);
@@ -873,7 +851,7 @@ function areaSelecao(local, areaNovaSaida)
     btnNovaCategoria.addEventListener('click', function(e){
         e.preventDefault();
 
-        areaNovaSaida.style.display = 'none';
+        areaNovaSaida.remove();
 
         naoSelecionado.style.display = 'none';
         iconMaisOpcoes.style.transform = 'rotate(90deg)';
@@ -945,7 +923,7 @@ function areaSelecao(local, areaNovaSaida)
             e.preventDefault();
 
             areaNovaCategoria.remove();
-            areaNovaSaida.style.display = 'flex';
+            bloqueio.appendChild(areaNovaSaida);
         })
 
         btnSalvar.addEventListener('click', function(e){
@@ -988,35 +966,78 @@ function areaSelecao(local, areaNovaSaida)
             })
             .then(function (dadosJSON) {
                 if (dadosJSON) {
-                console.log(dadosJSON);
-                    criarCategorias(areaControlados, txtNomeCategoria.value, 0, valorSaida);
+                    fetch("http://localhost/trit/api/listarCategorias.php", {
+                    method: "GET",
+                    credentials: "include",
+                })
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                        throw new Error("Erro HTTP: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                    if (dadosJSON) {
+                        let indiceLimite = 4;
+                        if(dadosJSON.categorias.length > 4){
+                            areaCategorias.appendChild(btnMais);
+                                indiceLimite = 4;
+                                listarCategorias(indiceLimite, dadosJSON.categorias);
+                                btnMais.addEventListener('click', function(e){
+                                    e.preventDefault();
+                                    btnMais.remove();
+                                    indiceLimite = dadosJSON.categorias.length;
+                                    areaCategorias.textContent = '';
+                                    listarCategorias(indiceLimite, dadosJSON.categorias);
+                                    let btnMenos = document.createElement('button');
+                                    btnMenos.textContent = 'Ver Menos';
+                                    btnMenos.classList.add('verMais');
+                                    areaCategorias.appendChild(btnMenos);
+                                    
+                                    btnMenos.addEventListener('click', function(e){
+                                        e.preventDefault();
+                                        indiceLimite = 4;
+                                        areaCategorias.textContent = '';
+                                        listarCategorias(indiceLimite, dadosJSON.categorias);
+                                        btnMenos.remove();
+                                        areaCategorias.appendChild(btnMais);
+                                    })
+                                })
+                            }else{
+                                indiceLimite = dadosJSON.categorias.length;
+                                listarCategorias(indiceLimite, dadosJSON.categorias);
+                            }     
+                        }
+                    })
+                    .catch(function (error) {
+                        console.warn(error);
+                    })
+                    .finally(function () {
+                    });
+                
                 }
             })
             .catch(function (error) {
                 console.warn(error);
             })
             .finally(function () {
+                let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
+    
+                areaNovaCategoria.remove();
+                bloqueio.appendChild(areaNovaSaida);
+                document.querySelector('.selecionarCategorias').remove();
+                areaSelecao(areaInfos, areaNovaSaida);
+                opcaoSelecionada.textContent = nomeCategoriaAtual;
+    
+                // const opcaoCriada = document.createElement('p');
+                // opcaoCriada.classList.add('opcao');
+                // opcaoCriada.classList.add('opcaoEscolher');
+                // opcaoCriada.textContent = nomeCategoriaAtual;
+                // opcaoNovaCategoria.setAttribute('codigo')
+    
+                // naoSelecionado.prepend(opcaoCriada);
+                selecionada();
             });
-
-            // fazer axios onde
-
-            // é criada uma nova categoria com as variaveis:
-            // txtNomeCategoria.value (referente ao nome da categoria)
-            // txtValorLimite.value (referente ao valor máximo estabelecido para a categoria)
-
-            let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
-
-            areaNovaCategoria.remove();
-            areaNovaSaida.style.display = 'flex';
-            opcaoSelecionada.textContent = nomeCategoriaAtual;
-
-            const opcaoCriada = document.createElement('p');
-            opcaoCriada.classList.add('opcao');
-            opcaoCriada.classList.add('opcaoEscolher');
-            opcaoCriada.textContent = nomeCategoriaAtual;
-
-            naoSelecionado.prepend(opcaoCriada);
-            selecionada();
         })
 
     })
@@ -1159,5 +1180,45 @@ function procuraVirgula(valorEx){
         return valorEx + ',00';
     }else{
         return valorEx;
+    }
+}
+
+function listarCategorias(indiceLista, dadosLista){
+    for (let i = 0; i < indiceLista; i++) {
+        const categoria = dadosLista[i];
+        fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+            {
+                "categoria":categoria.Codigo
+            }
+            ),
+        })
+        .then(function (resposta) {
+            if (!resposta.ok) {
+                throw new Error("Erro HTTP: " + resposta.status);
+            }
+            return resposta.json();
+        })
+        .then(function (dadosJSON) {
+            if (dadosJSON) {
+                let valor = dadosJSON.Valor;
+                let valorLimite = String(categoria.ValorLimite).replace(',','.');
+                valor = Number(valor);
+                valorLimite = Number(valorLimite);
+                criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite);
+                
+            }
+            
+        })
+        .catch(function (error) {
+            console.warn(error);
+        })
+        .finally(function () {
+        });         
     }
 }

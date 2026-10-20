@@ -431,3 +431,7 @@ input:disabled{
 .verMais:active{
     color:rgb(29, 59, 90);
 }
+
+.areaCategorias{
+    padding: 0;
+}

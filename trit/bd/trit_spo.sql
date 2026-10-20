@@ -517,5 +517,16 @@ delimiter $$
 				SET vl_cofrinho_atual = vl_cofrinho_atual - pValor
 				WHERE  cd_cofrinho = pCodigoCofrinho;
 		END$$
-    
+        
+	DROP PROCEDURE IF EXISTS calcular_cofrinhos_completados$$
+    CREATE PROCEDURE calcular_cofrinhos_completados(pEmail VARCHAR(200))
+    BEGIN
+    DECLARE qtdUsuario INT DEFAULT 0;
+    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+				IF qtdUsuario = 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+				END IF;
+            
+	select count(*) as completados from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final;  	
+	END;  
 delimiter ;
