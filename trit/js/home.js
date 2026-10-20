@@ -583,8 +583,8 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
 .then(function (dadosJSON) {
     if (dadosJSON) {
         let indiceLimite = 4;
-        areaCategorias.appendChild(btnMais);
         if(dadosJSON.categorias.length > 4){
+            areaCategorias.appendChild(btnMais);
                 indiceLimite = 4;
                 listarCategorias(indiceLimite, dadosJSON.categorias);
                 btnMais.addEventListener('click', function(e){
@@ -966,69 +966,47 @@ function areaSelecao(local, areaNovaSaida)
             })
             .then(function (dadosJSON) {
                 if (dadosJSON) {
-                console.log(dadosJSON);
-                fetch("http://localhost/trit/api/listarCategorias.php", {
+                    fetch("http://localhost/trit/api/listarCategorias.php", {
                     method: "GET",
                     credentials: "include",
-                    })
-                    .then(function (resposta) {
-                        if (!resposta.ok) {
-                            throw new Error("Erro HTTP: " + resposta.status);
-                        }
-                        return resposta.json();
-                    })
-                    .then(function (dadosJSON) {
-                        if (dadosJSON) {
-                            let indiceLimite = 4;
-                            if(dadosJSON.categorias.length > 4){
+                })
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                        throw new Error("Erro HTTP: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                    if (dadosJSON) {
+                        let indiceLimite = 4;
+                        if(dadosJSON.categorias.length > 4){
+                            areaCategorias.appendChild(btnMais);
                                 indiceLimite = 4;
+                                listarCategorias(indiceLimite, dadosJSON.categorias);
                                 btnMais.addEventListener('click', function(e){
                                     e.preventDefault();
+                                    btnMais.remove();
                                     indiceLimite = dadosJSON.categorias.length;
-                                    console.log(indiceLimite);
+                                    areaCategorias.textContent = '';
+                                    listarCategorias(indiceLimite, dadosJSON.categorias);
+                                    let btnMenos = document.createElement('button');
+                                    btnMenos.textContent = 'Ver Menos';
+                                    btnMenos.classList.add('verMais');
+                                    areaCategorias.appendChild(btnMenos);
+                                    
+                                    btnMenos.addEventListener('click', function(e){
+                                        e.preventDefault();
+                                        indiceLimite = 4;
+                                        areaCategorias.textContent = '';
+                                        listarCategorias(indiceLimite, dadosJSON.categorias);
+                                        btnMenos.remove();
+                                        areaCategorias.appendChild(btnMais);
+                                    })
                                 })
                             }else{
                                 indiceLimite = dadosJSON.categorias.length;
-                            }
-                            
-                            for (let i = 0; i < indiceLimite; i++) {
-                                const categoria = dadosJSON.categorias[i];
-                                fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
-                                    method: "POST",
-                                    credentials: "include",
-                                    headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(
-                                    {
-                                        "categoria":categoria.Codigo
-                                    }
-                                    ),
-                                })
-                                .then(function (resposta) {
-                                    if (!resposta.ok) {
-                                        throw new Error("Erro HTTP: " + resposta.status);
-                                    }
-                                    return resposta.json();
-                                })
-                                .then(function (dadosJSON) {
-                                    if (dadosJSON) {
-                                        let valor = dadosJSON.Valor;
-                                        let valorLimite = String(categoria.ValorLimite).replace(',','.');
-                                        valor = Number(valor);
-                                        valorLimite = Number(valorLimite);
-                                        criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite);
-                                        
-                                    }
-                                    areaCategorias.appendChild(btnMais);
-                                    
-                                })
-                                .catch(function (error) {
-                                    console.warn(error);
-                                })
-                                .finally(function () {
-                                });         
-                            }
+                                listarCategorias(indiceLimite, dadosJSON.categorias);
+                            }     
                         }
                     })
                     .catch(function (error) {
@@ -1036,35 +1014,30 @@ function areaSelecao(local, areaNovaSaida)
                     })
                     .finally(function () {
                     });
+                
                 }
             })
             .catch(function (error) {
                 console.warn(error);
             })
             .finally(function () {
+                let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
+    
+                areaNovaCategoria.remove();
+                bloqueio.appendChild(areaNovaSaida);
+                document.querySelector('.selecionarCategorias').remove();
+                areaSelecao(areaInfos, areaNovaSaida);
+                opcaoSelecionada.textContent = nomeCategoriaAtual;
+    
+                // const opcaoCriada = document.createElement('p');
+                // opcaoCriada.classList.add('opcao');
+                // opcaoCriada.classList.add('opcaoEscolher');
+                // opcaoCriada.textContent = nomeCategoriaAtual;
+                // opcaoNovaCategoria.setAttribute('codigo')
+    
+                // naoSelecionado.prepend(opcaoCriada);
+                selecionada();
             });
-
-            // fazer axios onde
-
-            // é criada uma nova categoria com as variaveis:
-            // txtNomeCategoria.value (referente ao nome da categoria)
-            // txtValorLimite.value (referente ao valor máximo estabelecido para a categoria)
-
-            let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
-
-            areaNovaCategoria.remove();
-            bloqueio.appendChild(areaNovaSaida);
-            opcaoSelecionada.textContent = nomeCategoriaAtual;
-
-            const opcaoCriada = document.createElement('p');
-            opcaoCriada.classList.add('opcao');
-            opcaoCriada.classList.add('opcaoEscolher');
-            opcaoCriada.textContent = nomeCategoriaAtual;
-
-            // nao cria a nova cat, apenas chama dnv
-
-            naoSelecionado.prepend(opcaoCriada);
-            selecionada();
         })
 
     })
@@ -1211,7 +1184,6 @@ function procuraVirgula(valorEx){
 }
 
 function listarCategorias(indiceLista, dadosLista){
-    console.log(dadosLista);
     for (let i = 0; i < indiceLista; i++) {
         const categoria = dadosLista[i];
         fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
