@@ -418,3 +418,16 @@ input:disabled{
     background-color: rgb(29, 59, 90);
     border: none;
 }
+
+.verMais{
+    width: fit-content;
+    text-align: start;
+    background: none;
+    border: none !important;
+    color:rgb(9, 95, 184);
+    cursor: pointer;
+}
+
+.verMais:active{
+    color:rgb(29, 59, 90);
+}
