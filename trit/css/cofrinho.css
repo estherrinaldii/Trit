@@ -108,6 +108,14 @@ section{
     grid-template-columns: repeat(3, 1fr);
 }
 
+.areaAdicionar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 170px;
+}
+
 .planta{
     position: relative;
     display: flex;
@@ -191,6 +199,7 @@ button{
     border-radius: 10px;
     border: solid rgb(9, 95, 184) 2px;
     font-weight: 450;
+    color: rgb(9, 95, 184);
 }
 
 .btnSair{

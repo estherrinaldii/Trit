@@ -1,4 +1,5 @@
 const main = document.querySelector('main');
+const body = document.querySelector('body');
 
 if(!document.querySelector('.planta'))
 {
@@ -19,11 +20,11 @@ if(!document.querySelector('.planta'))
 
 const btnAdicionar = document.querySelector('.btnAdicionar');
 
+const bloqueio = document.createElement('div');
+bloqueio.classList.add('bloqueio')
+
 btnAdicionar.addEventListener('click', function(e){
     e.preventDefault();
-
-    const bloqueio = document.createElement('div');
-    bloqueio.classList.add('bloqueio');
 
     const areaCriarCofre = document.createElement('div');
     areaCriarCofre.classList.add('popup');
@@ -109,7 +110,7 @@ btnAdicionar.addEventListener('click', function(e){
     areaCriarCofre.append(areaTitulo, areaInfos, btnSalvar)
 
     bloqueio.appendChild(areaCriarCofre);
-    main.appendChild(bloqueio);
+    body.appendChild(bloqueio);
 
     btnSair.addEventListener('click', function(e){
         e.preventDefault();
@@ -152,6 +153,112 @@ btnAdicionar.addEventListener('click', function(e){
         avisoSair(bloqueio);
     })
 })
+
+const plantas = document.querySelectorAll('.planta');
+
+for (let i = 0; i < plantas.length; i++) {
+    const plantaSelecionada = plantas[i];
+    
+    plantaSelecionada.addEventListener('click', function(e){
+        e.preventDefault()
+
+        const areaConsultarCofre = document.createElement('div');
+        areaConsultarCofre.classList.add('popup');
+
+        const cofreConsultar = document.createElement('div');
+
+        const plantaIcon = document.createElement('img');
+        plantaIcon.src = 'img/plantas/icons/lirio-icon.svg';
+
+        const nomeCofre = document.createElement('p');
+        nomeCofre.textContent = 'Algo muito legal';
+
+        cofreConsultar.append(plantaIcon, nomeCofre);
+
+        const areaInfos = document.createElement('div');
+
+        const areaValorDepositado = document.createElement('div');
+
+        const tituloValorDepositado = document.createElement('p');
+        tituloValorDepositado.textContent = 'Valor depositado:';
+
+        const valorDepositado = document.createElement('div');
+        valorDepositado.textContent = 'R$ 26,00';
+
+        areaValorDepositado.append(tituloValorDepositado, valorDepositado);
+
+        const areaValorLimite = document.createElement('div');
+
+        const tituloValorLimite = document.createElement('p');
+        tituloValorLimite.textContent = 'Valor limite:';
+
+        const valorLimite = document.createElement('div');
+        valorLimite.textContent = 'R$ 800,00';
+
+        areaValorLimite.append(tituloValorLimite, valorLimite);
+
+        const areaDataCriacao = document.createElement('div');
+
+        const tituloDataCriacao = document.createElement('p');
+        tituloDataCriacao.textContent = 'Data:';
+
+        const dataCriacao = document.createElement('div');
+        dataCriacao.textContent = '12/02/2020';
+
+        areaDataCriacao.append(tituloDataCriacao, dataCriacao);
+
+        const areaPeriodo = document.createElement('div');
+
+        const tituloPeriodo = document.createElement('p');
+        tituloPeriodo.textContent = 'Valor limite:';
+
+        const periodo = document.createElement('div');
+        periodo.textContent = 'Indeterminado';
+
+        areaPeriodo.append(tituloPeriodo, periodo);
+        areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaPeriodo);
+
+        const areaBotoes = document.createElement('div');
+
+        const btnGuardar = document.createElement('button');
+        btnGuardar.textContent = 'Guardar';
+
+        const btnResgatar = document.createElement('button');
+        btnResgatar.textContent = 'Resgatar';
+
+        areaBotoes.append(btnGuardar, btnResgatar);
+
+        const areaConfig = document.createElement('div');
+
+        const btnEditar = document.createElement('div');
+
+        const editarIcon = document.createElement('img');
+        editarIcon.src = 'img/editar.svg';
+
+        const editar = document.createElement('p');
+        editar.textContent = 'Editar dados';
+
+        btnEditar.append(editarIcon, editar);
+
+        const btnExcluir = document.createElement('div');
+
+        const excluirIcon = document.createElement('img');
+        excluirIcon.src = 'img/excluir.svg';
+
+        const excluir = document.createElement('p');
+        excluir.textContent = 'Excluir';
+
+        btnExcluir.append(excluirIcon, excluir);
+
+        areaConfig.append(btnEditar, btnExcluir);
+
+        btnSair = botaoSair();
+
+        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaBotoes, areaConfig);
+        bloqueio.appendChild(areaConsultarCofre);
+        body.appendChild(bloqueio);
+    })
+}
 
 function botaoSair()
 {
