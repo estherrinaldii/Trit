@@ -518,6 +518,39 @@ delimiter $$
 				WHERE  cd_cofrinho = pCodigoCofrinho;
 		END$$
         
+        
+    DROP PROCEDURE IF EXISTS listar_extrato$$
+	CREATE PROCEDURE listar_extrato(pEmail VARCHAR(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+        DECLARE pCarteira INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+        
+        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+        
+        SELECT 'entrada' AS origem, cd_entrada AS codigo, nm_entrada AS nome, vl_entrada AS valor, dt_entrada AS data
+			FROM entrada
+			WHERE FK_cd_carteira = pCarteira
+
+		UNION ALL
+
+		SELECT 'saida', cd_saida, nm_saida, vl_saida, dt_saida
+			FROM saida
+			WHERE FK_cd_carteira = pCarteira
+
+		UNION ALL
+
+		SELECT 'cofrinho', mc.cd_movimentacao, mc.ic_tipo_movimentacao, mc.vl_movimentacao, mc.dt_movimentacao
+			FROM movimentacao_cofrinho mc
+			WHERE mc.FK_nm_email = pEmail
+
+		ORDER BY data DESC;
+	END$$    
+        
 	DROP PROCEDURE IF EXISTS calcular_cofrinhos_completados$$
     CREATE PROCEDURE calcular_cofrinhos_completados(pEmail VARCHAR(200))
     BEGIN
