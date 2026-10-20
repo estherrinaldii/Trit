@@ -46,7 +46,7 @@ try {
 	}
 
 	http_response_code(500);
-	echo json_encode(['status' => 'false', 'mensagem'=> $erro->getMessage()]);
+	echo json_encode(['status' => 'false', 'mensagem' => $mensagem]);
 }
 
 function validaCorpoRequisicao($corpo)
