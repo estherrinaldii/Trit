@@ -164,8 +164,10 @@ for (let i = 0; i < plantas.length; i++) {
 
         const areaConsultarCofre = document.createElement('div');
         areaConsultarCofre.classList.add('popup');
+        areaConsultarCofre.classList.add('areaConsultarCofre');
 
         const cofreConsultar = document.createElement('div');
+        cofreConsultar.classList.add('cofreConsultar');
 
         const plantaIcon = document.createElement('img');
         plantaIcon.src = 'img/plantas/icons/lirio-icon.svg';
@@ -176,11 +178,14 @@ for (let i = 0; i < plantas.length; i++) {
         cofreConsultar.append(plantaIcon, nomeCofre);
 
         const areaInfos = document.createElement('div');
+        areaInfos.classList.add('infosCofrinho');
 
         const areaValorDepositado = document.createElement('div');
+        areaValorDepositado.classList.add('areaInfos');
 
         const tituloValorDepositado = document.createElement('p');
-        tituloValorDepositado.textContent = 'Valor depositado:';
+        tituloValorDepositado.textContent = 'Valor atual:';
+        tituloValorDepositado.classList.add('tituloInfos');
 
         const valorDepositado = document.createElement('div');
         valorDepositado.textContent = 'R$ 26,00';
@@ -188,9 +193,11 @@ for (let i = 0; i < plantas.length; i++) {
         areaValorDepositado.append(tituloValorDepositado, valorDepositado);
 
         const areaValorLimite = document.createElement('div');
+        areaValorLimite.classList.add('areaInfos');
 
         const tituloValorLimite = document.createElement('p');
         tituloValorLimite.textContent = 'Valor limite:';
+        tituloValorLimite.classList.add('tituloInfos');
 
         const valorLimite = document.createElement('div');
         valorLimite.textContent = 'R$ 800,00';
@@ -198,9 +205,11 @@ for (let i = 0; i < plantas.length; i++) {
         areaValorLimite.append(tituloValorLimite, valorLimite);
 
         const areaDataCriacao = document.createElement('div');
+        areaDataCriacao.classList.add('areaInfos');
 
         const tituloDataCriacao = document.createElement('p');
         tituloDataCriacao.textContent = 'Data:';
+        tituloDataCriacao.classList.add('tituloInfos');
 
         const dataCriacao = document.createElement('div');
         dataCriacao.textContent = '12/02/2020';
@@ -208,29 +217,35 @@ for (let i = 0; i < plantas.length; i++) {
         areaDataCriacao.append(tituloDataCriacao, dataCriacao);
 
         const areaPeriodo = document.createElement('div');
+        areaPeriodo.classList.add('areaInfos');
 
         const tituloPeriodo = document.createElement('p');
-        tituloPeriodo.textContent = 'Valor limite:';
+        tituloPeriodo.textContent = 'Período:';
+        tituloPeriodo.classList.add('tituloInfos');
 
         const periodo = document.createElement('div');
-        periodo.textContent = 'Indeterminado';
 
         areaPeriodo.append(tituloPeriodo, periodo);
         areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaPeriodo);
 
         const areaBotoes = document.createElement('div');
+        areaBotoes.classList.add('areaBotoes');
 
         const btnGuardar = document.createElement('button');
         btnGuardar.textContent = 'Guardar';
+        btnGuardar.classList.add('btnGuardar');
 
         const btnResgatar = document.createElement('button');
         btnResgatar.textContent = 'Resgatar';
+        btnResgatar.classList.add('btnResgatar');
 
         areaBotoes.append(btnGuardar, btnResgatar);
 
         const areaConfig = document.createElement('div');
+        areaConfig.classList.add('areaConfig');
 
         const btnEditar = document.createElement('div');
+        btnEditar.classList.add('btnEditar');
 
         const editarIcon = document.createElement('img');
         editarIcon.src = 'img/editar.svg';
@@ -241,6 +256,7 @@ for (let i = 0; i < plantas.length; i++) {
         btnEditar.append(editarIcon, editar);
 
         const btnExcluir = document.createElement('div');
+        btnExcluir.classList.add('btnExcluir');
 
         const excluirIcon = document.createElement('img');
         excluirIcon.src = 'img/excluir.svg';
@@ -253,10 +269,48 @@ for (let i = 0; i < plantas.length; i++) {
         areaConfig.append(btnEditar, btnExcluir);
 
         btnSair = botaoSair();
+        btnSair.classList.add('btnSairPosicao');
 
-        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaBotoes, areaConfig);
+        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos);
+
+        if(plantaSelecionada.querySelector('.determinado'))
+        {
+            periodo.textContent = 'Determinado';
+
+            const areaDica = document.createElement('div');
+            areaDica.classList.add('areaDica');
+
+            const fundoDica = document.createElement('img');
+            fundoDica.src = 'img/fundoDica.svg';
+            fundoDica.classList.add('fundoDica');
+
+            const dica = document.createElement('p');
+            dica.textContent = '*Caso junte R$' + '500,00' + ' por mês baterá sua meta com tranqulidade!';
+            dica.classList.add('dica');
+
+            const avisoIcon = document.createElement('img');
+            avisoIcon.src = 'img/aviso-icon.svg';
+            avisoIcon.classList.add('avisoIcon');
+
+            areaDica.append(fundoDica, dica, avisoIcon);
+            areaConsultarCofre.appendChild(areaDica)
+
+        }
+        else
+        {
+            periodo.textContent = 'Indeterminado';
+        }
+
+        areaConsultarCofre.append(areaBotoes, areaConfig);
         bloqueio.appendChild(areaConsultarCofre);
         body.appendChild(bloqueio);
+
+        btnSair.addEventListener('click', function(e){
+            e.preventDefault();
+
+            areaConsultarCofre.remove();
+            bloqueio.remove();
+        })
     })
 }
 
