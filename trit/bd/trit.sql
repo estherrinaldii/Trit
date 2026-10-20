@@ -124,7 +124,7 @@ CREATE TABLE Movimentacao_Cofrinho(
 	cd_movimentacao int not null,
     vl_movimentacao DECIMAL(10,2) NOT NULL,
     dt_movimentacao date not null,
-    ic_tipo_movimentacao ENUM('depositar', 'resgatar') NOT NULL,
+    ic_tipo_movimentacao ENUM('guardar', 'resgatar') NOT NULL,
      FK_nm_email VARCHAR(200) NOT NULL,
      FK_cd_cofrinho INT NOT NULL,
 	CONSTRAINT FK_Movimentacao_Usuario

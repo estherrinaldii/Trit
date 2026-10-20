@@ -436,8 +436,8 @@ delimiter $$
         DELETE FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
     END$$
     
-    DROP PROCEDURE IF EXISTS depositar_cofrinho$$
-    CREATE PROCEDURE  depositar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
+    DROP PROCEDURE IF EXISTS guardar_cofrinho$$
+    CREATE PROCEDURE  guardar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
     BEGIN
 			DECLARE pCarteira INT DEFAULT 0;
 			DECLARE qtdUsuario INT DEFAULT 0;
