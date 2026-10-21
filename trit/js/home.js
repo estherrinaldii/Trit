@@ -64,10 +64,8 @@ method: "GET",
 })
 .catch(function (error) {
     console.warn(error);
-    // O que fazer se der erro na requisição
 })
 .finally(function () {
-    // O que fazer independente de ter dado erro ou não
 });
 
 const body = document.querySelector('body');
@@ -82,318 +80,7 @@ bloqueio.classList.add('bloqueio');
 
 btnNovaSaida.addEventListener('click', function(e){
     e.preventDefault();
-
-    const areaNovaSaida = document.createElement('div');
-    areaNovaSaida.classList.add('popup');
-
-    const areaTitulo = document.createElement('div');
-    areaTitulo.classList.add('areaTitulo');
-
-    const tituloNovaSaida = document.createElement('p');
-    tituloNovaSaida.classList.add('titulo');
-    tituloNovaSaida.classList.add('tituloPopup');
-    tituloNovaSaida.textContent = 'Nova saída';
-
-    btnSair = botaoSair();
-
-    const opcoesSaida = document.createElement('div');
-    opcoesSaida.classList.add('opcoesSaida');
-
-    const btnCategorizado = document.createElement('button');
-    btnCategorizado.textContent = 'Categorizada';
-
-    const btnFixo = document.createElement('button');
-    btnFixo.textContent = 'Fixa';
-
-    const btnParcelado = document.createElement('button');
-    btnParcelado.textContent = 'Parcelada';
-
-    areaTitulo.append(tituloNovaSaida, btnSair);
-
-    opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
-
-    areaNovaSaida.append(areaTitulo, opcoesSaida);
-
-    bloqueio.appendChild(areaNovaSaida)
-
-    body.append(bloqueio);
-
-    btnSair.addEventListener('click', function(e){
-        e.preventDefault();
-
-        areaNovaSaida.remove();
-        bloqueio.remove();
-    })
-
-    const areaInfos = document.createElement('div');
-    areaInfos.classList.add('infos');
-
-    const areaNomeSaida = document.createElement('div');
-    areaNomeSaida.classList.add('areaDigitar');
-
-    const labelNomeSaida = document.createElement('label');
-    labelNomeSaida.textContent = 'Nome:'
-
-    const txtNomeSaida = document.createElement('input');
-    txtNomeSaida.type = 'text';
-    txtNomeSaida.classList.add('recuoPopup');
-    areaRight = obrigatorioIcon(txtNomeSaida);
-
-    areaNomeSaida.append(labelNomeSaida, areaRight);
-
-    const divAlinhamento = document.createElement('div');
-    divAlinhamento.classList.add('divAlinhamento');
-
-    const areaTipoSaida = document.createElement('div');
-    areaTipoSaida.classList.add('areaDigitar');
-
-    const labelTipoSaida = document.createElement('label');
-    labelTipoSaida.textContent = 'Tipo:'
-
-    const txtTipoSaida = document.createElement('input');
-    txtTipoSaida.type = 'text';
-    txtTipoSaida.disabled = true;
-
-    areaTipoSaida.append(labelTipoSaida, txtTipoSaida);
-
-    const areaDataSaida = document.createElement('div');
-    areaDataSaida.classList.add('areaDigitar');
-
-    const labelDataSaida = document.createElement('label');
-    labelDataSaida.textContent = 'Data:'
-
-    const txtDataSaida = document.createElement('input');
-    txtDataSaida.type = 'text';
-    txtDataSaida.classList.add('recuoPopup');
-    areaRight = obrigatorioIcon(txtDataSaida);
-    areaDataSaida.append(labelDataSaida, areaRight);
-
-    const areaDataLimite = document.createElement('div');
-    areaDataLimite.classList.add('areaDigitar');
-
-    const labelDataLimite = document.createElement('label');
-    labelDataLimite.textContent = 'Data Limite:'
-
-    const txtDataLimite = document.createElement('input');
-    txtDataLimite.type = 'text';
-    txtDataLimite.classList.add('recuoPopup');
-    areaRight = obrigatorioIcon(txtDataLimite);
-    areaDataLimite.append(labelDataLimite, areaRight);
-
-    const areaValorSaida = document.createElement('div');
-    areaValorSaida.classList.add('areaDigitar');
-
-    const labelValorSaida = document.createElement('label');
-    labelValorSaida.textContent = 'Valor:'
-
-    const areaLeft = document.createElement('div');
-    areaLeft.classList.add('areaLeft');
-
-    const txtValorSaida = document.createElement('input');
-    txtValorSaida.type = 'number';
-    txtValorSaida.classList.add('recuoPopup');
-    txtValorSaida.classList.add('inputMoeda');
-
-    const moeda = document.createElement('p');
-    moeda.textContent = 'R$';
-    moeda.classList.add('moeda');
-
-    areaLeft.append(txtValorSaida, moeda);
-    areaValorSaida.append(labelValorSaida, obrigatorioIcon(areaLeft));
-
-    const areaParcelas = document.createElement('div');
-    areaParcelas.classList.add('areaDigitar');
-
-    const labelParcelas = document.createElement('label');
-    labelParcelas.textContent = 'Nº de parcelas:'
-
-    const txtParcelas = document.createElement('input');
-    txtParcelas.type = 'number';
-    txtParcelas.classList.add('recuoPopup');
-    areaRight = obrigatorioIcon(txtParcelas);
-    areaParcelas.append(labelParcelas, areaRight);
-
-    const btnSalvar = document.createElement('button');
-    btnSalvar.textContent = 'Salvar';
-    btnSalvar.classList.add('btnSalvar');
-
-    btnCategorizado.addEventListener('click', function(e){
-        e.preventDefault();
-        
-        opcoesSaida.remove();
-        divAlinhamento.innerHTML = '';
-        areaInfos.innerHTML = '';
-        txtTipoSaida.value = 'Categorizada';
-        
-        divAlinhamento.append(areaTipoSaida, areaDataSaida);
-        
-        areaSelecao(areaInfos, areaNovaSaida);
-        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-        areaNovaSaida.append(areaInfos, btnSalvar);
-    })
-
-    btnFixo.addEventListener('click', function(e){
-
-        opcoesSaida.remove();
-        divAlinhamento.innerHTML = '';
-        areaInfos.innerHTML = '';
-        txtTipoSaida.value = 'Fixa';
-
-        divAlinhamento.append(areaTipoSaida, areaDataSaida);
-
-        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-        areaNovaSaida.append(areaInfos, btnSalvar);
-    })
-
-    btnParcelado.addEventListener('click', function(e){
-        e.preventDefault();
-
-        opcoesSaida.remove();
-        divAlinhamento.innerHTML = '';
-        areaInfos.innerHTML = '';
-        txtTipoSaida.value = 'Parcelada';
-
-        divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
-
-        areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-        areaNovaSaida.append(areaInfos, btnSalvar);
-    })
-
-    btnSalvar.addEventListener('click', function(e){
-        e.preventDefault();
-        
-        if(txtTipoSaida.value == 'Categorizada') 
-        {
-
-            if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')
-            {
-                erro(null, 'Selecione uma categoria!', areaInfos);
-                return;
-            }
-        }
-
-        if(txtNomeSaida.value == '')
-        {
-            erro(txtNomeSaida, 'Nome não foi informado!', areaInfos);
-            return;
-        }
-
-        if(txtDataSaida.value == '')
-        {
-            erro(txtDataSaida, 'Data não foi informada!', areaInfos);
-            return;
-        }
-
-        if(txtTipoSaida.value == 'Parcelada')
-        {
-
-            if(txtDataLimite.value == '')
-            {
-                erro(txtDataLimite, 'Data limite não foi informada!', areaInfos);
-                return; 
-            }
-
-            if(txtParcelas.value == '')
-            {
-                erro(txtParcelas, 'Número de parcelas não informado!', areaInfos);
-                return;
-            }
-        }
-
-        if(txtValorSaida.value == '')
-        {
-            erro(txtValorSaida, 'Valor não foi informado!', areaInfos);
-            return;
-        }
-
-        const selecionado = document.querySelector('.areaOpcaoSelecionada p');
-        if(txtTipoSaida.value == 'Categorizada'){
-            let categoria = selecionado.getAttribute('codigo');
-            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
-            let valor = String(txtValorSaida.value).replace(',','.');
-            valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, null, null, null, categoria);
-        }
-
-
-        if(txtTipoSaida.value == 'Fixa'){
-            let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
-            let valor = String(txtValorSaida.value).replace(',','.');
-            valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null);
-        }
-
-        if(txtTipoSaida.value == 'Parcelada'){
-            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
-            let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
-            let valor = String(txtValorSaida.value).replace(',','.');
-            valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null);
-        }
-
-        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria){
-            fetch("http://localhost/trit/api/criarSaida.php", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-                {
-                    "nome":txtNome,
-                    "valor":txtValor,
-                    "data":txtData,
-                    "prazo":txtDataLimite,
-                    "tipo":txtTipo.toLowerCase(),
-                    "status":txtStatus,
-                    "parcelas":txtParcelas,
-                    "categoria":txtCategoria
-                }
-            ),
-            })
-            .then(function (resposta) {
-                if (!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-                }
-                return resposta.json();
-            })
-            .then(function (dadosJSON) {
-                if (dadosJSON) {
-                areaNomeSaida.remove();
-                bloqueio.remove();
-                bloqueio.innerHTML = '';
-                    if(txtTipo === 'Categorizada'){
-                        let nomeCategoria = selecionado.textContent;
-                        let categorias = document.querySelectorAll('.controlado');
-                        for (let i = 0; i < categorias.length; i++) {
-                            const categoria = categorias[i];
-                            if(categoria.querySelector('.tituloControlado p').textContent == nomeCategoria){
-                                    alterarProgresso(txtValor, categoria);
-                                    alterarCarteira(txtValor);
-                            }
-                        }
-
-                    }
-
-                    if(txtTipo === 'Fixa'){
-                        console.log('fixou!');
-                        alterarCarteira(txtValor);
-                    }
-
-                    if(txtTipo === 'Parcelada'){
-                        console.log('parcelou!');
-                        alterarCarteira(txtValor);
-                    }
-                }
-            })
-            .catch(function (error) {
-                console.warn(error);
-            })
-            .finally(function () {
-            });
-        }
-
-    })
+    criarSaida();
 })
 
 btnNovaEntrada.addEventListener('click', function(e){
@@ -593,6 +280,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
                     indiceLimite = dadosJSON.categorias.length;
                     areaCategorias.textContent = '';
                     listarCategorias(indiceLimite, dadosJSON.categorias);
+
                     let btnMenos = document.createElement('button');
                     btnMenos.textContent = 'Ver Menos';
                     btnMenos.classList.add('verMais');
@@ -979,35 +667,26 @@ function areaSelecao(local, areaNovaSaida)
                 .then(function (dadosJSON) {
                     if (dadosJSON) {
                         let indiceLimite = 4;
-                        if(dadosJSON.categorias.length > 4){
+                        if(dadosJSON.categoria.length > 4){
+                            listarCategorias(dadosJSON.categoria.length, dadosJSON.categoria);
                             areaCategorias.appendChild(btnMais);
-                                indiceLimite = 4;
+
+                            let btnMenos = document.createElement('button');
+                            btnMenos.textContent = 'Ver Menos';
+                            btnMenos.classList.add('verMais');
+                            areaCategorias.appendChild(btnMenos);
+                            
+                            btnMenos.addEventListener('click', function(e){
+                                e.preventDefault();
+                                areaCategorias.textContent = '';
                                 listarCategorias(indiceLimite, dadosJSON.categorias);
-                                btnMais.addEventListener('click', function(e){
-                                    e.preventDefault();
-                                    btnMais.remove();
-                                    indiceLimite = dadosJSON.categorias.length;
-                                    areaCategorias.textContent = '';
-                                    listarCategorias(indiceLimite, dadosJSON.categorias);
-                                    let btnMenos = document.createElement('button');
-                                    btnMenos.textContent = 'Ver Menos';
-                                    btnMenos.classList.add('verMais');
-                                    areaCategorias.appendChild(btnMenos);
-                                    
-                                    btnMenos.addEventListener('click', function(e){
-                                        e.preventDefault();
-                                        indiceLimite = 4;
-                                        areaCategorias.textContent = '';
-                                        listarCategorias(indiceLimite, dadosJSON.categorias);
-                                        btnMenos.remove();
-                                        areaCategorias.appendChild(btnMais);
-                                    })
-                                })
-                            }else{
-                                indiceLimite = dadosJSON.categorias.length;
-                                listarCategorias(indiceLimite, dadosJSON.categorias);
-                            }     
+                                btnMenos.remove();
+                                areaCategorias.appendChild(btnMais);
+                            })
+                        }else{
+                            listarCategorias(dadosJSON.categoria.length, dadosJSON.categoria);
                         }
+                    }
                     })
                     .catch(function (error) {
                         console.warn(error);
@@ -1022,12 +701,11 @@ function areaSelecao(local, areaNovaSaida)
             })
             .finally(function () {
                 let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
-    
                 areaNovaCategoria.remove();
-                bloqueio.appendChild(areaNovaSaida);
-                document.querySelector('.selecionarCategorias').remove();
-                areaSelecao(areaInfos, areaNovaSaida);
-                opcaoSelecionada.textContent = nomeCategoriaAtual;
+                criarSaida('Categorizada');
+    
+                // bloqueio.appendChild(areaNovaSaida);
+                // opcaoSelecionada.textContent = nomeCategoriaAtual;
     
                 // const opcaoCriada = document.createElement('p');
                 // opcaoCriada.classList.add('opcao');
@@ -1036,7 +714,7 @@ function areaSelecao(local, areaNovaSaida)
                 // opcaoNovaCategoria.setAttribute('codigo')
     
                 // naoSelecionado.prepend(opcaoCriada);
-                selecionada();
+                // selecionada();
             });
         })
 
@@ -1221,4 +899,334 @@ function listarCategorias(indiceLista, dadosLista){
         .finally(function () {
         });         
     }
+}
+
+
+function criarSaida(txtTipo){
+    const areaNovaSaida = document.createElement('div');
+    areaNovaSaida.classList.add('popup');
+
+    const areaTitulo = document.createElement('div');
+    areaTitulo.classList.add('areaTitulo');
+
+    const tituloNovaSaida = document.createElement('p');
+    tituloNovaSaida.classList.add('titulo');
+    tituloNovaSaida.classList.add('tituloPopup');
+    tituloNovaSaida.textContent = 'Nova saída';
+
+    btnSair = botaoSair();
+
+    const opcoesSaida = document.createElement('div');
+    opcoesSaida.classList.add('opcoesSaida');
+
+    const btnCategorizado = document.createElement('button');
+    btnCategorizado.textContent = 'Categorizada';
+
+    const btnFixo = document.createElement('button');
+    btnFixo.textContent = 'Fixa';
+
+    const btnParcelado = document.createElement('button');
+    btnParcelado.textContent = 'Parcelada';
+
+    areaTitulo.append(tituloNovaSaida, btnSair);
+
+    opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
+
+    areaNovaSaida.append(areaTitulo, opcoesSaida);
+
+    bloqueio.appendChild(areaNovaSaida)
+
+    body.append(bloqueio);
+
+    btnSair.addEventListener('click', function(e){
+        e.preventDefault();
+
+        areaNovaSaida.remove();
+        bloqueio.remove();
+    })
+
+    const areaInfos = document.createElement('div');
+    areaInfos.classList.add('infos');
+
+    const areaNomeSaida = document.createElement('div');
+    areaNomeSaida.classList.add('areaDigitar');
+
+    const labelNomeSaida = document.createElement('label');
+    labelNomeSaida.textContent = 'Nome:'
+
+    const txtNomeSaida = document.createElement('input');
+    txtNomeSaida.type = 'text';
+    txtNomeSaida.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtNomeSaida);
+
+    areaNomeSaida.append(labelNomeSaida, areaRight);
+
+    const divAlinhamento = document.createElement('div');
+    divAlinhamento.classList.add('divAlinhamento');
+
+    const areaTipoSaida = document.createElement('div');
+    areaTipoSaida.classList.add('areaDigitar');
+
+    const labelTipoSaida = document.createElement('label');
+    labelTipoSaida.textContent = 'Tipo:'
+
+    const txtTipoSaida = document.createElement('input');
+    txtTipoSaida.type = 'text';
+    txtTipoSaida.disabled = true;
+
+    areaTipoSaida.append(labelTipoSaida, txtTipoSaida);
+
+    const areaDataSaida = document.createElement('div');
+    areaDataSaida.classList.add('areaDigitar');
+
+    const labelDataSaida = document.createElement('label');
+    labelDataSaida.textContent = 'Data:'
+
+    const txtDataSaida = document.createElement('input');
+    txtDataSaida.type = 'text';
+    txtDataSaida.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtDataSaida);
+    areaDataSaida.append(labelDataSaida, areaRight);
+
+    const areaDataLimite = document.createElement('div');
+    areaDataLimite.classList.add('areaDigitar');
+
+    const labelDataLimite = document.createElement('label');
+    labelDataLimite.textContent = 'Data Limite:'
+
+    const txtDataLimite = document.createElement('input');
+    txtDataLimite.type = 'text';
+    txtDataLimite.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtDataLimite);
+    areaDataLimite.append(labelDataLimite, areaRight);
+
+    const areaValorSaida = document.createElement('div');
+    areaValorSaida.classList.add('areaDigitar');
+
+    const labelValorSaida = document.createElement('label');
+    labelValorSaida.textContent = 'Valor:'
+
+    const areaLeft = document.createElement('div');
+    areaLeft.classList.add('areaLeft');
+
+    const txtValorSaida = document.createElement('input');
+    txtValorSaida.type = 'number';
+    txtValorSaida.classList.add('recuoPopup');
+    txtValorSaida.classList.add('inputMoeda');
+
+    const moeda = document.createElement('p');
+    moeda.textContent = 'R$';
+    moeda.classList.add('moeda');
+
+    areaLeft.append(txtValorSaida, moeda);
+    areaValorSaida.append(labelValorSaida, obrigatorioIcon(areaLeft));
+
+    const areaParcelas = document.createElement('div');
+    areaParcelas.classList.add('areaDigitar');
+
+    const labelParcelas = document.createElement('label');
+    labelParcelas.textContent = 'Nº de parcelas:'
+
+    const txtParcelas = document.createElement('input');
+    txtParcelas.type = 'number';
+    txtParcelas.classList.add('recuoPopup');
+    areaRight = obrigatorioIcon(txtParcelas);
+    areaParcelas.append(labelParcelas, areaRight);
+
+    const btnSalvar = document.createElement('button');
+    btnSalvar.textContent = 'Salvar';
+    btnSalvar.classList.add('btnSalvar');
+
+    if(!txtTipo || txtTipo == null || txtTipo == ''){
+        btnCategorizado.addEventListener('click', function(e){
+            e.preventDefault();
+            
+            opcoesSaida.remove();
+            divAlinhamento.innerHTML = '';
+            areaInfos.innerHTML = '';
+            txtTipoSaida.value = 'Categorizada';
+            
+            divAlinhamento.append(areaTipoSaida, areaDataSaida);
+            
+            areaSelecao(areaInfos, areaNovaSaida);
+            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+            areaNovaSaida.append(areaInfos, btnSalvar);
+        })
+
+        btnFixo.addEventListener('click', function(e){
+
+            opcoesSaida.remove();
+            divAlinhamento.innerHTML = '';
+            areaInfos.innerHTML = '';
+            txtTipoSaida.value = 'Fixa';
+
+            divAlinhamento.append(areaTipoSaida, areaDataSaida);
+
+            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+            areaNovaSaida.append(areaInfos, btnSalvar);
+        })
+
+        btnParcelado.addEventListener('click', function(e){
+            e.preventDefault();
+
+            opcoesSaida.remove();
+            divAlinhamento.innerHTML = '';
+            areaInfos.innerHTML = '';
+            txtTipoSaida.value = 'Parcelada';
+
+            divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
+
+            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+            areaNovaSaida.append(areaInfos, btnSalvar);
+        })
+    }else{
+        if(txtTipo == 'Categorizada'){
+            opcoesSaida.remove();
+            divAlinhamento.innerHTML = '';
+            areaInfos.innerHTML = '';
+            txtTipoSaida.value = 'Categorizada';
+            
+            divAlinhamento.append(areaTipoSaida, areaDataSaida);
+            
+            areaSelecao(areaInfos, areaNovaSaida);
+            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+            areaNovaSaida.append(areaInfos, btnSalvar);
+        }
+    }
+
+    btnSalvar.addEventListener('click', function(e){
+        e.preventDefault();
+        
+        if(txtTipoSaida.value == 'Categorizada') 
+        {
+
+            if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')
+            {
+                erro(null, 'Selecione uma categoria!', areaInfos);
+                return;
+            }
+        }
+
+        if(txtNomeSaida.value == '')
+        {
+            erro(txtNomeSaida, 'Nome não foi informado!', areaInfos);
+            return;
+        }
+
+        if(txtDataSaida.value == '')
+        {
+            erro(txtDataSaida, 'Data não foi informada!', areaInfos);
+            return;
+        }
+
+        if(txtTipoSaida.value == 'Parcelada')
+        {
+
+            if(txtDataLimite.value == '')
+            {
+                erro(txtDataLimite, 'Data limite não foi informada!', areaInfos);
+                return; 
+            }
+
+            if(txtParcelas.value == '')
+            {
+                erro(txtParcelas, 'Número de parcelas não informado!', areaInfos);
+                return;
+            }
+        }
+
+        if(txtValorSaida.value == '')
+        {
+            erro(txtValorSaida, 'Valor não foi informado!', areaInfos);
+            return;
+        }
+
+        const selecionado = document.querySelector('.areaOpcaoSelecionada p');
+        if(txtTipoSaida.value == 'Categorizada'){
+            let categoria = selecionado.getAttribute('codigo');
+            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
+            let valor = String(txtValorSaida.value).replace(',','.');
+            valor = Number(valor);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, null, null, null, categoria);
+        }
+
+
+        if(txtTipoSaida.value == 'Fixa'){
+            let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
+            let valor = String(txtValorSaida.value).replace(',','.');
+            valor = Number(valor);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null);
+        }
+
+        if(txtTipoSaida.value == 'Parcelada'){
+            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
+            let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
+            let valor = String(txtValorSaida.value).replace(',','.');
+            valor = Number(valor);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null);
+        }
+
+        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria){
+            fetch("http://localhost/trit/api/criarSaida.php", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    "nome":txtNome,
+                    "valor":txtValor,
+                    "data":txtData,
+                    "prazo":txtDataLimite,
+                    "tipo":txtTipo.toLowerCase(),
+                    "status":txtStatus,
+                    "parcelas":txtParcelas,
+                    "categoria":txtCategoria
+                }
+            ),
+            })
+            .then(function (resposta) {
+                if (!resposta.ok) {
+                throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+            })
+            .then(function (dadosJSON) {
+                if (dadosJSON) {
+                areaNomeSaida.remove();
+                bloqueio.remove();
+                bloqueio.innerHTML = '';
+                    if(txtTipo === 'Categorizada'){
+                        let nomeCategoria = selecionado.textContent;
+                        let categorias = document.querySelectorAll('.controlado');
+                        for (let i = 0; i < categorias.length; i++) {
+                            const categoria = categorias[i];
+                            if(categoria.querySelector('.tituloControlado p').textContent == nomeCategoria){
+                                    alterarProgresso(txtValor, categoria);
+                                    alterarCarteira(txtValor);
+                            }
+                        }
+
+                    }
+
+                    if(txtTipo === 'Fixa'){
+                        console.log('fixou!');
+                        alterarCarteira(txtValor);
+                    }
+
+                    if(txtTipo === 'Parcelada'){
+                        console.log('parcelou!');
+                        alterarCarteira(txtValor);
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.warn(error);
+            })
+            .finally(function () {
+            });
+        }
+
+    })
 }

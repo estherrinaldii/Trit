@@ -50,6 +50,11 @@ header{
     padding-left: 16px;
 }
 
+main{
+    overflow: auto;
+    margin-bottom: 8px;
+}
+
 .areaGalho{
     min-height: 145px;
     display: flex;
@@ -58,7 +63,8 @@ header{
 }
 
 .areaRenda{
-    padding: 24px;
+    position: relative;
+    right: 8px;
     font-size: 20px;
     color: rgb(9, 95, 184);
     display: flex;
@@ -332,6 +338,7 @@ progress::-webkit-progress-value {
 }
 
 .opcao{
+    font-size: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -434,4 +441,5 @@ input:disabled{
 
 .areaCategorias{
     padding: 0;
+    gap: 8px;
 }
