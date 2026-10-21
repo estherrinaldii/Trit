@@ -83,3 +83,19 @@ export function obrigatorioIcon(input){
 
     return areaRight;
 }
+
+
+export function botaoSair()
+{
+    const btnSair = document.createElement('button');
+    btnSair.classList.add('btnSair');
+
+    const imgSair = document.createElement('img');
+    imgSair.src = 'img/sair.png';
+    imgSair.alt = 'icone sair';
+    imgSair.classList.add('imgSair');
+
+    btnSair.appendChild(imgSair);
+
+    return btnSair;
+}

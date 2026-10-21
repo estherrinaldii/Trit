@@ -126,9 +126,23 @@ progress::-webkit-progress-bar {
   border-radius: 4px;
 }
 progress::-webkit-progress-value {
-  background-color: rgb(131, 9, 184);
+  background-color: rgb(9, 95, 184);
   border-radius: 4px;
 }
+
+/* alteração de valor */
+.meio::-webkit-progress-value {
+    background-color: #8309B8;
+}
+
+.alto::-webkit-progress-value {
+    background-color: #B209B8;
+}
+
+.limite::-webkit-progress-value {
+    background-color: rgb(255, 85, 85);
+}
+/*  */
 
 .fixo{
     background-color: rgb(9, 95, 184, 0.21);

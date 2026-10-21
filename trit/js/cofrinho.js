@@ -1,4 +1,4 @@
-import { erro, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
 const main = document.querySelector('main');
 const body = document.querySelector('body');
@@ -537,21 +537,6 @@ for (let i = 0; i < plantas.length; i++) {
 
         })
     })
-}
-
-function botaoSair()
-{
-    const btnSair = document.createElement('button');
-    btnSair.classList.add('btnSair');
-
-    const imgSair = document.createElement('img');
-    imgSair.src = 'img/sair.png';
-    imgSair.alt = 'icone sair';
-    imgSair.classList.add('imgSair');
-
-    btnSair.appendChild(imgSair);
-
-    return btnSair;
 }
 
 function areaSelecaoPlanta(local)

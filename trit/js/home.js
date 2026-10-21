@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/trit/login.html";
 }
 
-import { erro, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
@@ -85,7 +85,7 @@ msgErro.classList.add('erro');
 
 btnNovaSaida.addEventListener('click', function(e){
     e.preventDefault();
-    criarSaida();
+    criarAreaSaida();
 })
 
 btnNovaEntrada.addEventListener('click', function(e){
@@ -274,6 +274,11 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
 })
 .then(function (dadosJSON) {
     if (dadosJSON) {
+        // for (let i = 0; i < local.length; i++) {
+        //     console.log(local[i]);
+        //     alterarProgresso(null, local[i]);
+        // }
+
         let indiceLimite = 4;
         if(dadosJSON.categorias.length > 4){
             areaCategorias.appendChild(btnMais);
@@ -311,7 +316,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
     })
     .finally(function () {
     });
-    
+
 function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
     let valorAtualEx = String(txtValorAtual).replace('.',',');
     let valorLimiteEx = String(txtValorLimite).replace('.',',');
@@ -366,18 +371,23 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
             const barraProgresso = document.createElement('progress');
             barraProgresso.setAttribute('max', 100);
             let progresso = (Number(txtValorAtual) * 100) / Number(txtValorLimite);
-        
-            if(progresso <= 100)
-            {
-                barraProgresso.setAttribute('value', progresso);
+            barraProgresso.setAttribute('value', progresso);
+            
+            if(progresso >= 35 && progresso < 65){
+                barraProgresso.classList.add('leve');
+            }else{
+                if(progresso >= 65 && progresso < 100){
+                    barraProgresso.classList.add('meio');
+                }else{
+                    if(progresso >= 100){
+                        barraProgresso.classList.add('limite');
+                        barraProgresso.setAttribute('value', 100);
+                        textoAtual.style.color = 'rgb(255, 85, 85)';
+                        moedaAtual.style.color = 'rgb(255, 85, 85)';
+                    }
+                }
             }
-            else
-            {
-                barraProgresso.setAttribute('value', 100);
-                textoAtual.style.color = 'rgb(255, 85, 85)';
-                moedaAtual.style.color = 'rgb(255, 85, 85)';
-            }
-        
+
         infosControlado.appendChild(tituloControlado);
         infosControlado.appendChild(barraProgresso);
 
@@ -403,23 +413,6 @@ function alterarCarteira(txtValor){
         carteira = carteira + ',00';
     }
     document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
-}
-
-function botaoSair()
-{
-    const btnSair = document.createElement('button');
-    btnSair.classList.add('btnSair');
-
-    const imgSair = document.createElement('img');
-    imgSair.src = 'img/sair.png';
-    imgSair.alt = 'icone sair';
-    imgSair.classList.add('imgSair');
-
-    btnSair.appendChild(imgSair);
-
-    avisoSair(bloqueio);
-
-    return btnSair;
 }
 
 function areaSelecao(local, areaNovaSaida)
@@ -712,7 +705,7 @@ function areaSelecao(local, areaNovaSaida)
             .finally(function () {
                 // let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
                 areaNovaCategoria.remove();
-                criarSaida('Categorizada');
+                criarAreaSaida('Categorizada');
                 selecionada();
             });
         })
@@ -744,35 +737,47 @@ function FormatarData(txtData){
 }
 
 
-function alterarProgresso(txtValor, categoria){
-    let valorAtual = categoria.querySelector('#valorAtualControlado').textContent.replace(',','.');
-    let valorTotal = categoria.querySelector('#valorTotalControlado').textContent.replace(',','.');
+function alterarProgresso(txtValor, local){
+    let valorAtual = local.querySelector('#valorAtualControlado').textContent.replace(',','.');
+    let valorTotal = local.querySelector('#valorTotalControlado').textContent.replace(',','.');
     valorAtual = Number(valorAtual);
     valorTotal = Number(valorTotal);
 
     let valorAdicionado = valorAtual + Number(txtValor);
-
-
-    let progressoAtual = categoria.querySelector('progress');
     let valorProgresso = (valorAdicionado * 100) / valorTotal;
+
+    let progressoAtual = local.querySelector('progress');
     progressoAtual.setAttribute('value', valorProgresso);
 
     if(valorProgresso <= 100)
         {
             progressoAtual.setAttribute('value', valorProgresso);
+
+            if(valorProgresso >= 35 && valorProgresso < 65){
+                progressoAtual.classList.add('leve');
+            }else{
+                if(valorProgresso >= 65 && valorProgresso < 100){
+                    progressoAtual.classList.add('meio');
+                }else{
+                    progressoAtual.classList.add('limite');
+                }
+            }
+
         }
         else
         {
             progressoAtual.setAttribute('value', 100);
-            categoria.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
-            categoria.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
+            progressoAtual.classList.add('limite');
+            local.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
+            local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
         }
 
         if(!String(valorAdicionado).includes('.'))
         {
             valorAdicionado = valorAdicionado + ',00';
         }
-        categoria.querySelector('#valorAtualControlado').textContent = String(valorAdicionado).replace('.',',');
+        local.querySelector('#valorAtualControlado').textContent = String(valorAdicionado).replace('.',',');
+
 }
 
 function procuraVirgula(valorEx){
@@ -811,7 +816,6 @@ function listarCategorias(indiceLista, dadosLista){
                 valor = Number(valor);
                 valorLimite = Number(valorLimite);
                 criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite);
-                
             }
             
         })
@@ -824,7 +828,7 @@ function listarCategorias(indiceLista, dadosLista){
 }
 
 
-function criarSaida(txtTipo){
+function criarAreaSaida(txtTipo){
     const areaNovaSaida = document.createElement('div');
     areaNovaSaida.classList.add('popup');
 
@@ -1066,90 +1070,91 @@ function criarSaida(txtTipo){
 
         const selecionado = document.querySelector('.areaOpcaoSelecionada p');
         if(txtTipoSaida.value == 'Categorizada'){
+            areaNovaSaida.remove();
             let categoria = selecionado.getAttribute('codigo');
             let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, null, null, null, categoria);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, null, null, null, categoria, selecionado);
         }
 
 
         if(txtTipoSaida.value == 'Fixa'){
+            areaNovaSaida.remove();
             let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null, selecionado);
         }
 
         if(txtTipoSaida.value == 'Parcelada'){
+            areaNovaSaida.remove();
             let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null);
+            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null, selecionado);
         }
-
-        function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria){
-            fetch("http://localhost/trit/api/criarSaida.php", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-                {
-                    "nome":txtNome,
-                    "valor":txtValor,
-                    "data":txtData,
-                    "prazo":txtDataLimite,
-                    "tipo":txtTipo.toLowerCase(),
-                    "status":txtStatus,
-                    "parcelas":txtParcelas,
-                    "categoria":txtCategoria
-                }
-            ),
-            })
-            .then(function (resposta) {
-                if (!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-                }
-                return resposta.json();
-            })
-            .then(function (dadosJSON) {
-                if (dadosJSON) {
-                areaNomeSaida.remove();
-                bloqueio.remove();
-                bloqueio.innerHTML = '';
-                    if(txtTipo === 'Categorizada'){
-                        let nomeCategoria = selecionado.textContent;
-                        let categorias = document.querySelectorAll('.controlado');
-                        for (let i = 0; i < categorias.length; i++) {
-                            const categoria = categorias[i];
-                            if(categoria.querySelector('.tituloControlado p').textContent == nomeCategoria){
-                                    alterarProgresso(txtValor, categoria);
-                                    alterarCarteira(txtValor);
-                            }
-                        }
-
-                    }
-
-                    if(txtTipo === 'Fixa'){
-                        console.log('fixou!');
-                        alterarCarteira(txtValor);
-                    }
-
-                    if(txtTipo === 'Parcelada'){
-                        console.log('parcelou!');
-                        alterarCarteira(txtValor);
-                    }
-                }
-            })
-            .catch(function (error) {
-                console.warn(error);
-            })
-            .finally(function () {
-            });
-        }
-
     })
+}
+
+function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria, selecionado){
+    fetch("http://localhost/trit/api/criarSaida.php", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(
+        {
+            "nome":txtNome,
+            "valor":txtValor,
+            "data":txtData,
+            "prazo":txtDataLimite,
+            "tipo":txtTipo.toLowerCase(),
+            "status":txtStatus,
+            "parcelas":txtParcelas,
+            "categoria":txtCategoria
+        }
+    ),
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        bloqueio.remove();
+        bloqueio.innerHTML = '';
+            if(txtTipo === 'Categorizada'){
+                let nomeCategoria = selecionado.textContent;
+                let categorias = document.querySelectorAll('.controlado');
+                for (let i = 0; i < categorias.length; i++) {
+                    const categoria = categorias[i];
+                    if(categoria.querySelector('.tituloControlado p').textContent == nomeCategoria){
+                            alterarProgresso(txtValor, categoria);
+                            alterarCarteira(txtValor);
+                    }
+                }
+
+            }
+
+            if(txtTipo === 'Fixa'){
+                console.log('fixou!');
+                alterarCarteira(txtValor);
+            }
+
+            if(txtTipo === 'Parcelada'){
+                console.log('parcelou!');
+                alterarCarteira(txtValor);
+            }
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    })
+    .finally(function () {
+    });
 }
