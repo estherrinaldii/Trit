@@ -207,3 +207,23 @@ INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrin
 INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (9, 'Reforma da cozinha', '2026-08-01 09:00:00', '2027-02-28', 6000.00, 'determinado', 1500.00,'maria.souza@gmail.com', 1);
 INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (10, 'Aposentadoria', '2026-04-12 10:30:00', NULL, 50000.00, 'indeterminado', 8200.00, 'joao.silva@gmail.com', 2);
 INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (11, 'Moto nova', '2026-02-02 15:00:00', '2026-08-15', 9000.00, 'determinado', 9000.00,'ana.costa@gmail.com', 3);
+
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (1, 'Salário Mensal', 1400.00, '2026-08-01', 1);
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (2, 'Trabalho Freelance', 350.00, '2026-08-10', 1);
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (3, 'Reembolso de Despesa', 75.50, '2026-08-15', 1);
+
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (1, 300.00, '2026-08-02', 'guardar', 'sabrina.carpinteira@gmail.com', 1);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (2, 500.00, '2026-08-05', 'guardar', 'sabrina.carpinteira@gmail.com', 2);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (3, 200.00, '2026-08-12', 'resgatar', 'sabrina.carpinteira@gmail.com', 6);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (4, 50.00, '2026-08-18', 'guardar', 'sabrina.carpinteira@gmail.com', 8);
+
+-- TESTE
+
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (4, 'Bônus Anual', 1200.00, '2025-12-20', 1);
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (5, 'Restituição de Imposto de Renda', 850.00, '2026-05-30', 1);
+INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (6, 'Projeto Consultoria', 2500.00, '2027-02-14', 1);
+
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (5, 450.00, '2025-11-10', 'guardar', 'sabrina.carpinteira@gmail.com', 1);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (6, 1000.00, '2026-04-15', 'guardar', 'sabrina.carpinteira@gmail.com', 2);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (7, 300.00, '2027-03-05', 'resgatar', 'sabrina.carpinteira@gmail.com', 6);
+INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (8, 150.00, '2027-01-10', 'guardar', 'sabrina.carpinteira@gmail.com', 8);

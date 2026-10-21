@@ -520,10 +520,11 @@ delimiter $$
         
         
     DROP PROCEDURE IF EXISTS listar_extrato$$
-	CREATE PROCEDURE listar_extrato(pEmail VARCHAR(200))
+	CREATE PROCEDURE listar_extrato(pEmail VARCHAR(200), pAno INT, pMes INT)
 	BEGIN
 		DECLARE qtdUsuario INT DEFAULT 0;
         DECLARE pCarteira INT DEFAULT 0;
+        DECLARE pInicio DATE DEFAULT  '1000-01-01';
         
         SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
 			IF qtdUsuario = 0 THEN
@@ -532,21 +533,32 @@ delimiter $$
         
         SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
         
+        IF pAno !=  -1 THEN
+			IF pMes != -1 THEN
+				SET pInicio = MAKEDATE(pAno, 1) + INTERVAL (pMes - 1) MONTH;
+            ELSE
+				SET pInicio = MAKEDATE(pAno, 1);				
+			END IF;
+        end if;
+        
         SELECT 'entrada' AS origem, cd_entrada AS codigo, nm_entrada AS nome, vl_entrada AS valor, dt_entrada AS data
 			FROM entrada
 			WHERE FK_cd_carteira = pCarteira
+            AND dt_entrada >= pInicio
 
 		UNION ALL
 
 		SELECT 'saida', cd_saida, nm_saida, vl_saida, dt_saida
 			FROM saida
 			WHERE FK_cd_carteira = pCarteira
+            AND dt_saida >= pInicio
 
 		UNION ALL
 
-		SELECT 'cofrinho', mc.cd_movimentacao, mc.ic_tipo_movimentacao, mc.vl_movimentacao, mc.dt_movimentacao
+		SELECT 'movimentação', cd_movimentacao, ic_tipo_movimentacao, vl_movimentacao, dt_movimentacao
 			FROM movimentacao_cofrinho mc
 			WHERE mc.FK_nm_email = pEmail
+            AND dt_movimentacao >= pInicio
 
 		ORDER BY data DESC;
 	END$$    
