@@ -2,6 +2,8 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/trit/login.html";
 }
 
+import { erro, avisoSair, obrigatorioIcon } from "./funcoes.js";
+
 const galho = document.querySelector('#galho');
 function mudaFaseArvore(valorAtual, valorTotal){
     let porcentagem = (valorAtual * 100) / valorTotal;
@@ -412,6 +414,8 @@ function botaoSair()
 
     btnSair.appendChild(imgSair);
 
+    avisoSair(bloqueio);
+
     return btnSair;
 }
 
@@ -667,10 +671,13 @@ function areaSelecao(local, areaNovaSaida)
                 .then(function (dadosJSON) {
                     if (dadosJSON) {
                         let indiceLimite = 4;
-                        if(dadosJSON.categoria.length > 4){
-                            listarCategorias(dadosJSON.categoria.length, dadosJSON.categoria);
+                        areaCategorias.textContent = '';
+                        if(dadosJSON.categorias.length > 4){
+                            console.log(dadosJSON.categorias);
+                            listarCategorias(dadosJSON.categorias.length, dadosJSON.categorias);
                             areaCategorias.appendChild(btnMais);
 
+                            btnMais.remove();
                             let btnMenos = document.createElement('button');
                             btnMenos.textContent = 'Ver Menos';
                             btnMenos.classList.add('verMais');
@@ -684,7 +691,7 @@ function areaSelecao(local, areaNovaSaida)
                                 areaCategorias.appendChild(btnMais);
                             })
                         }else{
-                            listarCategorias(dadosJSON.categoria.length, dadosJSON.categoria);
+                            listarCategorias(dadosJSON.categorias.length, dadosJSON.categorias);
                         }
                     }
                     })
@@ -700,21 +707,10 @@ function areaSelecao(local, areaNovaSaida)
                 console.warn(error);
             })
             .finally(function () {
-                let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
+                // let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
                 areaNovaCategoria.remove();
                 criarSaida('Categorizada');
-    
-                // bloqueio.appendChild(areaNovaSaida);
-                // opcaoSelecionada.textContent = nomeCategoriaAtual;
-    
-                // const opcaoCriada = document.createElement('p');
-                // opcaoCriada.classList.add('opcao');
-                // opcaoCriada.classList.add('opcaoEscolher');
-                // opcaoCriada.textContent = nomeCategoriaAtual;
-                // opcaoNovaCategoria.setAttribute('codigo')
-    
-                // naoSelecionado.prepend(opcaoCriada);
-                // selecionada();
+                selecionada();
             });
         })
 
@@ -736,86 +732,9 @@ function areaSelecao(local, areaNovaSaida)
     }
 }
 
-function erro(input, mensagem, local){
-    
-    if(input)
-    {
-        input.classList.add('inputErro');
-        setTimeout(() => {
-            input.classList.remove('inputErro');
-        }, 2000); 
-    }
-    
-    if(mensagem)
-    {
-        msgErro.textContent = mensagem;
-        local.appendChild(msgErro);
-
-        setTimeout(() => {
-            msgErro.remove();
-        }, 2000); 
-    }  
-}
-
-function obrigatorioIcon(input){
-
-    const areaRight = document.createElement('div');
-    areaRight.classList.add('areaRight');
-
-    const obrigatorio = document.createElement('p');
-    obrigatorio.textContent = '•'
-    obrigatorio.classList.add('obrigatorio');
-
-    areaRight.append(input, obrigatorio);
-
-    input.addEventListener('input', function(e){
-
-        if(input.getAttribute('type') == 'text' || input.getAttribute('type') == 'password')
-        {
-            if(input.value.trim() != "")
-            {
-                obrigatorio.remove();
-            }
-            else
-            {
-                areaRight.appendChild(obrigatorio);
-            }
-        }
-        else
-        {
-            if(input.value != "")
-            {
-                obrigatorio.remove();
-            }
-            else
-            {
-                areaRight.appendChild(obrigatorio);
-            }
-        }
-        
-    })
-
-    return areaRight;
-}
-
-function FormatarData(input, txtData, local){
+function FormatarData(txtData){
     let data = txtData.value;
     let conjuntoData = data.split("/");
-    
-    if(conjuntoData[0].length > 4){
-        erro(input, 'A data inserida está inválida!', local);
-        return;
-    }
-    
-    if(conjuntoData[1].length > 12){
-        erro(input, 'A data inserida está inválida!', local);
-        return;
-    }
-    
-    if(conjuntoData[2].length > 31){
-        erro(input, 'A data inserida está inválida!', local);
-        return;
-    }
     
     let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
     return dataFormatada;
