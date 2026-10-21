@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+body{
+    min-height: 100vh;
+}
+
+.menu{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: fit-content;
+    background-color: white;
+}
+
+a{
+    padding: 6px;
+    border-top: solid 2px transparent;
+}
+
+a img{
+    height: 48px;
+}
+
+.selecionado{
+    background-color: rgb(204, 246, 162);
+    border-top: solid 2px rgb(9, 95, 184);
+}
+
+.guia{
+    font-size: 16px;
+    color: rgb(29, 59, 90);
+    padding-left: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+header{
+    width: 100%;
+    padding: 16px;
+}
+
+.areaAviso{
+    font-size: 24px;
+    color: rgb(9, 95, 184);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.btnOk, .btnSalvar, .btnGuardar, .btnCancelar{
+    background-color: rgb(9, 95, 184);
+    color: white;
+}
+
+.btnOk:active, .btnSalvar:active, .btnGuardar:active, .btnCancelar:active{
+    background-color: rgb(29, 59, 90);
+    border: solid transparent 2px;
+}
+
+
+.infos{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.erro{
+    color: rgb(255, 85, 85);
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.areaDigitar{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+}
+
+.bloqueio{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(29, 59, 90, 0.46);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup{
+    background-color: white;
+    position: fixed;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    width: 80%;
+}

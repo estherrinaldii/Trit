@@ -26,7 +26,9 @@ msgErro.classList.add('erro');
 const btnAdicionar = document.querySelector('.btnAdicionar');
 
 const bloqueio = document.createElement('div');
-bloqueio.classList.add('bloqueio')
+bloqueio.classList.add('bloqueio');
+let btnSair = botaoSair();
+let areaRight = 0;
 
 btnAdicionar.addEventListener('click', function(e){
     e.preventDefault();

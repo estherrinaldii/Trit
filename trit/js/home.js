@@ -4,6 +4,12 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
 
 import { erro, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
+const bloqueio = document.createElement('div');
+bloqueio.classList.add('bloqueio');
+let btnSair = botaoSair();
+let areaRight = 0;
+
+
 const galho = document.querySelector('#galho');
 function mudaFaseArvore(valorAtual, valorTotal){
     let porcentagem = (valorAtual * 100) / valorTotal;
@@ -77,9 +83,6 @@ const btnNovaEntrada = document.querySelector('#novaEntrada');
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
 
-const bloqueio = document.createElement('div');
-bloqueio.classList.add('bloqueio');
-
 btnNovaSaida.addEventListener('click', function(e){
     e.preventDefault();
     criarSaida();
@@ -102,7 +105,7 @@ btnNovaEntrada.addEventListener('click', function(e){
     tituloNovaEntrada.classList.add('titulo');
     tituloNovaEntrada.classList.add('tituloPopup');
 
-    btnSair = botaoSair();
+   btnSair = botaoSair();
 
     areaTitulo.append(tituloNovaEntrada, btnSair);
 
@@ -170,7 +173,7 @@ btnNovaEntrada.addEventListener('click', function(e){
         e.preventDefault();
 
         areaNovaEntrada.remove();
-        bloqueio.remove();
+        avisoSair(bloqueio);
     })
 
     btnSalvar.addEventListener('click', function(e){
@@ -861,7 +864,7 @@ function criarSaida(txtTipo){
         e.preventDefault();
 
         areaNovaSaida.remove();
-        bloqueio.remove();
+        avisoSair(bloqueio);
     })
 
     const areaInfos = document.createElement('div');
@@ -973,6 +976,7 @@ function criarSaida(txtTipo){
         })
 
         btnFixo.addEventListener('click', function(e){
+            e.preventDefault();
 
             opcoesSaida.remove();
             divAlinhamento.innerHTML = '';
