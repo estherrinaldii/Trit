@@ -525,6 +525,7 @@ delimiter $$
 		DECLARE qtdUsuario INT DEFAULT 0;
         DECLARE pCarteira INT DEFAULT 0;
         DECLARE pInicio DATE DEFAULT  '1000-01-01';
+        DECLARE pFim DATE DEFAULT  '3000-12-31';
         
         SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
 			IF qtdUsuario = 0 THEN
@@ -536,29 +537,34 @@ delimiter $$
         IF pAno !=  -1 THEN
 			IF pMes != -1 THEN
 				SET pInicio = MAKEDATE(pAno, 1) + INTERVAL (pMes - 1) MONTH;
+                SET pFim = pInicio + interval 1 month;
             ELSE
-				SET pInicio = MAKEDATE(pAno, 1);				
+				SET pInicio = MAKEDATE(pAno, 1);
+				SET pFim = pInicio + interval 1 year;
 			END IF;
         end if;
         
         SELECT 'entrada' AS origem, cd_entrada AS codigo, nm_entrada AS nome, vl_entrada AS valor, dt_entrada AS data
 			FROM entrada
 			WHERE FK_cd_carteira = pCarteira
-            AND dt_entrada >= pInicio
+            AND dt_entrada >= pInicio 
+            AND dt_entrada < pFim 
 
 		UNION ALL
 
 		SELECT 'saida', cd_saida, nm_saida, vl_saida, dt_saida
 			FROM saida
 			WHERE FK_cd_carteira = pCarteira
-            AND dt_saida >= pInicio
+            AND dt_saida >= pInicio 
+            AND dt_saida < pFim 
 
 		UNION ALL
 
 		SELECT 'movimentação', cd_movimentacao, ic_tipo_movimentacao, vl_movimentacao, dt_movimentacao
 			FROM movimentacao_cofrinho mc
 			WHERE mc.FK_nm_email = pEmail
-            AND dt_movimentacao >= pInicio
+            AND dt_movimentacao >= pInicio 
+            AND dt_movimentacao < pFim 
 
 		ORDER BY data DESC;
 	END$$    
