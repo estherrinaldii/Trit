@@ -479,7 +479,7 @@ select{
     gap: 8px;
 }
 
-.btnEditar, .btnExcluir, .areaBotoesExcluir{
+.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor{
     display: flex;
     gap: 8px;
 }

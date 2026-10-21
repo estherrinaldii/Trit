@@ -57,8 +57,7 @@ btnAdicionar.addEventListener('click', function(e){
     txtNomeCofre.type = 'text';
     txtNomeCofre.classList.add('recuoPopup');
 
-    areaRight = obrigatorioIcon(txtNomeCofre);
-    areaNomeCofre.append(labelNomeCofre, areaRight);
+    areaNomeCofre.append(labelNomeCofre, obrigatorioIcon(txtNomeCofre));
 
     const areaPeriodo = document.createElement('div');
     areaPeriodo.classList.add('areaDigitar');
@@ -78,6 +77,10 @@ btnAdicionar.addEventListener('click', function(e){
     const txtDataCofre = document.createElement('input');
     txtDataCofre.type = 'text';
     txtDataCofre.disabled = true;
+    txtDataCofre.value = 'dd/mm/aaaa';
+    txtDataCofre.inputMode = 'numeric';
+
+    formataInputData(txtDataCofre, null);
 
     areaPeriodo.append(labelPeriodo, areaSelecaoPeriodo(txtDataCofre))
     areaDataCofre.append(labelDataCofre, txtDataCofre);
@@ -88,12 +91,25 @@ btnAdicionar.addEventListener('click', function(e){
     const labelValorCofre = document.createElement('label');
     labelValorCofre.textContent = 'Valor limite:';
 
-    const txtValorCofre = document.createElement('input');
-    txtValorCofre.type = 'number';
-    txtValorCofre.classList.add('recuoPopup');
+    const areaLeft = document.createElement('div');
+    areaLeft.classList.add('areaLeft');
 
-    areaRight = obrigatorioIcon(txtValorCofre);
-    areaValorCofre.append(labelValorCofre, areaRight);
+    const txtValorCofre = document.createElement('input');
+    txtValorCofre.type = 'text';
+    txtValorCofre.inputMode = 'numeric';
+    txtValorCofre.value = '0,00';
+    txtValorCofre.classList.add('recuoPopup');
+    txtValorCofre.classList.add('inputMoeda');
+
+    const moeda = document.createElement('p');
+    moeda.textContent = 'R$';
+    moeda.classList.add('moeda');
+
+    areaLeft.append(txtValorCofre, moeda);
+
+    formataInputValor(txtValorCofre, null);
+
+    areaValorCofre.append(labelValorCofre, obrigatorioIcon(areaLeft));
     divAlinhamento.append(areaDataCofre, areaValorCofre);
 
     const areaPlantaSelecionada = document.createElement('div');
@@ -133,14 +149,14 @@ btnAdicionar.addEventListener('click', function(e){
 
         if(document.querySelector('.periodoSelecionado').textContent == 'Determinado')
         {
-            if(txtDataCofre.value == '')
+            erroEncontrado = validaData(txtDataCofre, areaInfos);
+            if(erroEncontrado)
             {
-                erro(txtDataCofre, 'Data não foi informada!', areaInfos);
                 return;
             }
         }
 
-        if(txtValorCofre.value == '')
+        if(txtValorCofre.value == '' || txtValorCofre.value == '0,00')
         {
             erro(txtValorCofre, 'Valor limite não foi informado!', areaInfos);
             return;
@@ -153,7 +169,7 @@ btnAdicionar.addEventListener('click', function(e){
         }
 
         areaCriarCofre.remove();
-        avisoSair(bloqueio);
+        bloqueio.remove();
     })
 })
 
@@ -161,6 +177,7 @@ const plantas = document.querySelectorAll('.planta');
 
 for (let i = 0; i < plantas.length; i++) {
     const plantaSelecionada = plantas[i];
+    const tituloCofres = document.querySelectorAll('.tituloCofre');
     
     plantaSelecionada.addEventListener('click', function(e){
         e.preventDefault()
@@ -191,8 +208,15 @@ for (let i = 0; i < plantas.length; i++) {
         tituloValorDepositado.classList.add('tituloInfos');
 
         const valorDepositado = document.createElement('div');
-        valorDepositado.textContent = 'R$ 26,00';
+        valorDepositado.classList.add('valor');
+        
+        const valorDepositadoMoeda = document.createElement('p');
+        valorDepositadoMoeda.textContent = 'R$';
 
+        const valorDepositadoReal = document.createElement('p');
+        valorDepositadoReal.textContent = '26,00';
+
+        valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
         areaValorDepositado.append(tituloValorDepositado, valorDepositado);
 
         const areaValorLimite = document.createElement('div');
@@ -203,8 +227,15 @@ for (let i = 0; i < plantas.length; i++) {
         tituloValorLimite.classList.add('tituloInfos');
 
         const valorLimite = document.createElement('div');
-        valorLimite.textContent = 'R$ 800,00';
+        valorLimite.classList.add('valor');
+        
+        const valorLimiteMoeda = document.createElement('p');
+        valorLimiteMoeda.textContent = 'R$';
 
+        const valorLimiteReal = document.createElement('p');
+        valorLimiteReal.textContent = '800,00';
+
+        valorLimite.append(valorLimiteMoeda, valorLimiteReal);
         areaValorLimite.append(tituloValorLimite, valorLimite);
 
         const areaDataCriacao = document.createElement('div');
@@ -214,7 +245,7 @@ for (let i = 0; i < plantas.length; i++) {
         tituloDataCriacao.textContent = 'Data:';
         tituloDataCriacao.classList.add('tituloInfos');
 
-        const dataCriacao = document.createElement('div');
+        const dataCriacao = document.createElement('p');
         dataCriacao.textContent = '12/02/2020';
 
         areaDataCriacao.append(tituloDataCriacao, dataCriacao);
@@ -226,10 +257,54 @@ for (let i = 0; i < plantas.length; i++) {
         tituloPeriodo.textContent = 'Período:';
         tituloPeriodo.classList.add('tituloInfos');
 
-        const periodo = document.createElement('div');
+        const periodo = document.createElement('p');
 
         areaPeriodo.append(tituloPeriodo, periodo);
-        areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaPeriodo);
+
+        let areaDica = '';
+        let areaDataLimite = '';
+
+        if(plantaSelecionada.querySelector('.determinado'))
+        {
+            periodo.textContent = 'Determinado';
+
+            areaDataLimite = document.createElement('div');
+            areaDataLimite.classList.add('areaInfos');
+
+            const tituloDataLimite = document.createElement('p');
+            tituloDataLimite.textContent = 'Data limite:';
+            tituloDataLimite.classList.add('tituloInfos');
+
+            const dataLimite = document.createElement('p');
+            dataLimite.textContent = '20/10/2027';
+            dataLimite.id = 'dataLimite';
+
+            areaDataLimite.append(tituloDataLimite, dataLimite);
+            areaInfos.appendChild(areaDataLimite);
+
+            areaDica = document.createElement('div');
+            areaDica.classList.add('areaDica');
+
+            const fundoDica = document.createElement('img');
+            fundoDica.src = 'img/fundoDica.svg';
+            fundoDica.classList.add('fundoDica');
+
+            const dica = document.createElement('p');
+            dica.textContent = '*Caso junte R$' + '500,00' + ' por mês baterá sua meta com tranqulidade!';
+            dica.classList.add('dica');
+
+            const avisoIcon = document.createElement('img');
+            avisoIcon.src = 'img/aviso-icon.svg';
+            avisoIcon.classList.add('avisoIcon');
+
+            areaDica.append(fundoDica, dica, avisoIcon);
+        }
+        else
+        {
+            periodo.textContent = 'Indeterminado';
+        }
+
+        areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaDataLimite, areaPeriodo);
 
         const areaBotoes = document.createElement('div');
         areaBotoes.classList.add('areaBotoes');
@@ -274,37 +349,7 @@ for (let i = 0; i < plantas.length; i++) {
         btnSair = botaoSair();
         btnSair.classList.add('btnSairPosicao');
 
-        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos);
-
-        if(plantaSelecionada.querySelector('.determinado'))
-        {
-            periodo.textContent = 'Determinado';
-
-            const areaDica = document.createElement('div');
-            areaDica.classList.add('areaDica');
-
-            const fundoDica = document.createElement('img');
-            fundoDica.src = 'img/fundoDica.svg';
-            fundoDica.classList.add('fundoDica');
-
-            const dica = document.createElement('p');
-            dica.textContent = '*Caso junte R$' + '500,00' + ' por mês baterá sua meta com tranqulidade!';
-            dica.classList.add('dica');
-
-            const avisoIcon = document.createElement('img');
-            avisoIcon.src = 'img/aviso-icon.svg';
-            avisoIcon.classList.add('avisoIcon');
-
-            areaDica.append(fundoDica, dica, avisoIcon);
-            areaConsultarCofre.appendChild(areaDica)
-
-        }
-        else
-        {
-            periodo.textContent = 'Indeterminado';
-        }
-
-        areaConsultarCofre.append(areaBotoes, areaConfig);
+        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaDica, areaBotoes, areaConfig);
         bloqueio.appendChild(areaConsultarCofre);
         body.appendChild(bloqueio);
 
@@ -313,6 +358,127 @@ for (let i = 0; i < plantas.length; i++) {
 
             areaConsultarCofre.remove();
             bloqueio.remove();
+        })
+
+        btnGuardar.addEventListener('click', function(e){
+            e.preventDefault();
+        })
+
+        btnResgatar.addEventListener('click', function(e){
+            e.preventDefault();
+        })
+
+        btnEditar.addEventListener('click', function(e){
+            e.preventDefault();
+
+            areaConsultarCofre.remove();
+
+            const areaEditarDados = document.createElement('div');
+            areaEditarDados.classList.add('popup');
+
+            const areaTitulo = document.createElement('div');
+            areaTitulo.classList.add('areaTitulo');
+
+            const tituloEditar = document.createElement('p');
+            tituloEditar.textContent = 'Editar dados';
+            tituloEditar.classList.add('titulo');
+            tituloEditar.classList.add('tituloPopup');
+
+            btnSair = botaoSair();
+
+            areaTitulo.append(tituloEditar, btnSair);
+
+            const areaInfos = document.createElement('div');
+            areaInfos.classList.add('infos');
+
+            const areaValorLimite = document.createElement('div');
+            areaValorLimite.classList.add('areaDigitar');
+
+            const labelValorLimite = document.createElement('label');
+            labelValorLimite.textContent = 'Valor limite:';
+
+            const areaLeft = document.createElement('div');
+            areaLeft.classList.add('areaLeft');
+
+            const txtValorLimite = document.createElement('input');
+            txtValorLimite.type = 'text';
+            txtValorLimite.inputMode = 'numeric';
+            txtValorLimite.value = valorLimiteReal.textContent;
+            txtValorLimite.classList.add('recuoPopup');
+            txtValorLimite.classList.add('inputMoeda');
+
+            const moeda = document.createElement('p');
+            moeda.textContent = 'R$';
+            moeda.classList.add('moeda');
+
+            formataInputValor(txtValorLimite, valorLimiteReal.textContent);
+
+            areaLeft.append(txtValorLimite, moeda);
+            areaValorLimite.append(labelValorLimite, obrigatorioIcon(areaLeft));
+            areaInfos.appendChild(areaValorLimite);
+
+            if(periodo.textContent == 'Determinado')
+            {
+                const areaData = document.createElement('div');
+                areaData.classList.add('areaDigitar');
+
+                const labelData = document.createElement('label');
+                labelData.textContent = 'Data limite:';
+
+                const txtData = document.createElement('input');
+                txtData.type = 'text';
+                txtData.inputMode = 'numeric';
+                txtData.id = 'txtData';
+                txtData.value = areaDataLimite.querySelector('#dataLimite').textContent;
+                txtData.classList.add('recuoPopup');
+
+                areaData.append(labelData, obrigatorioIcon(txtData));
+                areaInfos.appendChild(areaData);
+
+                formataInputData(txtData, txtData.value.replaceAll('/',''));
+            }
+
+            const btnSalvar = document.createElement('button');
+            btnSalvar.textContent = 'Salvar';
+            btnSalvar.classList.add('btnSalvar');
+
+            areaEditarDados.append(areaTitulo, areaInfos, btnSalvar);
+            bloqueio.appendChild(areaEditarDados);
+
+            btnSair.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaEditarDados.remove();
+                bloqueio.appendChild(areaConsultarCofre);
+            })
+
+            btnSalvar.addEventListener('click', function(e){
+                e.preventDefault();
+
+                if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
+                {
+                    erro(txtValorLimite, 'Valor limite não foi informado!', areaInfos);
+                    return;
+                }
+
+                if(document.querySelector('#txtData'))
+                {
+                    const txtData = document.querySelector('#txtData'); 
+                    erroEncontrado = validaData(txtData, areaInfos);
+
+                    if(erroEncontrado)
+                    {
+                        return;
+                    }
+                    areaDataLimite.querySelector('#dataLimite').textContent = txtData.value;
+                }
+
+                valorLimiteReal.textContent = txtValorLimite.value;
+
+                areaEditarDados.remove();
+                bloqueio.appendChild(areaConsultarCofre);
+            })
+
         })
 
         btnExcluir.addEventListener('click',function(e){
@@ -356,6 +522,12 @@ for (let i = 0; i < plantas.length; i++) {
 
                 areaAviso.remove();
                 bloqueio.remove();
+                    
+                if(plantaSelecionada.getAttribute('codigo') == tituloCofres[i].getAttribute('codigo'));
+                {
+                    tituloCofres[i].remove();
+                }
+                
                 plantaSelecionada.remove();
             })
 
@@ -722,4 +894,141 @@ function areaSelecaoPeriodo(dataLimite)
     }
 
     return selecionarPeriodo;
+}
+
+function formataInputValor(input, valorInicial)
+{
+    let valorDigitado = '';
+
+    if(valorInicial)
+    {
+        valorDigitado = valorInicial.replace(',','');
+    }
+    console.log(valorDigitado)
+
+    input.addEventListener('keydown', function(e){
+        e.preventDefault();
+
+        if (/^\d$/.test(e.key)) 
+        {
+            valorDigitado += e.key
+        }
+
+        if (e.key === 'Backspace') 
+        {
+            valorDigitado = valorDigitado.slice(0, -1);
+        }
+
+        let valorExibir = Number(valorDigitado) / 100;
+        valorExibir = valorExibir.toFixed(2);
+        valorExibir = String(valorExibir).replace('.',',');
+
+        input.value = valorExibir;
+    })
+}
+
+function formataInputData(input, valorInicial)
+{
+    let valorDigitado = '';
+
+    if(valorInicial)
+    {
+        valorDigitado = valorInicial;
+    }
+
+    input.addEventListener('keydown', function(e){
+        e.preventDefault();
+
+        if (/^\d$/.test(e.key) && valorDigitado.length < 8) 
+        {
+            valorDigitado += e.key
+        }
+
+        if (e.key === 'Backspace') 
+        {
+            valorDigitado = valorDigitado.slice(0, -1);
+            input.disabled = false;
+        }
+
+        let valorExibir = valorDigitado.padEnd(8, ' ');
+        valorExibir = valorExibir.slice(0, 2).replace(/ /g, 'd')  + valorExibir.slice(2, 4).replace(/ /g, 'm') +  valorExibir.slice(4, 8).replace(/ /g, 'a');
+        valorExibir = valorExibir.slice(0, 2) + '/' + valorExibir.slice(2, 4) + '/' + valorExibir.slice(4);
+        
+        input.value = valorExibir;
+    })
+}
+
+function validaData(input, local){
+    
+    let valorVerificar = input.value.replaceAll('/', '');
+    let erroEncontrado = false;
+
+    if(valorVerificar == '' || valorVerificar == 'ddmmaaaa')
+    {
+        erro(input, 'Data não foi informada!', local);
+        erroEncontrado = true;
+    }
+    else
+    {
+        if(isNaN(valorVerificar))
+        {
+            erro(input, 'Data inválida!', local);
+            erroEncontrado = true;
+        }
+        else
+        {
+            let dia = valorVerificar.slice(0, 2);
+            let mes = valorVerificar.slice(2, 4);
+            let ano = valorVerificar.slice(4);
+
+            if(Number(ano) < 2026)
+            {
+                erro(input, 'Data inválida!', local);
+                erroEncontrado = true;
+            }
+            else
+            {
+                if(Number(mes) > 12)
+                {
+                    erro(input, 'Data inválida!', local);
+                    erroEncontrado = true;
+                }
+                else
+                {
+                    if(mes == '01' || mes == '03' || mes == '05' || mes == '07' || mes == '08' || mes == '10' || mes == '12')
+                    {
+                        if(Number(dia) > 31)
+                        {
+                            erro(input, 'Data inválida!', local);
+                            erroEncontrado = true;
+                        }
+                    }
+                    else
+                    {
+                        if(mes == '04' || mes == '06' || mes == '09' || mes == '11')
+                        {
+                            if(Number(dia) > 30)
+                            {
+                                erro(input, 'Data inválida!', local);
+                                erroEncontrado = true;
+                            }
+                        }
+                        else
+                        {
+                            if(mes == '02')
+                            {
+                                if(Number(dia) > 29)
+                                {
+                                    erro(input, 'Data inválida!', local);
+                                    erroEncontrado = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return erroEncontrado;
 }
