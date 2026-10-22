@@ -176,6 +176,23 @@ INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(4, 3400.75, 
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(5, 1200.00, 'joao.silva@gmail.com');
 INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES(6, 950.20, 'carlos.pereira@gmail.com');
 
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (1, 'Primeiro cofrinho criado', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (2, 'Primeiro cofrinho completado', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (3, 'Bata 5 cofrinhos', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (4, 'Bata seu primeiro cofrinho determinado', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (5, 'Bata 10 cofrinhos', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (6, 'Bem Vindo!', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (7, 'Atinja o nível 1', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (8, 'Atinja o nível 5', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (9, 'Atinja o nível 10', 'nivel');
+
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (1, 'Zamioculca');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (2, 'Lírio');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (3, 'Cacto');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (4, 'Peônia');
+
+-- MASSA DE TESTE
+
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (1, 'Aluguel Agosto', 1500.00, '2026-08-05', '2026-08-10', 'fixa', 'finalizada', NULL, 1, null);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (2, 'Supermercado semanal', 320.75, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 16);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (3, 'Parcela notebook 3/10', 250.00, '2026-08-01', '2026-08-15', 'parcelada', 'pendente', 10, 2, null);
@@ -189,11 +206,6 @@ INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_ti
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (11, 'Parcela do aluguel', 900, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 3);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (12, 'Compra da feira', 10, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (13, 'Banana', 1, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);
-
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (1, 'Zamioculca');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (2, 'Lírio');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (3, 'Cacto');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (4, 'Peônia');
 
 INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (1, 'Viagem para Florianópolis', '2026-07-15 10:00:00', '2027-01-20', 3000.00, 'determinado', 1200.00, 'sabrina.carpinteira@gmail.com', 1);
 INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (2, 'Notebook novo', '2026-06-01 14:30:00', '2026-11-01', 4500.00, 'determinado', 4300.00, 'sabrina.carpinteira@gmail.com', 2);
@@ -215,18 +227,6 @@ INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_moviment
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (2, 500.00, '2026-08-05', 'guardar', 'sabrina.carpinteira@gmail.com', 2);
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (3, 200.00, '2026-08-12', 'resgatar', 'sabrina.carpinteira@gmail.com', 6);
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (4, 50.00, '2026-08-18', 'guardar', 'sabrina.carpinteira@gmail.com', 8);
-
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (1, 'Você criou seu primeiro cofrinho', 'cofrinho');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (2, 'Você completou seu primeiro cofrinho', 'cofrinho');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (3, 'Você bateu 5 cofrinhos', 'cofrinho');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (4, 'Você bateu seu primeiro cofrinho determinada', 'cofrinho');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (5, 'Você bateu 10 metas', 'cofrinho');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (6, 'Bem Vindo!', 'nivel');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (7, 'Você atinjiu o nível 1', 'nivel');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (8, 'Você atingiu o nível 5', 'nivel');
-INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (9, 'Você atingiu o nível 10', 'nivel');
-
--- TESTE
 
 INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (4, 'Bônus Anual', 1200.00, '2025-12-20', 1);
 INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (5, 'Restituição de Imposto de Renda', 850.00, '2026-05-30', 1);
