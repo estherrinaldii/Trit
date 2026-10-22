@@ -560,11 +560,25 @@ delimiter $$
 
 		UNION ALL
 
-		SELECT 'movimentação', cd_movimentacao, ic_tipo_movimentacao, vl_movimentacao, dt_movimentacao
+		SELECT 'resgatar', MC.cd_movimentacao, c.nm_cofrinho, mc.vl_movimentacao, mc.dt_movimentacao
 			FROM movimentacao_cofrinho mc
+            JOIN cofrinho c
+            ON c.cd_cofrinho = mc.FK_cd_cofrinho
 			WHERE mc.FK_nm_email = pEmail
+            AND ic_tipo_movimentacao = 'resgatar'
             AND dt_movimentacao >= pInicio 
-            AND dt_movimentacao < pFim 
+            AND dt_movimentacao < pFim
+        
+        UNION ALL
+        
+		SELECT 'guardar', MC.cd_movimentacao, c.nm_cofrinho, mc.vl_movimentacao, mc.dt_movimentacao
+			FROM movimentacao_cofrinho mc
+            JOIN cofrinho c
+            ON c.cd_cofrinho = mc.FK_cd_cofrinho
+			WHERE mc.FK_nm_email = pEmail
+            AND ic_tipo_movimentacao = 'guardar'
+            AND dt_movimentacao >= pInicio 
+            AND dt_movimentacao < pFim
 
 		ORDER BY data DESC;
 	END$$
@@ -589,8 +603,6 @@ delimiter $$
 	
 	if qtdCofrinho >= 1 then
 		insert into usuario_insignia values (pEmail, 1);  
-	ELSE 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não possui cofrinhos criados';
 	end if;
 	END$$ 
         
@@ -614,8 +626,6 @@ delimiter $$
 	
 	if qtdCofrinho >= 1 then
 		insert into usuario_insignia values (pEmail, 2);  
-	ELSE 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantidade de cofrinhos completados insuficiente';
 	end if;
 	END$$
     
@@ -639,9 +649,6 @@ delimiter $$
 	
 	if qtdCofrinho >= 5 then
 		insert into usuario_insignia values (pEmail, 3);
-	ELSE 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantidade de cofrinhos completados insuficiente';
 	end if;
-	END$$
-   	 
+	END$$   	 
 delimiter ;
