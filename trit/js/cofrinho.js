@@ -492,7 +492,8 @@ for (let i = 0; i < plantas.length; i++) {
                 if(document.querySelector('#txtData'))
                 {
                     const txtData = document.querySelector('#txtData'); 
-                    erroEncontrado = validaData(txtData, areaInfos);
+                    let erroEncontrado = '';
+                    erroEncontrado = validaData(msgErro, txtData, areaInfos);
 
                     if(erroEncontrado)
                     {
@@ -955,7 +956,8 @@ function botaoAdicionar()
 
             if(document.querySelector('.periodoSelecionado').textContent == 'Determinado')
             {
-                erroEncontrado = validaData(txtDataCofre, areaInfos);
+                let erroEncontrado = '';
+                erroEncontrado = validaData(msgErro, txtDataCofre, areaInfos);
                 if(erroEncontrado)
                 {
                     return;
