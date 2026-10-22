@@ -84,7 +84,7 @@ export function botaoSair()
     return btnSair;
 }
 
-export function validaData(input, local){
+export function validaData(msgErro, input, local){
     
     let valorVerificar = input.value.replaceAll('/', '');
     let erroEncontrado = false;
