@@ -274,11 +274,6 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
 })
 .then(function (dadosJSON) {
     if (dadosJSON) {
-        // for (let i = 0; i < local.length; i++) {
-        //     console.log(local[i]);
-        //     alterarProgresso(null, local[i]);
-        // }
-
         let indiceLimite = 4;
         if(dadosJSON.categorias.length > 4){
             areaCategorias.appendChild(btnMais);
@@ -377,7 +372,7 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
                 barraProgresso.classList.add('leve');
             }else{
                 if(progresso >= 65 && progresso < 100){
-                    barraProgresso.classList.add('meio');
+                    barraProgresso.classList.add('alto');
                 }else{
                     if(progresso >= 100){
                         barraProgresso.classList.add('limite');
@@ -757,19 +752,17 @@ function alterarProgresso(txtValor, local){
                 progressoAtual.classList.add('leve');
             }else{
                 if(valorProgresso >= 65 && valorProgresso < 100){
-                    progressoAtual.classList.add('meio');
+                    progressoAtual.classList.add('alto');
                 }else{
-                    progressoAtual.classList.add('limite');
+                    if(valorProgresso >= 100){
+                        progressoAtual.classList.add('limite');
+                        progressoAtual.setAttribute('value', 100);
+                        local.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
+                        local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
+                    }
                 }
             }
 
-        }
-        else
-        {
-            progressoAtual.setAttribute('value', 100);
-            progressoAtual.classList.add('limite');
-            local.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
-            local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
         }
 
         if(!String(valorAdicionado).includes('.'))

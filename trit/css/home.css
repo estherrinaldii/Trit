@@ -131,7 +131,7 @@ progress::-webkit-progress-value {
 }
 
 /* alteração de valor */
-.meio::-webkit-progress-value {
+.leve::-webkit-progress-value {
     background-color: #8309B8;
 }
 
@@ -180,24 +180,6 @@ progress::-webkit-progress-value {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.btnSair{
-    width: 48px;
-    height: 48px;
-    border: none;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btnSair:active{
-    background-color: transparent;
-}
-
-.imgSair{
-    height: 80%;
 }
 
 .opcoesSaida{
@@ -363,4 +345,15 @@ input:disabled{
 
 .btnOk{
     width: auto;
+}
+
+
+.areaBotoesPopup{
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.areaBotoesPopup button{
+    width: 100%;
 }

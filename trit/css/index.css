@@ -116,3 +116,45 @@ header{
     padding: 16px;
     width: 80%;
 }
+
+.btnSair{
+    width: 48px;
+    height: 48px;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnSair:active{
+    background-color: transparent;
+}
+
+.imgSair{
+    height: 80%;
+}
+
+.btnExcluirConfirma{
+    border: solid, rgb(255, 85, 85), 2px;
+    color: rgb(255, 85, 85);
+}
+
+.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito{
+    display: flex;
+    gap: 8px;
+}
+
+.btnEditar{
+    color: rgb(9, 95, 184);
+}
+
+.btnExcluir{
+    color: rgb(255, 85, 85);
+}
+
+.btnExcluirElemento{
+    background-color: rgb(225, 85, 85);
+    border: solid transparent 2px;
+    color: white;
+}

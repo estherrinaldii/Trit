@@ -144,25 +144,6 @@ button{
     background-color: white;
 }
 
-.btnSair{
-    width: 48px;
-    height: 48px;
-    border: none;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.imgSair{
-    height: 80%;
-}
-
-.btnExcluirConfirma{
-    border: solid, rgb(255, 85, 85), 2px;
-    color: rgb(255, 85, 85);
-}
-
 .btnResgatar:active, .btnExcluirConfirma:active, .btnCancelarDeposito:active{
     background-color: rgb(9, 95, 184, 0.05);
 }
@@ -371,17 +352,4 @@ select{
     display: flex;
     flex-direction: column;
     gap: 8px;
-}
-
-.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito{
-    display: flex;
-    gap: 8px;
-}
-
-.btnEditar{
-    color: rgb(9, 95, 184);
-}
-
-.btnExcluir{
-    color: rgb(255, 85, 85);
 }
