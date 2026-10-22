@@ -83,7 +83,6 @@ CREATE TABLE Insignia (
   cd_insignia INT NOT NULL,
   nm_insignia VARCHAR(100) NOT NULL,
   nm_tipo_insignia VARCHAR(100) NOT NULL,
-  img_insignia BLOB NOT NULL,
   CONSTRAINT PK_Insignia PRIMARY KEY (cd_insignia)
   );
   
@@ -216,6 +215,16 @@ INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_moviment
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (2, 500.00, '2026-08-05', 'guardar', 'sabrina.carpinteira@gmail.com', 2);
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (3, 200.00, '2026-08-12', 'resgatar', 'sabrina.carpinteira@gmail.com', 6);
 INSERT INTO Movimentacao_Cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (4, 50.00, '2026-08-18', 'guardar', 'sabrina.carpinteira@gmail.com', 8);
+
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (1, 'Você criou seu primeiro cofrinho', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (2, 'Você completou seu primeiro cofrinho', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (3, 'Você bateu 5 cofrinhos', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (4, 'Você bateu seu primeiro cofrinho determinada', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (5, 'Você bateu 10 metas', 'cofrinho');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (6, 'Bem Vindo!', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (7, 'Você atinjiu o nível 1', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (8, 'Você atingiu o nível 5', 'nivel');
+INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (9, 'Você atingiu o nível 10', 'nivel');
 
 -- TESTE
 
