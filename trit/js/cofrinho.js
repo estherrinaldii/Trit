@@ -29,6 +29,7 @@ const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 let btnSair = botaoSair();
 
+let prateleiraItens = 2;
 botaoAdicionar();
 
 const plantas = document.querySelectorAll('.planta');
@@ -1144,7 +1145,6 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
     const cofrinhos = document.querySelector('.cofrinhos');
     const prateleirasPlantas = document.querySelectorAll('.plantaPrateleira');
-    let prateleiraItens = 2;
 
     if(prateleirasPlantas.length == 0)
     {
@@ -1188,19 +1188,49 @@ function criarPlanta(nome, periodo, data, valor, planta)
     }
     else
     {
-        console.log('prateleira existe')
-        console.log(prateleiraItens)
         let prateleiraCheia = prateleiraItens / 3;
-        console.log(prateleiraCheia)
 
         if(Number.isInteger(prateleiraCheia))
         {
-            console.log('inteiro')
+            const plantaPrateleira = document.createElement('div');
+            plantaPrateleira.classList.add('plantaPrateleira');
+
+            const plantas = document.createElement('div');
+            plantas.classList.add('plantas');
+
+            const prateleira = document.createElement('prateleira');
+            prateleira.classList.add('prateleira');
+
+            const plantaCriada = document.createElement('div');
+            plantaCriada.classList.add('planta');
+
+            const plantaImg = document.createElement('img');
+            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+
+            const vasoPlanta = document.createElement('img');
+            vasoPlanta.src = 'img/plantas/vaso.svg';
+
+            const porcentagemPlanta = document.createElement('p');
+            porcentagemPlanta.classList.add('porcentagem');
+            porcentagemPlanta.textContent = '0%'
+
+            plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
+
+            const nomePlanta = document.createElement('p');
+            nomePlanta.classList.add('tituloCofre');
+            nomePlanta.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
+
+            plantas.appendChild(plantaCriada);
+            prateleira.appendChild(nomePlanta);
+
+            plantaPrateleira.append(plantas, prateleira);
+            cofrinhos.appendChild(plantaPrateleira);
+
+            prateleiraItens = 1;
         }
         else
         {
-            console.log('decimal')
-            const plantaPrateleira = document.querySelectorAll('.plantaprateleira');
+            const plantaPrateleira = document.querySelectorAll('.plantaPrateleira');
             const plantas = document.querySelectorAll('.plantas');
             const prateleira = document.querySelectorAll('.prateleira');
 
@@ -1231,6 +1261,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
             prateleira[prateleiraAdicionar].appendChild(nomePlanta);
 
             plantaPrateleira[plantaPrateleiraAdicionar].append(plantas, prateleira);
+            prateleiraItens++;
         }
     }
 }
