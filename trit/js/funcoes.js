@@ -58,9 +58,12 @@ export function obrigatorioIcon(input){
 
         areaRight.appendChild(obrigatorio);
 
-        if(input.value.trim() != "")
+        if(input.type == 'text' || input.type == 'password')
         {
-            obrigatorio.remove();
+            if(input.value.trim() != "")
+            {
+                obrigatorio.remove();
+            }
         }
         
     })

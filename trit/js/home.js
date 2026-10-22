@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/trit/login.html";
 }
 
-import { erro, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData } from "./funcoes.js";
 
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
@@ -134,6 +134,9 @@ btnNovaEntrada.addEventListener('click', function(e){
     const txtDataEntrada = document.createElement('input');
     txtDataEntrada.type = 'text';
     txtDataEntrada.classList.add('recuoPopup');
+    txtDataEntrada.inputMode = 'numeric';
+    txtDataEntrada.value = 'dd/mm/aaaa';
+    formataInputData(txtDataEntrada, null);
     areaRight = obrigatorioIcon(txtDataEntrada);
     areaDataEntrada.append(labelDataEntrada, areaRight);
 
@@ -910,6 +913,9 @@ function criarAreaSaida(txtTipo){
     const txtDataSaida = document.createElement('input');
     txtDataSaida.type = 'text';
     txtDataSaida.classList.add('recuoPopup');
+    txtDataSaida.inputMode = 'numeric';
+    txtDataSaida.value = 'dd/mm/aaaa';
+    formataInputData(txtDataSaida, null);
     areaRight = obrigatorioIcon(txtDataSaida);
     areaDataSaida.append(labelDataSaida, areaRight);
 
@@ -1041,8 +1047,10 @@ function criarAreaSaida(txtTipo){
 
         if(txtDataSaida.value == '')
         {
-            erro(msgErro, txtDataSaida, 'Data não foi informada!', areaInfos);
-            return;
+            erroEncontrado = validaData(txtDataSaida, areaInfos);
+            if(erroEncontrado){
+                return;
+            }
         }
 
         if(txtTipoSaida.value == 'Parcelada')
