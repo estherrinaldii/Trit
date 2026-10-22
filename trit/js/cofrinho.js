@@ -1,4 +1,4 @@
-import { erro, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
 const main = document.querySelector('main');
 const body = document.querySelector('body');
@@ -29,6 +29,7 @@ const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 let btnSair = botaoSair();
 
+let prateleiraItens = 2;
 botaoAdicionar();
 
 const plantas = document.querySelectorAll('.planta');
@@ -827,142 +828,6 @@ function areaSelecaoPeriodo(dataLimite)
     return selecionarPeriodo;
 }
 
-function formataInputValor(input, valorInicial)
-{
-    let valorDigitado = '';
-
-    if(valorInicial)
-    {
-        valorDigitado = valorInicial.replace(',','');
-    }
-
-    input.addEventListener('keydown', function(e){
-        e.preventDefault();
-
-        if (/^\d$/.test(e.key)) 
-        {
-            valorDigitado += e.key
-        }
-
-        if (e.key === 'Backspace') 
-        {
-            valorDigitado = valorDigitado.slice(0, -1);
-        }
-
-        let valorExibir = Number(valorDigitado) / 100;
-        valorExibir = valorExibir.toFixed(2);
-        valorExibir = String(valorExibir).replace('.',',');
-
-        input.value = valorExibir;
-    })
-}
-
-function formataInputData(input, valorInicial)
-{
-    let valorDigitado = '';
-
-    if(valorInicial)
-    {
-        valorDigitado = valorInicial;
-    }
-
-    input.addEventListener('keydown', function(e){
-        e.preventDefault();
-
-        if (/^\d$/.test(e.key) && valorDigitado.length < 8) 
-        {
-            valorDigitado += e.key
-        }
-
-        if (e.key === 'Backspace') 
-        {
-            valorDigitado = valorDigitado.slice(0, -1);
-            input.disabled = false;
-        }
-
-        let valorExibir = valorDigitado.padEnd(8, ' ');
-        valorExibir = valorExibir.slice(0, 2).replace(/ /g, 'd')  + valorExibir.slice(2, 4).replace(/ /g, 'm') +  valorExibir.slice(4, 8).replace(/ /g, 'a');
-        valorExibir = valorExibir.slice(0, 2) + '/' + valorExibir.slice(2, 4) + '/' + valorExibir.slice(4);
-        
-        input.value = valorExibir;
-    })
-}
-
-function validaData(input, local){
-    
-    let valorVerificar = input.value.replaceAll('/', '');
-    let erroEncontrado = false;
-
-    if(valorVerificar == '' || valorVerificar == 'ddmmaaaa')
-    {
-        erro(msgErro, input, 'Data não foi informada!', local);
-        erroEncontrado = true;
-    }
-    else
-    {
-        if(isNaN(valorVerificar))
-        {
-            erro(msgErro, input, 'Data inválida!', local);
-            erroEncontrado = true;
-        }
-        else
-        {
-            let dia = valorVerificar.slice(0, 2);
-            let mes = valorVerificar.slice(2, 4);
-            let ano = valorVerificar.slice(4);
-
-            if(Number(ano) < 2026)
-            {
-                erro(msgErro, input, 'Data inválida!', local);
-                erroEncontrado = true;
-            }
-            else
-            {
-                if(Number(mes) > 12)
-                {
-                    erro(msgErro, input, 'Data inválida!', local);
-                    erroEncontrado = true;
-                }
-                else
-                {
-                    if(mes == '01' || mes == '03' || mes == '05' || mes == '07' || mes == '08' || mes == '10' || mes == '12')
-                    {
-                        if(Number(dia) > 31)
-                        {
-                            erro(msgErro, input, 'Data inválida!', local);
-                            erroEncontrado = true;
-                        }
-                    }
-                    else
-                    {
-                        if(mes == '04' || mes == '06' || mes == '09' || mes == '11')
-                        {
-                            if(Number(dia) > 30)
-                            {
-                                erro(msgErro, input, 'Data inválida!', local);
-                                erroEncontrado = true;
-                            }
-                        }
-                        else
-                        {
-                            if(mes == '02')
-                            {
-                                if(Number(dia) > 29)
-                                {
-                                    erro(msgErro, input, 'Data inválida!', local);
-                                    erroEncontrado = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    return erroEncontrado;
-}
-
 function botaoAdicionar()
 {
     const btnAdicionar = document.querySelector('.btnAdicionar');
@@ -1144,7 +1009,6 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
     const cofrinhos = document.querySelector('.cofrinhos');
     const prateleirasPlantas = document.querySelectorAll('.plantaPrateleira');
-    let prateleiraItens = 2;
 
     if(prateleirasPlantas.length == 0)
     {
@@ -1188,19 +1052,49 @@ function criarPlanta(nome, periodo, data, valor, planta)
     }
     else
     {
-        console.log('prateleira existe')
-        console.log(prateleiraItens)
         let prateleiraCheia = prateleiraItens / 3;
-        console.log(prateleiraCheia)
 
         if(Number.isInteger(prateleiraCheia))
         {
-            console.log('inteiro')
+            const plantaPrateleira = document.createElement('div');
+            plantaPrateleira.classList.add('plantaPrateleira');
+
+            const plantas = document.createElement('div');
+            plantas.classList.add('plantas');
+
+            const prateleira = document.createElement('prateleira');
+            prateleira.classList.add('prateleira');
+
+            const plantaCriada = document.createElement('div');
+            plantaCriada.classList.add('planta');
+
+            const plantaImg = document.createElement('img');
+            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+
+            const vasoPlanta = document.createElement('img');
+            vasoPlanta.src = 'img/plantas/vaso.svg';
+
+            const porcentagemPlanta = document.createElement('p');
+            porcentagemPlanta.classList.add('porcentagem');
+            porcentagemPlanta.textContent = '0%'
+
+            plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
+
+            const nomePlanta = document.createElement('p');
+            nomePlanta.classList.add('tituloCofre');
+            nomePlanta.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
+
+            plantas.appendChild(plantaCriada);
+            prateleira.appendChild(nomePlanta);
+
+            plantaPrateleira.append(plantas, prateleira);
+            cofrinhos.appendChild(plantaPrateleira);
+
+            prateleiraItens = 1;
         }
         else
         {
-            console.log('decimal')
-            const plantaPrateleira = document.querySelectorAll('.plantaprateleira');
+            const plantaPrateleira = document.querySelectorAll('.plantaPrateleira');
             const plantas = document.querySelectorAll('.plantas');
             const prateleira = document.querySelectorAll('.prateleira');
 
@@ -1231,6 +1125,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
             prateleira[prateleiraAdicionar].appendChild(nomePlanta);
 
             plantaPrateleira[plantaPrateleiraAdicionar].append(plantas, prateleira);
+            prateleiraItens++;
         }
     }
 }
