@@ -3,9 +3,11 @@ import { erro, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 const main = document.querySelector('main');
 const body = document.querySelector('body');
 
+let areaSemCofre = '';
+
 if(!document.querySelector('.planta'))
 {
-    const areaSemCofre = document.createElement('div');
+    areaSemCofre = document.createElement('div');
     areaSemCofre.classList.add('areaSemCofre');
 
     const btnAdicionar = document.createElement('img');
@@ -23,163 +25,11 @@ if(!document.querySelector('.planta'))
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
 
-const btnAdicionar = document.querySelector('.btnAdicionar');
-
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 let btnSair = botaoSair();
-let areaRight = 0;
 
-btnAdicionar.addEventListener('click', function(e){
-    e.preventDefault();
-
-    const areaCriarCofre = document.createElement('div');
-    areaCriarCofre.classList.add('popup');
-
-    const areaTitulo = document.createElement('div');
-    areaTitulo.classList.add('areaTitulo');
-
-    const tituloCriarCofre = document.createElement('p');
-    tituloCriarCofre.textContent = 'Novo Cofrinho';
-    tituloCriarCofre.classList.add('titulo');
-    tituloCriarCofre.classList.add('tituloPopup');
-
-    btnSair = botaoSair();
-
-    areaTitulo.append(tituloCriarCofre, btnSair);
-
-    const areaInfos = document.createElement('div');
-    areaInfos.classList.add('infos')
-    
-    const areaNomeCofre = document.createElement('div');
-    areaNomeCofre.classList.add('areaDigitar');
-
-    const labelNomeCofre = document.createElement('label');
-    labelNomeCofre.textContent = 'Nome:';
-
-    const txtNomeCofre = document.createElement('input');
-    txtNomeCofre.type = 'text';
-    txtNomeCofre.classList.add('recuoPopup');
-
-    areaNomeCofre.append(labelNomeCofre, obrigatorioIcon(txtNomeCofre));
-
-    const areaPeriodo = document.createElement('div');
-    areaPeriodo.classList.add('areaDigitar');
-
-    const labelPeriodo = document.createElement('label');
-    labelPeriodo.textContent = 'Período:';
-
-    const divAlinhamento = document.createElement('div');
-    divAlinhamento.classList.add('divAlinhamento');
-
-    const areaDataCofre = document.createElement('div');
-    areaDataCofre.classList.add('areaDigitar');
-
-    const labelDataCofre = document.createElement('label');
-    labelDataCofre.textContent = 'Data limite:';
-
-    const txtDataCofre = document.createElement('input');
-    txtDataCofre.type = 'text';
-    txtDataCofre.disabled = true;
-    txtDataCofre.value = 'dd/mm/aaaa';
-    txtDataCofre.inputMode = 'numeric';
-
-    formataInputData(txtDataCofre, null);
-
-    areaPeriodo.append(labelPeriodo, areaSelecaoPeriodo(txtDataCofre))
-    areaDataCofre.append(labelDataCofre, txtDataCofre);
-
-    const areaValorCofre = document.createElement('div');
-    areaValorCofre.classList.add('areaDigitar');
-
-    const labelValorCofre = document.createElement('label');
-    labelValorCofre.textContent = 'Valor limite:';
-
-    const areaLeft = document.createElement('div');
-    areaLeft.classList.add('areaLeft');
-
-    const txtValorCofre = document.createElement('input');
-    txtValorCofre.type = 'text';
-    txtValorCofre.inputMode = 'numeric';
-    txtValorCofre.value = '0,00';
-    txtValorCofre.classList.add('recuoPopup');
-    txtValorCofre.classList.add('inputMoeda');
-
-    const moeda = document.createElement('p');
-    moeda.textContent = 'R$';
-    moeda.classList.add('moeda');
-
-    areaLeft.append(txtValorCofre, moeda);
-
-    formataInputValor(txtValorCofre, null);
-
-    areaValorCofre.append(labelValorCofre, obrigatorioIcon(areaLeft));
-    divAlinhamento.append(areaDataCofre, areaValorCofre);
-
-    const areaPlantaSelecionada = document.createElement('div');
-    areaPlantaSelecionada.classList.add('areaDigitar');
-
-    const labelPlanta = document.createElement('label');
-    labelPlanta.textContent = 'Planta:';
-
-    areaPlantaSelecionada.append(labelPlanta, areaSelecaoPlanta());
-
-    const btnSalvar = document.createElement('button');
-    btnSalvar.textContent = 'Salvar';
-    btnSalvar.classList.add('btnSalvar');
-
-    areaInfos.append(areaNomeCofre, areaPeriodo, divAlinhamento, areaPlantaSelecionada);
-
-    areaCriarCofre.append(areaTitulo, areaInfos, btnSalvar)
-
-    bloqueio.appendChild(areaCriarCofre);
-    body.appendChild(bloqueio);
-
-    btnSair.addEventListener('click', function(e){
-        e.preventDefault();
-
-        areaCriarCofre.remove();
-        avisoSair(bloqueio);
-    })
-
-    btnSalvar.addEventListener('click', function(e){
-        e.preventDefault();
-
-        if(txtNomeCofre.value == '')
-        {
-            erro(msgErro, txtNomeCofre, 'Nome não foi informado!', areaInfos);
-            return;
-        }
-
-        if(document.querySelector('.periodoSelecionado').textContent == 'Determinado')
-        {
-            erroEncontrado = validaData(txtDataCofre, areaInfos);
-            if(erroEncontrado)
-            {
-                return;
-            }
-        }
-
-        if(txtValorCofre.value == '' || txtValorCofre.value == '0,00')
-        {
-            erro(msgErro, txtValorCofre, 'Valor limite não foi informado!', areaInfos);
-            return;
-        }
-
-        if(document.querySelector('.plantaSelecionada').textContent == '- Selecione uma planta -')
-        {
-            erro(msgErro, null, 'Selecione uma planta!', areaInfos);
-            return;
-        }
-
-        let plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
-
-        criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, null, txtValorCofre, plantaEnviada)
-
-        areaCriarCofre.remove();
-        bloqueio.remove();
-    })
-})
+botaoAdicionar();
 
 const plantas = document.querySelectorAll('.planta');
 
@@ -1113,6 +963,162 @@ function validaData(input, local){
     return erroEncontrado;
 }
 
+function botaoAdicionar()
+{
+    const btnAdicionar = document.querySelector('.btnAdicionar');
+
+    btnAdicionar.addEventListener('click', function(e){
+        e.preventDefault();
+
+        const areaCriarCofre = document.createElement('div');
+        areaCriarCofre.classList.add('popup');
+
+        const areaTitulo = document.createElement('div');
+        areaTitulo.classList.add('areaTitulo');
+
+        const tituloCriarCofre = document.createElement('p');
+        tituloCriarCofre.textContent = 'Novo Cofrinho';
+        tituloCriarCofre.classList.add('titulo');
+        tituloCriarCofre.classList.add('tituloPopup');
+
+        btnSair = botaoSair();
+
+        areaTitulo.append(tituloCriarCofre, btnSair);
+
+        const areaInfos = document.createElement('div');
+        areaInfos.classList.add('infos')
+        
+        const areaNomeCofre = document.createElement('div');
+        areaNomeCofre.classList.add('areaDigitar');
+
+        const labelNomeCofre = document.createElement('label');
+        labelNomeCofre.textContent = 'Nome:';
+
+        const txtNomeCofre = document.createElement('input');
+        txtNomeCofre.type = 'text';
+        txtNomeCofre.classList.add('recuoPopup');
+
+        areaNomeCofre.append(labelNomeCofre, obrigatorioIcon(txtNomeCofre));
+
+        const areaPeriodo = document.createElement('div');
+        areaPeriodo.classList.add('areaDigitar');
+
+        const labelPeriodo = document.createElement('label');
+        labelPeriodo.textContent = 'Período:';
+
+        const divAlinhamento = document.createElement('div');
+        divAlinhamento.classList.add('divAlinhamento');
+
+        const areaDataCofre = document.createElement('div');
+        areaDataCofre.classList.add('areaDigitar');
+
+        const labelDataCofre = document.createElement('label');
+        labelDataCofre.textContent = 'Data limite:';
+
+        const txtDataCofre = document.createElement('input');
+        txtDataCofre.type = 'text';
+        txtDataCofre.disabled = true;
+        txtDataCofre.value = 'dd/mm/aaaa';
+        txtDataCofre.inputMode = 'numeric';
+
+        formataInputData(txtDataCofre, null);
+
+        areaPeriodo.append(labelPeriodo, areaSelecaoPeriodo(txtDataCofre))
+        areaDataCofre.append(labelDataCofre, txtDataCofre);
+
+        const areaValorCofre = document.createElement('div');
+        areaValorCofre.classList.add('areaDigitar');
+
+        const labelValorCofre = document.createElement('label');
+        labelValorCofre.textContent = 'Valor limite:';
+
+        const areaLeft = document.createElement('div');
+        areaLeft.classList.add('areaLeft');
+
+        const txtValorCofre = document.createElement('input');
+        txtValorCofre.type = 'text';
+        txtValorCofre.inputMode = 'numeric';
+        txtValorCofre.value = '0,00';
+        txtValorCofre.classList.add('recuoPopup');
+        txtValorCofre.classList.add('inputMoeda');
+
+        const moeda = document.createElement('p');
+        moeda.textContent = 'R$';
+        moeda.classList.add('moeda');
+
+        areaLeft.append(txtValorCofre, moeda);
+
+        formataInputValor(txtValorCofre, null);
+
+        areaValorCofre.append(labelValorCofre, obrigatorioIcon(areaLeft));
+        divAlinhamento.append(areaDataCofre, areaValorCofre);
+
+        const areaPlantaSelecionada = document.createElement('div');
+        areaPlantaSelecionada.classList.add('areaDigitar');
+
+        const labelPlanta = document.createElement('label');
+        labelPlanta.textContent = 'Planta:';
+
+        areaPlantaSelecionada.append(labelPlanta, areaSelecaoPlanta());
+
+        const btnSalvar = document.createElement('button');
+        btnSalvar.textContent = 'Salvar';
+        btnSalvar.classList.add('btnSalvar');
+
+        areaInfos.append(areaNomeCofre, areaPeriodo, divAlinhamento, areaPlantaSelecionada);
+
+        areaCriarCofre.append(areaTitulo, areaInfos, btnSalvar)
+
+        bloqueio.appendChild(areaCriarCofre);
+        body.appendChild(bloqueio);
+
+        btnSair.addEventListener('click', function(e){
+            e.preventDefault();
+
+            areaCriarCofre.remove();
+            avisoSair(bloqueio);
+        })
+
+        btnSalvar.addEventListener('click', function(e){
+            e.preventDefault();
+
+            if(txtNomeCofre.value == '')
+            {
+                erro(msgErro, txtNomeCofre, 'Nome não foi informado!', areaInfos);
+                return;
+            }
+
+            if(document.querySelector('.periodoSelecionado').textContent == 'Determinado')
+            {
+                erroEncontrado = validaData(txtDataCofre, areaInfos);
+                if(erroEncontrado)
+                {
+                    return;
+                }
+            }
+
+            if(txtValorCofre.value == '' || txtValorCofre.value == '0,00')
+            {
+                erro(msgErro, txtValorCofre, 'Valor limite não foi informado!', areaInfos);
+                return;
+            }
+
+            if(document.querySelector('.plantaSelecionada').textContent == '- Selecione uma planta -')
+            {
+                erro(msgErro, null, 'Selecione uma planta!', areaInfos);
+                return;
+            }
+
+            let plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
+
+            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, null, txtValorCofre, plantaEnviada);
+
+            areaCriarCofre.remove();
+            bloqueio.remove();
+        })
+    })
+}
+
 function criarPlanta(nome, periodo, data, valor, planta)
 {
     let areaAdicionar = '';
@@ -1138,10 +1144,12 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
     const cofrinhos = document.querySelector('.cofrinhos');
     const prateleirasPlantas = document.querySelectorAll('.plantaPrateleira');
-    let prateleiraCheia = 0;
+    let prateleiraItens = 2;
 
     if(prateleirasPlantas.length == 0)
     {
+        areaSemCofre.remove();
+        
         const plantaPrateleira = document.createElement('div');
         plantaPrateleira.classList.add('plantaPrateleira');
 
@@ -1168,21 +1176,61 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
         const nomePlanta = document.createElement('p');
         nomePlanta.classList.add('tituloCofre');
-        nomePlanta.textContent = nome;
+        nomePlanta.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
 
-        plantas.appendChild(areaAdicionar, plantaCriada);
-        prateleira.appendChild(tituloAdicionar, nomePlanta);
+        plantas.append(areaAdicionar, plantaCriada);
+        prateleira.append(tituloAdicionar, nomePlanta);
 
         plantaPrateleira.append(plantas, prateleira);
         cofrinhos.appendChild(plantaPrateleira);
 
-        prateleiraCheia = 2;
+        botaoAdicionar();
     }
     else
     {
-        for (let i = 0; i < prateleirasPlantas.length; i++) {
-            
-            
+        console.log('prateleira existe')
+        console.log(prateleiraItens)
+        let prateleiraCheia = prateleiraItens / 3;
+        console.log(prateleiraCheia)
+
+        if(Number.isInteger(prateleiraCheia))
+        {
+            console.log('inteiro')
+        }
+        else
+        {
+            console.log('decimal')
+            const plantaPrateleira = document.querySelectorAll('.plantaprateleira');
+            const plantas = document.querySelectorAll('.plantas');
+            const prateleira = document.querySelectorAll('.prateleira');
+
+            const plantaPrateleiraAdicionar = plantaPrateleira.length - 1;
+            const plantasAdicionar = plantas.length - 1;
+            const prateleiraAdicionar = prateleira.length - 1;
+
+            const plantaCriada = document.createElement('div');
+            plantaCriada.classList.add('planta');
+
+            const plantaImg = document.createElement('img');
+            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+
+            const vasoPlanta = document.createElement('img');
+            vasoPlanta.src = 'img/plantas/vaso.svg';
+
+            const porcentagemPlanta = document.createElement('p');
+            porcentagemPlanta.classList.add('porcentagem');
+            porcentagemPlanta.textContent = '0%'
+
+            plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
+
+            const nomePlanta = document.createElement('p');
+            nomePlanta.classList.add('tituloCofre');
+            nomePlanta.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
+
+            plantas[plantasAdicionar].appendChild(plantaCriada);
+            prateleira[prateleiraAdicionar].appendChild(nomePlanta);
+
+            plantaPrateleira[plantaPrateleiraAdicionar].append(plantas, prateleira);
         }
     }
 }
