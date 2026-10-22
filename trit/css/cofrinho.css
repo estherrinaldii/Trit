@@ -163,7 +163,7 @@ button{
     color: rgb(255, 85, 85);
 }
 
-.btnResgatar:active, .btnExcluirConfirma:active{
+.btnResgatar:active, .btnExcluirConfirma:active, .btnCancelarDeposito:active{
     background-color: rgb(9, 95, 184, 0.05);
 }
 .divAlinhamento{
@@ -373,7 +373,7 @@ select{
     gap: 8px;
 }
 
-.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor{
+.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito{
     display: flex;
     gap: 8px;
 }

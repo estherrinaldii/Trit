@@ -147,7 +147,7 @@ btnAdicionar.addEventListener('click', function(e){
 
         if(txtNomeCofre.value == '')
         {
-            erro(txtNomeCofre, 'Nome não foi informado!', areaInfos);
+            erro(msgErro, txtNomeCofre, 'Nome não foi informado!', areaInfos);
             return;
         }
 
@@ -162,15 +162,19 @@ btnAdicionar.addEventListener('click', function(e){
 
         if(txtValorCofre.value == '' || txtValorCofre.value == '0,00')
         {
-            erro(txtValorCofre, 'Valor limite não foi informado!', areaInfos);
+            erro(msgErro, txtValorCofre, 'Valor limite não foi informado!', areaInfos);
             return;
         }
 
         if(document.querySelector('.plantaSelecionada').textContent == '- Selecione uma planta -')
         {
-            erro(null, 'Selecione uma planta!', areaInfos);
+            erro(msgErro, null, 'Selecione uma planta!', areaInfos);
             return;
         }
+
+        let plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
+
+        criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, null, txtValorCofre, plantaEnviada)
 
         areaCriarCofre.remove();
         bloqueio.remove();
@@ -316,10 +320,12 @@ for (let i = 0; i < plantas.length; i++) {
         const btnGuardar = document.createElement('button');
         btnGuardar.textContent = 'Guardar';
         btnGuardar.classList.add('btnGuardar');
+        btnGuardar.classList.add('btnAlteraValor');
 
         const btnResgatar = document.createElement('button');
         btnResgatar.textContent = 'Resgatar';
         btnResgatar.classList.add('btnResgatar');
+        btnResgatar.classList.add('btnAlteraValor');
 
         areaBotoes.append(btnGuardar, btnResgatar);
 
@@ -364,13 +370,180 @@ for (let i = 0; i < plantas.length; i++) {
             bloqueio.remove();
         })
 
-        btnGuardar.addEventListener('click', function(e){
-            e.preventDefault();
-        })
+        const btnAlteraValor = document.querySelectorAll('.btnAlteraValor');
 
-        btnResgatar.addEventListener('click', function(e){
-            e.preventDefault();
-        })
+        for (let index = 0; index < btnAlteraValor.length; index++) {
+            
+            btnAlteraValor[index].addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaConsultarCofre.remove();
+
+                const areaAlterarValor = document.createElement('div');
+                areaAlterarValor.classList.add('popup');
+
+                const areaTitulo = document.createElement('div');
+                areaTitulo.classList.add('areaTitulo');
+
+                const tituloAlterar = document.createElement('p');
+                tituloAlterar.classList.add('titulo');
+                tituloAlterar.classList.add('tituloPopup');
+
+                if(btnAlteraValor[index].textContent == 'Guardar')
+                {
+                    tituloAlterar.textContent = 'Guardar valor';
+                }
+                else
+                {
+                    tituloAlterar.textContent = 'Resgatar valor';
+                }
+
+                btnSair = botaoSair();
+
+                areaTitulo.append(tituloAlterar, btnSair);
+
+                const areaInfos = document.createElement('div');
+                areaInfos.classList.add('infos');
+
+                const areaValor = document.createElement('div');
+                areaValor.classList.add('areaDigitar');
+
+                const labelValor = document.createElement('label');
+                labelValor.textContent = 'Valor:';
+
+                const areaLeft = document.createElement('div');
+                areaLeft.classList.add('areaLeft');
+
+                const txtValor = document.createElement('input');
+                txtValor.type = 'text';
+                txtValor.inputMode = 'numeric';
+                txtValor.value = '0,00';
+                txtValor.classList.add('recuoPopup');
+                txtValor.classList.add('inputMoeda');
+
+                const moeda = document.createElement('p');
+                moeda.textContent = 'R$';
+                moeda.classList.add('moeda');
+
+                formataInputValor(txtValor, null);
+
+                areaLeft.append(txtValor, moeda);
+                areaValor.append(labelValor, obrigatorioIcon(areaLeft));
+                areaInfos.appendChild(areaValor);
+
+                const btnSalvar = document.createElement('button');
+                btnSalvar.textContent = 'Salvar';
+                btnSalvar.classList.add('btnSalvar');
+
+                areaAlterarValor.append(areaTitulo, areaInfos, btnSalvar);
+                bloqueio.appendChild(areaAlterarValor);
+
+                btnSair.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaAlterarValor.remove();
+                    bloqueio.appendChild(areaConsultarCofre)
+                })
+
+                btnSalvar.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    if(txtValor.value == '' || txtValor.value == '0,00')
+                    {
+                        erro(msgErro, txtValor, 'Valor não foi informado!', areaInfos);
+                        return;
+                    }
+
+                    let valorDigitado = txtValor.value;
+                    valorDigitado = valorDigitado.replace(',', '.');
+                    valorDigitado = Number(valorDigitado);
+
+                    let valorPossui = valorDepositadoReal.textContent;
+                    valorPossui = valorPossui.replace(',', '.');
+                    valorPossui = Number(valorPossui);
+
+                    let valorTotal = 0;
+
+                    if(btnAlteraValor[index].textContent == 'Guardar')
+                    {
+                        valorTotal = valorPossui + valorDigitado;
+
+                        let valorMax = valorLimiteReal.textContent;
+                        valorMax = valorMax = valorMax.replace(',', '.');
+                        valorMax = Number(valorMax);
+
+                        if(valorTotal > valorMax)
+                        {
+                            areaAlterarValor.remove();
+
+                            const areaAviso = document.createElement('div');
+                            areaAviso.classList.add('popup');
+                            areaAviso.classList.add('areaAviso');
+
+                            const aviso = document.createElement('p');
+                            aviso.textContent = 'O valor total ultrapassa o valor limite do cofrinho. Deseja depositar mesmo assim?'
+
+                            const areaBotoesDeposito = document.createElement('div');
+                            areaBotoesDeposito.classList.add('areaBotoesDeposito');
+
+                            const btnDepositar = document.createElement('button');
+                            btnDepositar.classList.add('btnDepositar');
+                            btnDepositar.textContent = 'Depositar';
+
+                            const btnCancelar = document.createElement('button');
+                            btnCancelar.classList.add('btnCancelarDeposito');
+                            btnCancelar.textContent = 'Cancelar';
+
+                            areaBotoesDeposito.append(btnDepositar, btnCancelar)
+                            areaAviso.append(aviso, areaBotoesDeposito);
+                            bloqueio.appendChild(areaAviso);
+
+                            btnDepositar.addEventListener('click', function(e){
+                                e.preventDefault();
+
+                                areaAviso.remove();
+                                bloqueio.appendChild(areaConsultarCofre);
+
+                                valorTotal = Number(valorTotal).toFixed(2);
+                                valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                            })
+
+                            btnCancelar.addEventListener('click', function(e){
+                                e.preventDefault();
+
+                                areaAviso.remove();
+                                bloqueio.appendChild(areaConsultarCofre);
+                            })
+                        }
+                        else
+                        {
+                            areaAlterarValor.remove();
+                            bloqueio.appendChild(areaConsultarCofre);
+
+                            valorTotal = Number(valorTotal).toFixed(2);
+                            valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                        }
+                    }
+                    else
+                    {
+                        if(valorDigitado > valorPossui)
+                        {
+                            erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
+                            return;
+                        }
+                        else
+                        {
+                            areaAlterarValor.remove();
+                            bloqueio.appendChild(areaConsultarCofre);
+
+                            valorTotal = valorPossui - valorDigitado;
+                            valorTotal = Number(valorTotal).toFixed(2);
+                            valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                        }
+                    }
+                })
+            })
+        }
 
         btnEditar.addEventListener('click', function(e){
             e.preventDefault();
@@ -461,7 +634,7 @@ for (let i = 0; i < plantas.length; i++) {
 
                 if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
                 {
-                    erro(txtValorLimite, 'Valor limite não foi informado!', areaInfos);
+                    erro(msgErro, txtValorLimite, 'Valor limite não foi informado!', areaInfos);
                     return;
                 }
 
@@ -539,7 +712,7 @@ for (let i = 0; i < plantas.length; i++) {
     })
 }
 
-function areaSelecaoPlanta(local)
+function areaSelecaoPlanta()
 {
     const selecionarPlantas = document.createElement('div');
     selecionarPlantas.classList.add('selecionar');
@@ -566,6 +739,7 @@ function areaSelecaoPlanta(local)
     const planta1 = document.createElement('div');
     planta1.classList.add('opcao');
     planta1.classList.add('plantasEscolher');
+    planta1.setAttribute('planta', 'cacto');
     
     const planta1Img = document.createElement('img');
     planta1Img.src = 'img/plantas/icons/cacto-icon.svg';
@@ -578,6 +752,7 @@ function areaSelecaoPlanta(local)
     const planta2 = document.createElement('div');
     planta2.classList.add('opcao');
     planta2.classList.add('plantasEscolher');
+    planta2.setAttribute('planta', 'lirio');
     
     const planta2Img = document.createElement('img');
     planta2Img.src = 'img/plantas/icons/lirio-icon.svg';
@@ -590,6 +765,7 @@ function areaSelecaoPlanta(local)
     const planta3 = document.createElement('div');
     planta3.classList.add('opcao');
     planta3.classList.add('plantasEscolher');
+    planta3.setAttribute('planta', 'peonia');
     
     const planta3Img = document.createElement('img');
     planta3Img.src = 'img/plantas/icons/peonia-icon.svg';
@@ -602,6 +778,7 @@ function areaSelecaoPlanta(local)
     const planta4 = document.createElement('div');
     planta4.classList.add('opcao');
     planta4.classList.add('plantasEscolher');
+    planta4.setAttribute('planta', 'zamioculca');
     
     const planta4Img = document.createElement('img');
     planta4Img.src = 'img/plantas/icons/zamioculca-icon.svg';
@@ -639,6 +816,7 @@ function areaSelecaoPlanta(local)
 
                 plantaSelecionada.textContent = '';
                 plantaSelecionada.append(imgOpcaoAtual.cloneNode(true), txtOpcaoAtual.cloneNode(true));
+                plantaSelecionada.setAttribute('planta', opcaoAtual.getAttribute('planta'));
                 selecionada();
 
                 abaAberta = true;
@@ -807,7 +985,6 @@ function formataInputValor(input, valorInicial)
     {
         valorDigitado = valorInicial.replace(',','');
     }
-    console.log(valorDigitado)
 
     input.addEventListener('keydown', function(e){
         e.preventDefault();
@@ -868,14 +1045,14 @@ function validaData(input, local){
 
     if(valorVerificar == '' || valorVerificar == 'ddmmaaaa')
     {
-        erro(input, 'Data não foi informada!', local);
+        erro(msgErro, input, 'Data não foi informada!', local);
         erroEncontrado = true;
     }
     else
     {
         if(isNaN(valorVerificar))
         {
-            erro(input, 'Data inválida!', local);
+            erro(msgErro, input, 'Data inválida!', local);
             erroEncontrado = true;
         }
         else
@@ -886,14 +1063,14 @@ function validaData(input, local){
 
             if(Number(ano) < 2026)
             {
-                erro(input, 'Data inválida!', local);
+                erro(msgErro, input, 'Data inválida!', local);
                 erroEncontrado = true;
             }
             else
             {
                 if(Number(mes) > 12)
                 {
-                    erro(input, 'Data inválida!', local);
+                    erro(msgErro, input, 'Data inválida!', local);
                     erroEncontrado = true;
                 }
                 else
@@ -902,7 +1079,7 @@ function validaData(input, local){
                     {
                         if(Number(dia) > 31)
                         {
-                            erro(input, 'Data inválida!', local);
+                            erro(msgErro, input, 'Data inválida!', local);
                             erroEncontrado = true;
                         }
                     }
@@ -912,7 +1089,7 @@ function validaData(input, local){
                         {
                             if(Number(dia) > 30)
                             {
-                                erro(input, 'Data inválida!', local);
+                                erro(msgErro, input, 'Data inválida!', local);
                                 erroEncontrado = true;
                             }
                         }
@@ -922,7 +1099,7 @@ function validaData(input, local){
                             {
                                 if(Number(dia) > 29)
                                 {
-                                    erro(input, 'Data inválida!', local);
+                                    erro(msgErro, input, 'Data inválida!', local);
                                     erroEncontrado = true;
                                 }
                             }
@@ -934,4 +1111,78 @@ function validaData(input, local){
     }
     
     return erroEncontrado;
+}
+
+function criarPlanta(nome, periodo, data, valor, planta)
+{
+    let areaAdicionar = '';
+    let tituloAdicionar = '';
+
+    if(!document.querySelector('.planta'))
+    {
+        areaAdicionar = document.createElement('div');
+        areaAdicionar.classList.add('areaAdicionar');
+
+        const btnAdicionarPlanta = document.createElement('img');
+        btnAdicionarPlanta.src = 'img/adicionar.svg';
+        btnAdicionarPlanta.classList.add('btnAdicionar');
+
+        const vasoBotao = document.createElement('img');
+        vasoBotao.src = 'img/plantas/vaso.svg';
+
+        tituloAdicionar = document.createElement('p');
+        tituloAdicionar.classList.add('tituloAdicionar');
+
+        areaAdicionar.append(btnAdicionarPlanta, vasoBotao);
+    }
+
+    const cofrinhos = document.querySelector('.cofrinhos');
+    const prateleirasPlantas = document.querySelectorAll('.plantaPrateleira');
+    let prateleiraCheia = 0;
+
+    if(prateleirasPlantas.length == 0)
+    {
+        const plantaPrateleira = document.createElement('div');
+        plantaPrateleira.classList.add('plantaPrateleira');
+
+        const plantas = document.createElement('div');
+        plantas.classList.add('plantas');
+
+        const prateleira = document.createElement('prateleira');
+        prateleira.classList.add('prateleira');
+
+        const plantaCriada = document.createElement('div');
+        plantaCriada.classList.add('planta');
+
+        const plantaImg = document.createElement('img');
+        plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+
+        const vasoPlanta = document.createElement('img');
+        vasoPlanta.src = 'img/plantas/vaso.svg';
+
+        const porcentagemPlanta = document.createElement('p');
+        porcentagemPlanta.classList.add('porcentagem');
+        porcentagemPlanta.textContent = '0%'
+
+        plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
+
+        const nomePlanta = document.createElement('p');
+        nomePlanta.classList.add('tituloCofre');
+        nomePlanta.textContent = nome;
+
+        plantas.appendChild(areaAdicionar, plantaCriada);
+        prateleira.appendChild(tituloAdicionar, nomePlanta);
+
+        plantaPrateleira.append(plantas, prateleira);
+        cofrinhos.appendChild(plantaPrateleira);
+
+        prateleiraCheia = 2;
+    }
+    else
+    {
+        for (let i = 0; i < prateleirasPlantas.length; i++) {
+            
+            
+        }
+    }
 }

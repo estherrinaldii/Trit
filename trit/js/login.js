@@ -189,19 +189,19 @@ btnEntrar.addEventListener('click', function(e){
 
     if(txtEmail.value == '')
     {
-        erro(txtEmail, 'Email não foi informado!', areaInfos);
+        erro(msgErro, txtEmail, 'Email não foi informado!', areaInfos);
         return;
     }
 
     if(!txtEmail.value.includes('@') || !txtEmail.value.includes('.'))
     {
-        erro(txtEmail, 'Email inválido!', areaInfos);
+        erro(msgErro, txtEmail, 'Email inválido!', areaInfos);
         return;
     }
     
     if(txtSenha.value == '')
     {
-        erro(txtSenha, 'Senha não foi informada!', areaInfos);
+        erro(msgErro, txtSenha, 'Senha não foi informada!', areaInfos);
         return;  
     }
 
@@ -232,12 +232,12 @@ btnEntrar.addEventListener('click', function(e){
                 }
                 
             } else {
-                erro(null, "Email e/ou senha inválidos!", areaInfos);
+                erro(msgErro, null, "Email e/ou senha inválidos!", areaInfos);
             }
         })
         .catch(function (error) {
             console.warn(error);
-            erro(null, "Email e/ou senha inválidos!", areaInfos);
+            erro(msgErro, null, "Email e/ou senha inválidos!", areaInfos);
         })
         .finally(function () {
             // O que fazer independente de ter dado erro ou não
@@ -262,43 +262,43 @@ btnContinuar.addEventListener('click', function(e){
     {
         if(txtNome.value == '')
         {
-            erro(txtNome, 'Nome não foi informado!', areaInfos);
+            erro(msgErro, txtNome, 'Nome não foi informado!', areaInfos);
             return;
         }
         
         if(txtEmail.value == '')
         {
-            erro(txtEmail, 'Email não foi informado!', areaInfos);
+            erro(msgErro, txtEmail, 'Email não foi informado!', areaInfos);
             return;
         }
 
         if(!txtEmail.value.includes('@') || !txtEmail.value.includes('.'))
         {
-            erro(txtEmail, 'Email inválido!', areaInfos);
+            erro(msgErro, txtEmail, 'Email inválido!', areaInfos);
             return;
         }
             
         if(txtSenha.value == '')
         {
-            erro(txtSenha, 'Senha não foi informada!', areaInfos); 
+            erro(msgErro, txtSenha, 'Senha não foi informada!', areaInfos); 
             return;
         }
                 
         if(txtConfirmaSenha.value == '')
         {
-            erro(txtConfirmaSenha, 'Confirme a senha!', areaInfos); 
+            erro(msgErro, txtConfirmaSenha, 'Confirme a senha!', areaInfos); 
             return;
         }
                     
         if(txtSenha.value != txtConfirmaSenha.value)
         {
-            erro(txtConfirmaSenha, 'Confirmação de senha incompatível!', areaInfos); 
+            erro(msgErro, txtConfirmaSenha, 'Confirmação de senha incompatível!', areaInfos); 
             return;
         }
 
         if(!requisito1.classList.contains('requisitoAtendido') || !requisito2.classList.contains('requisitoAtendido') || !requisito3.classList.contains('requisitoAtendido') || !requisito4.classList.contains('requisitoAtendido') || !requisito5.classList.contains('requisitoAtendido'))
         {
-            erro(txtSenha, null, null);
+            erro(msgErro, txtSenha, null, null);
             return;
         }
                         
@@ -362,7 +362,7 @@ btnContinuar.addEventListener('click', function(e){
 
         if(txtRenda.value == '')
         {
-            erro(txtRenda, 'Renda não foi informada!', areaRenda);
+            erro(msgErro, txtRenda, 'Renda não foi informada!', areaRenda);
             return;
         }
 
@@ -452,7 +452,7 @@ btnContinuar.addEventListener('click', function(e){
         {
             if(categoriasSelecionadas.length == 0)
             {
-                erro(null, 'Selecione seus gastos!', areaTodasCategorias);
+                erro(msgErro, null, 'Selecione seus gastos!', areaTodasCategorias);
             }
         }
         
@@ -466,7 +466,7 @@ btnContinuar.addEventListener('click', function(e){
     
 })
 
-function erro(input, mensagem, local){
+function erro(msgErro, input, mensagem, local){
     
     if(input)
     {
@@ -803,12 +803,12 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
 
         if(txtNomeCategoria.value == '')
         {
-            erro(txtNomeCategoria, 'Nome da categoria não foi informado!', areaValorCategoria);
+            erro(msgErro, txtNomeCategoria, 'Nome da categoria não foi informado!', areaValorCategoria);
             return;
         }
         if(txtValorCategoria.value == '')
         {
-            erro(txtValorCategoria, 'Valor limite não foi informado!', areaValorCategoria);
+            erro(msgErro, txtValorCategoria, 'Valor limite não foi informado!', areaValorCategoria);
             return;
         }
 
@@ -818,7 +818,7 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
             
                 if(txtNomeCategoria.value.trim().toUpperCase() == categoriasSugeridas[i].toUpperCase())
                 {
-                    erro(txtNomeCategoria, 'Categoria já existente!', areaValorCategoria);
+                    erro(msgErro, txtNomeCategoria, 'Categoria já existente!', areaValorCategoria);
                     return;
                 }
             }

@@ -61,12 +61,12 @@ header{
     gap: 16px;
 }
 
-.btnOk, .btnSalvar, .btnGuardar, .btnCancelar{
+.btnOk, .btnSalvar, .btnGuardar, .btnCancelar, .btnDepositar{
     background-color: rgb(9, 95, 184);
     color: white;
 }
 
-.btnOk:active, .btnSalvar:active, .btnGuardar:active, .btnCancelar:active{
+.btnOk:active, .btnSalvar:active, .btnGuardar:active, .btnCancelar:active, .btnDepositar:active{
     background-color: rgb(29, 59, 90);
     border: solid transparent 2px;
 }

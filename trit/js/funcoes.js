@@ -1,4 +1,4 @@
-export function erro(input, mensagem, local){
+export function erro(msgErro, input, mensagem, local){
     
     if(input)
     {
@@ -56,27 +56,11 @@ export function obrigatorioIcon(input){
 
     input.addEventListener('input', function(e){
 
-        if(input.getAttribute('type') == 'text' || input.getAttribute('type') == 'password')
+        areaRight.appendChild(obrigatorio);
+
+        if(input.value.trim() != "")
         {
-            if(input.value.trim() != "")
-            {
-                obrigatorio.remove();
-            }
-            else
-            {
-                areaRight.appendChild(obrigatorio);
-            }
-        }
-        else
-        {
-            if(input.value != "")
-            {
-                obrigatorio.remove();
-            }
-            else
-            {
-                areaRight.appendChild(obrigatorio);
-            }
+            obrigatorio.remove();
         }
         
     })

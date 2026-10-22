@@ -181,19 +181,19 @@ btnNovaEntrada.addEventListener('click', function(e){
 
         if(txtNomeEntrada.value == '')
         {
-            erro(txtNomeEntrada, 'Nome não foi informado!', areaInfos);
+            erro(msgErro, txtNomeEntrada, 'Nome não foi informado!', areaInfos);
             return;
         }
 
         if(txtDataEntrada.value == '')
         {
-            erro(txtDataEntrada, 'Data não foi informada!', areaInfos);
+            erro(msgErro, txtDataEntrada, 'Data não foi informada!', areaInfos);
             return;
         }
 
         if(txtValorEntrada.value == '')
         {
-            erro(txtValorEntrada, 'Valor não foi informado', areaInfos)
+            erro(msgErro, txtValorEntrada, 'Valor não foi informado', areaInfos)
             return;
         }
 
@@ -619,13 +619,13 @@ function areaSelecao(local, areaNovaSaida)
 
             if(txtNomeCategoria.value == '')
             {
-                erro(txtNomeCategoria, 'Nome não foi informado!', areaInfos);
+                erro(msgErro, txtNomeCategoria, 'Nome não foi informado!', areaInfos);
                 return;
             }
 
             if(txtValorLimite.value == '')
             {
-                erro(txtValorLimite, 'Valor não foi informado!', areaInfos);
+                erro(msgErro, txtValorLimite, 'Valor não foi informado!', areaInfos);
                 return;
             }
 
@@ -1029,20 +1029,20 @@ function criarAreaSaida(txtTipo){
 
             if(document.querySelector('.areaOpcaoSelecionada').textContent == '- Selecione a categoria -')
             {
-                erro(null, 'Selecione uma categoria!', areaInfos);
+                erro(msgErro, null, 'Selecione uma categoria!', areaInfos);
                 return;
             }
         }
 
         if(txtNomeSaida.value == '')
         {
-            erro(txtNomeSaida, 'Nome não foi informado!', areaInfos);
+            erro(msgErro, txtNomeSaida, 'Nome não foi informado!', areaInfos);
             return;
         }
 
         if(txtDataSaida.value == '')
         {
-            erro(txtDataSaida, 'Data não foi informada!', areaInfos);
+            erro(msgErro, txtDataSaida, 'Data não foi informada!', areaInfos);
             return;
         }
 
@@ -1051,20 +1051,20 @@ function criarAreaSaida(txtTipo){
 
             if(txtDataLimite.value == '')
             {
-                erro(txtDataLimite, 'Data limite não foi informada!', areaInfos);
+                erro(msgErro, txtDataLimite, 'Data limite não foi informada!', areaInfos);
                 return; 
             }
 
             if(txtParcelas.value == '')
             {
-                erro(txtParcelas, 'Número de parcelas não informado!', areaInfos);
+                erro(msgErro, txtParcelas, 'Número de parcelas não informado!', areaInfos);
                 return;
             }
         }
 
         if(txtValorSaida.value == '')
         {
-            erro(txtValorSaida, 'Valor não foi informado!', areaInfos);
+            erro(msgErro, txtValorSaida, 'Valor não foi informado!', areaInfos);
             return;
         }
 
