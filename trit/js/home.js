@@ -105,7 +105,7 @@ btnNovaEntrada.addEventListener('click', function(e){
     tituloNovaEntrada.classList.add('titulo');
     tituloNovaEntrada.classList.add('tituloPopup');
 
-   btnSair = botaoSair();
+    btnSair = botaoSair();
 
     areaTitulo.append(tituloNovaEntrada, btnSair);
 
@@ -388,6 +388,12 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
 
         const icone = document.createElement('img');
         icone.src = "img/seta.png";
+        icone.addEventListener('click', function(e){
+            e.preventDefault();
+            console.log('clicou');
+            body.appendChild(bloqueio);
+            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx);
+        })
 
     cardControlado.appendChild(infosControlado);
     cardControlado.appendChild(icone);
@@ -1150,4 +1156,101 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
     })
     .finally(function () {
     });
+}
+
+function areaPopupEditar(local, txtNome, txtValorAtual, txtValorLimite){
+    console.log(txtValorAtual);
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+
+        const areaTitulo = document.createElement('div');
+        areaTitulo.classList.add('areaTitulo');
+
+            const tituloPopup = document.createElement('h1');
+            tituloPopup.classList.add('titulo');
+            tituloPopup.classList.add('tituloPopup');
+            tituloPopup.textContent = txtNome;
+
+            btnSair.addEventListener('click', function(e){
+                e.preventDefault();
+        
+                popup.remove();
+                avisoSair(bloqueio);
+            })
+        areaTitulo.appendChild(tituloPopup);
+        areaTitulo.appendChild(btnSair);
+
+        const areaValor = document.createElement('div');
+        areaValor.classList.add('divAlinhamento');
+            const areaValorAtual = document.createElement('div');
+            areaValorAtual.classList.add('areaDigitar');
+
+                const labelValorAtual = document.createElement('label');
+                labelValorAtual.textContent = 'Valor:'
+
+                let areaLeft = document.createElement('div');
+                areaLeft.classList.add('areaLeft');
+
+                const inputValorAtual = document.createElement('input');
+                inputValorAtual.type = 'number';
+                inputValorAtual.classList.add('recuoPopup');
+                inputValorAtual.classList.add('inputMoeda');
+                inputValorAtual.value = txtValorAtual;
+
+                    let moeda = document.createElement('p');
+                    moeda.textContent = 'R$';
+                    moeda.classList.add('moeda');
+
+                areaLeft.appendChild(inputValorAtual);
+                areaLeft.appendChild(moeda);
+
+            areaValorAtual.appendChild(labelValorAtual);
+            areaValorAtual.appendChild(areaLeft);
+
+
+            const areaValorLimite = document.createElement('div');
+            areaValorLimite.classList.add('areaDigitar');
+
+                const labelValorLimite = document.createElement('label');
+                labelValorLimite.textContent = 'Valor Limite:'
+
+                areaLeft = document.createElement('div');
+                areaLeft.classList.add('areaLeft');
+
+                const inputValorLimite = document.createElement('input');
+                inputValorLimite.type = 'number';
+                inputValorLimite.classList.add('recuoPopup');
+                inputValorLimite.classList.add('inputMoeda');
+                inputValorLimite.value = txtValorLimite;
+
+                    moeda = document.createElement('p');
+                    moeda.textContent = 'R$';
+                    moeda.classList.add('moeda');
+
+                areaLeft.appendChild(inputValorLimite);
+                areaLeft.appendChild(moeda);
+            areaValorLimite.appendChild(labelValorLimite);
+            areaValorLimite.appendChild(areaLeft);
+        
+        areaValor.appendChild(areaValorAtual);
+        areaValor.appendChild(areaValorLimite);
+
+        const areaBotoesPopup = document.createElement('div');
+        areaBotoesPopup.classList.add('areaBotoesPopup');
+
+            const btnSalvar = document.createElement('button');
+            btnSalvar.classList.add('btnSalvar');
+            btnSalvar.textContent = 'Salvar';
+
+            const btnExcluir = document.createElement('button');
+            btnExcluir.classList.add('btnExcluirElemento');
+            btnExcluir.textContent = 'Excluir';
+        areaBotoesPopup.appendChild(btnSalvar);
+        areaBotoesPopup.appendChild(btnExcluir);
+    
+    popup.appendChild(areaTitulo);
+    popup.appendChild(areaValor);
+    popup.appendChild(areaBotoesPopup);
+
+    local.appendChild(popup);
 }
