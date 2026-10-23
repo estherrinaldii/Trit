@@ -32,538 +32,6 @@ let btnSair = botaoSair();
 let prateleiraItens = 2;
 botaoAdicionar();
 
-const plantas = document.querySelectorAll('.planta');
-
-for (let i = 0; i < plantas.length; i++) {
-    const plantaSelecionada = plantas[i];
-    const tituloCofres = document.querySelectorAll('.tituloCofre');
-    
-    plantaSelecionada.addEventListener('click', function(e){
-        e.preventDefault()
-
-        const areaConsultarCofre = document.createElement('div');
-        areaConsultarCofre.classList.add('popup');
-        areaConsultarCofre.classList.add('areaConsultarCofre');
-
-        const cofreConsultar = document.createElement('div');
-        cofreConsultar.classList.add('cofreConsultar');
-
-        const plantaIcon = document.createElement('img');
-        plantaIcon.src = 'img/plantas/icons/lirio-icon.svg';
-
-        const nomeCofre = document.createElement('p');
-        nomeCofre.textContent = 'Algo muito legal';
-
-        cofreConsultar.append(plantaIcon, nomeCofre);
-
-        const areaInfos = document.createElement('div');
-        areaInfos.classList.add('infosCofrinho');
-
-        const areaValorDepositado = document.createElement('div');
-        areaValorDepositado.classList.add('areaInfos');
-
-        const tituloValorDepositado = document.createElement('p');
-        tituloValorDepositado.textContent = 'Valor atual:';
-        tituloValorDepositado.classList.add('tituloInfos');
-
-        const valorDepositado = document.createElement('div');
-        valorDepositado.classList.add('valor');
-        
-        const valorDepositadoMoeda = document.createElement('p');
-        valorDepositadoMoeda.textContent = 'R$';
-
-        const valorDepositadoReal = document.createElement('p');
-        valorDepositadoReal.textContent = '26,00';
-
-        valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
-        areaValorDepositado.append(tituloValorDepositado, valorDepositado);
-
-        const areaValorLimite = document.createElement('div');
-        areaValorLimite.classList.add('areaInfos');
-
-        const tituloValorLimite = document.createElement('p');
-        tituloValorLimite.textContent = 'Valor limite:';
-        tituloValorLimite.classList.add('tituloInfos');
-
-        const valorLimite = document.createElement('div');
-        valorLimite.classList.add('valor');
-        
-        const valorLimiteMoeda = document.createElement('p');
-        valorLimiteMoeda.textContent = 'R$';
-
-        const valorLimiteReal = document.createElement('p');
-        valorLimiteReal.textContent = '800,00';
-
-        valorLimite.append(valorLimiteMoeda, valorLimiteReal);
-        areaValorLimite.append(tituloValorLimite, valorLimite);
-
-        const areaDataCriacao = document.createElement('div');
-        areaDataCriacao.classList.add('areaInfos');
-
-        const tituloDataCriacao = document.createElement('p');
-        tituloDataCriacao.textContent = 'Data:';
-        tituloDataCriacao.classList.add('tituloInfos');
-
-        const dataCriacao = document.createElement('p');
-        dataCriacao.textContent = '12/02/2020';
-
-        areaDataCriacao.append(tituloDataCriacao, dataCriacao);
-
-        const areaPeriodo = document.createElement('div');
-        areaPeriodo.classList.add('areaInfos');
-
-        const tituloPeriodo = document.createElement('p');
-        tituloPeriodo.textContent = 'Período:';
-        tituloPeriodo.classList.add('tituloInfos');
-
-        const periodo = document.createElement('p');
-
-        areaPeriodo.append(tituloPeriodo, periodo);
-
-        let areaDica = '';
-        let areaDataLimite = '';
-
-        if(plantaSelecionada.querySelector('.determinado'))
-        {
-            periodo.textContent = 'Determinado';
-
-            areaDataLimite = document.createElement('div');
-            areaDataLimite.classList.add('areaInfos');
-
-            const tituloDataLimite = document.createElement('p');
-            tituloDataLimite.textContent = 'Data limite:';
-            tituloDataLimite.classList.add('tituloInfos');
-
-            const dataLimite = document.createElement('p');
-            dataLimite.textContent = '20/10/2027';
-            dataLimite.id = 'dataLimite';
-
-            areaDataLimite.append(tituloDataLimite, dataLimite);
-            areaInfos.appendChild(areaDataLimite);
-
-            areaDica = document.createElement('div');
-            areaDica.classList.add('areaDica');
-
-            const fundoDica = document.createElement('img');
-            fundoDica.src = 'img/fundoDica.svg';
-            fundoDica.classList.add('fundoDica');
-
-            const dica = document.createElement('p');
-            dica.textContent = '*Caso junte R$' + '500,00' + ' por mês baterá sua meta com tranqulidade!';
-            dica.classList.add('dica');
-
-            const avisoIcon = document.createElement('img');
-            avisoIcon.src = 'img/aviso-icon.svg';
-            avisoIcon.classList.add('avisoIcon');
-
-            areaDica.append(fundoDica, dica, avisoIcon);
-        }
-        else
-        {
-            periodo.textContent = 'Indeterminado';
-        }
-
-        areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaDataLimite, areaPeriodo);
-
-        const areaBotoes = document.createElement('div');
-        areaBotoes.classList.add('areaBotoes');
-
-        const btnGuardar = document.createElement('button');
-        btnGuardar.textContent = 'Guardar';
-        btnGuardar.classList.add('btnGuardar');
-        btnGuardar.classList.add('btnAlteraValor');
-
-        const btnResgatar = document.createElement('button');
-        btnResgatar.textContent = 'Resgatar';
-        btnResgatar.classList.add('btnResgatar');
-        btnResgatar.classList.add('btnAlteraValor');
-
-        areaBotoes.append(btnGuardar, btnResgatar);
-
-        const areaConfig = document.createElement('div');
-        areaConfig.classList.add('areaConfig');
-
-        const btnEditar = document.createElement('div');
-        btnEditar.classList.add('btnEditar');
-
-        const editarIcon = document.createElement('img');
-        editarIcon.src = 'img/editar.svg';
-
-        const editar = document.createElement('p');
-        editar.textContent = 'Editar dados';
-
-        btnEditar.append(editarIcon, editar);
-
-        const btnExcluir = document.createElement('div');
-        btnExcluir.classList.add('btnExcluir');
-
-        const excluirIcon = document.createElement('img');
-        excluirIcon.src = 'img/excluir.svg';
-
-        const excluir = document.createElement('p');
-        excluir.textContent = 'Excluir';
-
-        btnExcluir.append(excluirIcon, excluir);
-
-        areaConfig.append(btnEditar, btnExcluir);
-
-        btnSair = botaoSair();
-        btnSair.classList.add('btnSairPosicao');
-
-        areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaDica, areaBotoes, areaConfig);
-        bloqueio.appendChild(areaConsultarCofre);
-        body.appendChild(bloqueio);
-
-        btnSair.addEventListener('click', function(e){
-            e.preventDefault();
-
-            areaConsultarCofre.remove();
-            bloqueio.remove();
-        })
-
-        const btnAlteraValor = document.querySelectorAll('.btnAlteraValor');
-
-        for (let index = 0; index < btnAlteraValor.length; index++) {
-            
-            btnAlteraValor[index].addEventListener('click', function(e){
-                e.preventDefault();
-
-                areaConsultarCofre.remove();
-
-                const areaAlterarValor = document.createElement('div');
-                areaAlterarValor.classList.add('popup');
-
-                const areaTitulo = document.createElement('div');
-                areaTitulo.classList.add('areaTitulo');
-
-                const tituloAlterar = document.createElement('p');
-                tituloAlterar.classList.add('titulo');
-                tituloAlterar.classList.add('tituloPopup');
-
-                if(btnAlteraValor[index].textContent == 'Guardar')
-                {
-                    tituloAlterar.textContent = 'Guardar valor';
-                }
-                else
-                {
-                    tituloAlterar.textContent = 'Resgatar valor';
-                }
-
-                btnSair = botaoSair();
-
-                areaTitulo.append(tituloAlterar, btnSair);
-
-                const areaInfos = document.createElement('div');
-                areaInfos.classList.add('infos');
-
-                const areaValor = document.createElement('div');
-                areaValor.classList.add('areaDigitar');
-
-                const labelValor = document.createElement('label');
-                labelValor.textContent = 'Valor:';
-
-                const areaLeft = document.createElement('div');
-                areaLeft.classList.add('areaLeft');
-
-                const txtValor = document.createElement('input');
-                txtValor.type = 'text';
-                txtValor.inputMode = 'numeric';
-                txtValor.value = '0,00';
-                txtValor.classList.add('recuoPopup');
-                txtValor.classList.add('inputMoeda');
-
-                const moeda = document.createElement('p');
-                moeda.textContent = 'R$';
-                moeda.classList.add('moeda');
-
-                formataInputValor(txtValor, null);
-
-                areaLeft.append(txtValor, moeda);
-                areaValor.append(labelValor, obrigatorioIcon(areaLeft));
-                areaInfos.appendChild(areaValor);
-
-                const btnSalvar = document.createElement('button');
-                btnSalvar.textContent = 'Salvar';
-                btnSalvar.classList.add('btnSalvar');
-
-                areaAlterarValor.append(areaTitulo, areaInfos, btnSalvar);
-                bloqueio.appendChild(areaAlterarValor);
-
-                btnSair.addEventListener('click', function(e){
-                    e.preventDefault();
-
-                    areaAlterarValor.remove();
-                    bloqueio.appendChild(areaConsultarCofre)
-                })
-
-                btnSalvar.addEventListener('click', function(e){
-                    e.preventDefault();
-
-                    if(txtValor.value == '' || txtValor.value == '0,00')
-                    {
-                        erro(msgErro, txtValor, 'Valor não foi informado!', areaInfos);
-                        return;
-                    }
-
-                    let valorDigitado = txtValor.value;
-                    valorDigitado = valorDigitado.replace(',', '.');
-                    valorDigitado = Number(valorDigitado);
-
-                    let valorPossui = valorDepositadoReal.textContent;
-                    valorPossui = valorPossui.replace(',', '.');
-                    valorPossui = Number(valorPossui);
-
-                    let valorTotal = 0;
-
-                    if(btnAlteraValor[index].textContent == 'Guardar')
-                    {
-                        valorTotal = valorPossui + valorDigitado;
-
-                        let valorMax = valorLimiteReal.textContent;
-                        valorMax = valorMax = valorMax.replace(',', '.');
-                        valorMax = Number(valorMax);
-
-                        if(valorTotal > valorMax)
-                        {
-                            areaAlterarValor.remove();
-
-                            const areaAviso = document.createElement('div');
-                            areaAviso.classList.add('popup');
-                            areaAviso.classList.add('areaAviso');
-
-                            const aviso = document.createElement('p');
-                            aviso.textContent = 'O valor total ultrapassa o valor limite do cofrinho. Deseja depositar mesmo assim?'
-
-                            const areaBotoesDeposito = document.createElement('div');
-                            areaBotoesDeposito.classList.add('areaBotoesDeposito');
-
-                            const btnDepositar = document.createElement('button');
-                            btnDepositar.classList.add('btnDepositar');
-                            btnDepositar.textContent = 'Depositar';
-
-                            const btnCancelar = document.createElement('button');
-                            btnCancelar.classList.add('btnCancelarDeposito');
-                            btnCancelar.textContent = 'Cancelar';
-
-                            areaBotoesDeposito.append(btnDepositar, btnCancelar)
-                            areaAviso.append(aviso, areaBotoesDeposito);
-                            bloqueio.appendChild(areaAviso);
-
-                            btnDepositar.addEventListener('click', function(e){
-                                e.preventDefault();
-
-                                areaAviso.remove();
-                                bloqueio.appendChild(areaConsultarCofre);
-
-                                valorTotal = Number(valorTotal).toFixed(2);
-                                valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                            })
-
-                            btnCancelar.addEventListener('click', function(e){
-                                e.preventDefault();
-
-                                areaAviso.remove();
-                                bloqueio.appendChild(areaConsultarCofre);
-                            })
-                        }
-                        else
-                        {
-                            areaAlterarValor.remove();
-                            bloqueio.appendChild(areaConsultarCofre);
-
-                            valorTotal = Number(valorTotal).toFixed(2);
-                            valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                        }
-                    }
-                    else
-                    {
-                        if(valorDigitado > valorPossui)
-                        {
-                            erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
-                            return;
-                        }
-                        else
-                        {
-                            areaAlterarValor.remove();
-                            bloqueio.appendChild(areaConsultarCofre);
-
-                            valorTotal = valorPossui - valorDigitado;
-                            valorTotal = Number(valorTotal).toFixed(2);
-                            valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                        }
-                    }
-                })
-            })
-        }
-
-        btnEditar.addEventListener('click', function(e){
-            e.preventDefault();
-
-            areaConsultarCofre.remove();
-
-            const areaEditarDados = document.createElement('div');
-            areaEditarDados.classList.add('popup');
-
-            const areaTitulo = document.createElement('div');
-            areaTitulo.classList.add('areaTitulo');
-
-            const tituloEditar = document.createElement('p');
-            tituloEditar.textContent = 'Editar dados';
-            tituloEditar.classList.add('titulo');
-            tituloEditar.classList.add('tituloPopup');
-
-            btnSair = botaoSair();
-
-            areaTitulo.append(tituloEditar, btnSair);
-
-            const areaInfos = document.createElement('div');
-            areaInfos.classList.add('infos');
-
-            const areaValorLimite = document.createElement('div');
-            areaValorLimite.classList.add('areaDigitar');
-
-            const labelValorLimite = document.createElement('label');
-            labelValorLimite.textContent = 'Valor limite:';
-
-            const areaLeft = document.createElement('div');
-            areaLeft.classList.add('areaLeft');
-
-            const txtValorLimite = document.createElement('input');
-            txtValorLimite.type = 'text';
-            txtValorLimite.inputMode = 'numeric';
-            txtValorLimite.value = valorLimiteReal.textContent;
-            txtValorLimite.classList.add('recuoPopup');
-            txtValorLimite.classList.add('inputMoeda');
-
-            const moeda = document.createElement('p');
-            moeda.textContent = 'R$';
-            moeda.classList.add('moeda');
-
-            formataInputValor(txtValorLimite, valorLimiteReal.textContent);
-
-            areaLeft.append(txtValorLimite, moeda);
-            areaValorLimite.append(labelValorLimite, obrigatorioIcon(areaLeft));
-            areaInfos.appendChild(areaValorLimite);
-
-            if(periodo.textContent == 'Determinado')
-            {
-                const areaData = document.createElement('div');
-                areaData.classList.add('areaDigitar');
-
-                const labelData = document.createElement('label');
-                labelData.textContent = 'Data limite:';
-
-                const txtData = document.createElement('input');
-                txtData.type = 'text';
-                txtData.inputMode = 'numeric';
-                txtData.id = 'txtData';
-                txtData.value = areaDataLimite.querySelector('#dataLimite').textContent;
-                txtData.classList.add('recuoPopup');
-
-                areaData.append(labelData, obrigatorioIcon(txtData));
-                areaInfos.appendChild(areaData);
-
-                formataInputData(txtData, txtData.value.replaceAll('/',''));
-            }
-
-            const btnSalvar = document.createElement('button');
-            btnSalvar.textContent = 'Salvar';
-            btnSalvar.classList.add('btnSalvar');
-
-            areaEditarDados.append(areaTitulo, areaInfos, btnSalvar);
-            bloqueio.appendChild(areaEditarDados);
-
-            btnSair.addEventListener('click', function(e){
-                e.preventDefault();
-
-                areaEditarDados.remove();
-                bloqueio.appendChild(areaConsultarCofre);
-            })
-
-            btnSalvar.addEventListener('click', function(e){
-                e.preventDefault();
-
-                if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
-                {
-                    erro(msgErro, txtValorLimite, 'Valor limite não foi informado!', areaInfos);
-                    return;
-                }
-
-                if(document.querySelector('#txtData'))
-                {
-                    const txtData = document.querySelector('#txtData'); 
-                    let erroEncontrado = '';
-                    erroEncontrado = validaData(msgErro, txtData, areaInfos);
-
-                    if(erroEncontrado)
-                    {
-                        return;
-                    }
-                    areaDataLimite.querySelector('#dataLimite').textContent = txtData.value;
-                }
-
-                valorLimiteReal.textContent = txtValorLimite.value;
-
-                areaEditarDados.remove();
-                bloqueio.appendChild(areaConsultarCofre);
-            })
-
-        })
-
-        btnExcluir.addEventListener('click',function(e){
-            e.preventDefault();
-
-            areaConsultarCofre.remove();
-
-            const areaAviso = document.createElement('div');
-            areaAviso.classList.add('popup');
-            areaAviso.classList.add('areaAviso');
-
-            const aviso = document.createElement('p');
-            aviso.textContent = 'Gostaria de excluir esse cofrinho?'
-
-            const areaBotoesExcluir = document.createElement('div');
-            areaBotoesExcluir.classList.add('areaBotoesExcluir');
-
-            const btnCancelar = document.createElement('button');
-            btnCancelar.classList.add('btnCancelar');
-            btnCancelar.textContent = 'Cancelar';
-            btnCancelar.classList.add('btnCancelar');
-
-            const btnExcluirConfirma = document.createElement('button');
-            btnExcluirConfirma.classList.add('btnExcluirConfirma');
-            btnExcluirConfirma.textContent = 'Excluir';
-            btnExcluirConfirma.classList.add('btnExcluirConfirma');
-
-            areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
-            areaAviso.append(aviso, areaBotoesExcluir);
-            bloqueio.appendChild(areaAviso);
-
-            btnCancelar.addEventListener('click', function(e){
-                e.preventDefault();
-
-                areaAviso.remove();
-                bloqueio.appendChild(areaConsultarCofre);
-            });
-
-            btnExcluirConfirma.addEventListener('click', function(e){
-                e.preventDefault();
-
-                areaAviso.remove();
-                bloqueio.remove();
-                    
-                if(plantaSelecionada.getAttribute('codigo') == tituloCofres[i].getAttribute('codigo'));
-                {
-                    tituloCofres[i].remove();
-                }
-                
-                plantaSelecionada.remove();
-            })
-
-        })
-    })
-}
-
 function areaSelecaoPlanta()
 {
     const selecionarPlantas = document.createElement('div');
@@ -976,9 +444,9 @@ function botaoAdicionar()
                 return;
             }
 
-            let plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
+            const plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
 
-            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, null, txtValorCofre, plantaEnviada);
+            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, txtDataCofre.value, txtValorCofre.value, plantaEnviada);
 
             areaCriarCofre.remove();
             bloqueio.remove();
@@ -1030,6 +498,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
         const plantaImg = document.createElement('img');
         plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+        plantaImg.classList.add('plantaImg');
 
         const vasoPlanta = document.createElement('img');
         vasoPlanta.src = 'img/plantas/vaso.svg';
@@ -1049,6 +518,11 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
         plantaPrateleira.append(plantas, prateleira);
         cofrinhos.appendChild(plantaPrateleira);
+
+        if(periodo == 'Determinado')
+        {
+            plantaCriada.prepend(addStatus());
+        }
 
         botaoAdicionar();
     }
@@ -1072,6 +546,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const plantaImg = document.createElement('img');
             plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+            plantaImg.classList.add('plantaImg');
 
             const vasoPlanta = document.createElement('img');
             vasoPlanta.src = 'img/plantas/vaso.svg';
@@ -1092,6 +567,11 @@ function criarPlanta(nome, periodo, data, valor, planta)
             plantaPrateleira.append(plantas, prateleira);
             cofrinhos.appendChild(plantaPrateleira);
 
+            if(periodo == 'Determinado')
+            {
+                plantaCriada.prepend(addStatus());
+            }
+
             prateleiraItens = 1;
         }
         else
@@ -1109,6 +589,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const plantaImg = document.createElement('img');
             plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+            plantaImg.classList.add('plantaImg');
 
             const vasoPlanta = document.createElement('img');
             vasoPlanta.src = 'img/plantas/vaso.svg';
@@ -1123,11 +604,699 @@ function criarPlanta(nome, periodo, data, valor, planta)
             nomePlanta.classList.add('tituloCofre');
             nomePlanta.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
 
-            plantas[plantasAdicionar].appendChild(plantaCriada);
-            prateleira[prateleiraAdicionar].appendChild(nomePlanta);
+            plantas[plantasAdicionar].append(plantaCriada);
+            prateleira[prateleiraAdicionar].append(nomePlanta);
 
-            plantaPrateleira[plantaPrateleiraAdicionar].append(plantas, prateleira);
+            plantaPrateleira[plantaPrateleiraAdicionar].append(plantas[plantasAdicionar], prateleira[prateleiraAdicionar]);
+
+            if(periodo == 'Determinado')
+            {
+                plantaCriada.prepend(addStatus());
+            }
+
             prateleiraItens++;
         }
+    }
+
+    if(data == 'dd/mm/aaaa')
+    {
+        data = null;
+    }
+    informacoesCofre(nome, periodo, '22/10/2026', data, valor, planta);
+
+    function addStatus()
+    {
+        const areaStatus = document.createElement('div');
+        areaStatus.classList.add('status');
+        areaStatus.classList.add('determinado');
+
+        const dataStatus = document.createElement('p');
+        dataStatus.textContent = data;
+
+        const determinado = document.createElement('img');
+        determinado.src = 'img/timer-icon.svg';
+
+        areaStatus.append(dataStatus, determinado);
+        return areaStatus;
+    }
+}
+
+function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
+{
+    let valorTotal = 0;
+    const plantas = document.querySelectorAll('.planta');
+    let areaConsultarCofre = '';
+
+    for (let i = 0; i < plantas.length; i++) {
+        const plantaSelecionada = plantas[i];
+        const tituloCofres = document.querySelectorAll('.tituloCofre');
+
+        const imgPlanta = plantaSelecionada.querySelector('.plantaImg');
+        const porcentagemPlanta = plantaSelecionada.querySelector('.porcentagem');
+        
+        plantaSelecionada.addEventListener('click', function(e){
+            e.preventDefault()
+
+            if(plantaSelecionada.querySelector('.concluida'))
+            {
+                bloqueio.innerHTML = '';
+
+                const areaAvisoConcluida = document.createElement('div');
+                areaAvisoConcluida.classList.add('popup');
+                areaAvisoConcluida.classList.add('areaAviso');
+                areaAvisoConcluida.classList.add('comemorativo');
+
+                const aviso = document.createElement('p');
+                aviso.textContent = 'Parabéns! Essa meta foi concluída.'
+
+                const btnOk = document.createElement('button');
+                btnOk.classList.add('btnOk');
+                btnOk.textContent = 'Ok';
+
+                areaAvisoConcluida.append(aviso, btnOk);
+                bloqueio.appendChild(areaAvisoConcluida);
+                body.appendChild(bloqueio);
+
+                btnOk.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaAvisoConcluida.remove();
+                    bloqueio.appendChild(areaConsultarCofre);
+
+                    document.querySelector('.concluida').remove();
+                })  
+                
+                return;
+            }
+
+            bloqueio.innerHTML = '';
+
+            areaConsultarCofre = document.createElement('div');
+            areaConsultarCofre.classList.add('popup');
+            areaConsultarCofre.classList.add('areaConsultarCofre');
+
+            const cofreConsultar = document.createElement('div');
+            cofreConsultar.classList.add('cofreConsultar');
+
+            const plantaIcon = document.createElement('img');
+            plantaIcon.src = 'img/plantas/icons/' + planta + '-icon.svg';
+
+            const nomeCofre = document.createElement('p');
+            nomeCofre.textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
+
+            cofreConsultar.append(plantaIcon, nomeCofre);
+
+            const areaInfos = document.createElement('div');
+            areaInfos.classList.add('infosCofrinho');
+
+            const areaValorDepositado = document.createElement('div');
+            areaValorDepositado.classList.add('areaInfos');
+
+            const tituloValorDepositado = document.createElement('p');
+            tituloValorDepositado.textContent = 'Valor atual:';
+            tituloValorDepositado.classList.add('tituloInfos');
+
+            const valorDepositado = document.createElement('div');
+            valorDepositado.classList.add('valor');
+            
+            const valorDepositadoMoeda = document.createElement('p');
+            valorDepositadoMoeda.textContent = 'R$';
+
+            const valorDepositadoReal = document.createElement('p');
+            valorDepositadoReal.textContent = Number(valorTotal).toFixed(2).replace('.',',');
+        
+
+            valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
+            areaValorDepositado.append(tituloValorDepositado, valorDepositado);
+
+            const areaValorLimite = document.createElement('div');
+            areaValorLimite.classList.add('areaInfos');
+
+            const tituloValorLimite = document.createElement('p');
+            tituloValorLimite.textContent = 'Valor limite:';
+            tituloValorLimite.classList.add('tituloInfos');
+
+            const valorLimite = document.createElement('div');
+            valorLimite.classList.add('valor');
+            
+            const valorLimiteMoeda = document.createElement('p');
+            valorLimiteMoeda.textContent = 'R$';
+
+            const valorLimiteReal = document.createElement('p');
+            valorLimiteReal.textContent = valor;
+
+            valorLimite.append(valorLimiteMoeda, valorLimiteReal);
+            areaValorLimite.append(tituloValorLimite, valorLimite);
+
+            const areaDataCriacao = document.createElement('div');
+            areaDataCriacao.classList.add('areaInfos');
+
+            const tituloDataCriacao = document.createElement('p');
+            tituloDataCriacao.textContent = 'Data:';
+            tituloDataCriacao.classList.add('tituloInfos');
+
+            const dataCriacao = document.createElement('p');
+            dataCriacao.textContent = dataAtual;
+
+            areaDataCriacao.append(tituloDataCriacao, dataCriacao);
+
+            const areaPeriodo = document.createElement('div');
+            areaPeriodo.classList.add('areaInfos');
+
+            const tituloPeriodo = document.createElement('p');
+            tituloPeriodo.textContent = 'Período:';
+            tituloPeriodo.classList.add('tituloInfos');
+
+            const tipoPeriodo = document.createElement('p');
+            tipoPeriodo.textContent = periodo;
+
+            areaPeriodo.append(tituloPeriodo, tipoPeriodo);
+
+            let areaDica = '';
+            let areaDataLimite = '';
+
+            if(data)
+            {
+                let diaAtual = dataAtual.replaceAll('/','');
+                diaAtual = diaAtual.slice(0,2);
+
+                let mesAtual = dataAtual.replaceAll('/','');
+                mesAtual = mesAtual.slice(2,4);
+
+                let anoAtual = dataAtual.replaceAll('/','');
+                anoAtual = anoAtual.slice(4);
+
+                let diaLimite = data.replaceAll('/','');
+                diaLimite = diaLimite.slice(0,2);
+
+                let mesLimite = data.replaceAll('/','');
+                mesLimite = mesLimite.slice(2,4);
+
+                let anoLimite = data.replaceAll('/','');
+                anoLimite = anoLimite.slice(4);
+
+                let diferencaAno = anoLimite - anoAtual;
+                let diferencaMes = mesLimite - mesAtual;
+                diferencaMes = diferencaMes + (diferencaAno * 12);
+
+                if(diaAtual > diaLimite)
+                {
+                    diferencaMes--;
+                }
+
+                let valorPorMes = Number(valor.replace(',','.')) / diferencaMes;
+                valorPorMes = Math.ceil(valorPorMes * Math.pow(10,2)) / Math.pow(10,2);
+                valorPorMes = valorPorMes.toFixed(2).replace('.',',');
+
+                areaDataLimite = document.createElement('div');
+                areaDataLimite.classList.add('areaInfos');
+
+                const tituloDataLimite = document.createElement('p');
+                tituloDataLimite.textContent = 'Data limite:';
+                tituloDataLimite.classList.add('tituloInfos');
+
+                const dataLimite = document.createElement('p');
+                dataLimite.textContent = data;
+                dataLimite.id = 'dataLimite';
+
+                areaDataLimite.append(tituloDataLimite, dataLimite);
+                areaInfos.appendChild(areaDataLimite);
+
+                areaDica = document.createElement('div');
+                areaDica.classList.add('areaDica');
+
+                const fundoDica = document.createElement('img');
+                fundoDica.src = 'img/fundoDica.svg';
+                fundoDica.classList.add('fundoDica');
+
+                const dica = document.createElement('p');
+                dica.textContent = '*Caso junte R$' + valorPorMes + ' por mês baterá sua meta com tranqulidade!';
+                dica.classList.add('dica');
+
+                const avisoIcon = document.createElement('img');
+                avisoIcon.src = 'img/aviso-icon.svg';
+                avisoIcon.classList.add('avisoIcon');
+
+                areaDica.append(fundoDica, dica, avisoIcon);
+            }
+
+            areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaDataLimite, areaPeriodo);
+
+            const areaBotoes = document.createElement('div');
+            areaBotoes.classList.add('areaBotoes');
+
+            const btnGuardar = document.createElement('button');
+            btnGuardar.textContent = 'Guardar';
+            btnGuardar.classList.add('btnGuardar');
+            btnGuardar.classList.add('btnAlteraValor');
+
+            const btnResgatar = document.createElement('button');
+            btnResgatar.textContent = 'Resgatar';
+            btnResgatar.classList.add('btnResgatar');
+            btnResgatar.classList.add('btnAlteraValor');
+
+            areaBotoes.append(btnGuardar, btnResgatar);
+
+            const areaConfig = document.createElement('div');
+            areaConfig.classList.add('areaConfig');
+
+            const btnEditar = document.createElement('div');
+            btnEditar.classList.add('btnEditar');
+
+            const editarIcon = document.createElement('img');
+            editarIcon.src = 'img/editar.svg';
+
+            const editar = document.createElement('p');
+            editar.textContent = 'Editar dados';
+
+            btnEditar.append(editarIcon, editar);
+
+            const btnExcluir = document.createElement('div');
+            btnExcluir.classList.add('btnExcluir');
+
+            const excluirIcon = document.createElement('img');
+            excluirIcon.src = 'img/excluir.svg';
+
+            const excluir = document.createElement('p');
+            excluir.textContent = 'Excluir';
+
+            btnExcluir.append(excluirIcon, excluir);
+
+            areaConfig.append(btnEditar, btnExcluir);
+
+            btnSair = botaoSair();
+            btnSair.classList.add('btnSairPosicao');
+
+            areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaDica, areaBotoes, areaConfig);
+            bloqueio.appendChild(areaConsultarCofre);
+            body.appendChild(bloqueio);
+
+            btnSair.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaConsultarCofre.remove();
+                bloqueio.remove();
+            })
+
+            const btnAlteraValor = document.querySelectorAll('.btnAlteraValor');
+
+            for (let index = 0; index < btnAlteraValor.length; index++) {
+            
+                btnAlteraValor[index].addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaConsultarCofre.remove();
+
+                    const areaAlterarValor = document.createElement('div');
+                    areaAlterarValor.classList.add('popup');
+
+                    const areaTitulo = document.createElement('div');
+                    areaTitulo.classList.add('areaTitulo');
+
+                    const tituloAlterar = document.createElement('p');
+                    tituloAlterar.classList.add('titulo');
+                    tituloAlterar.classList.add('tituloPopup');
+
+                    if(btnAlteraValor[index].textContent == 'Guardar')
+                    {
+                        tituloAlterar.textContent = 'Guardar valor';
+                    }
+                    else
+                    {
+                        tituloAlterar.textContent = 'Resgatar valor';
+                    }
+
+                    btnSair = botaoSair();
+
+                    areaTitulo.append(tituloAlterar, btnSair);
+
+                    const areaInfos = document.createElement('div');
+                    areaInfos.classList.add('infos');
+
+                    const areaValor = document.createElement('div');
+                    areaValor.classList.add('areaDigitar');
+
+                    const labelValor = document.createElement('label');
+                    labelValor.textContent = 'Valor:';
+
+                    const areaLeft = document.createElement('div');
+                    areaLeft.classList.add('areaLeft');
+
+                    const txtValor = document.createElement('input');
+                    txtValor.type = 'text';
+                    txtValor.inputMode = 'numeric';
+                    txtValor.value = '0,00';
+                    txtValor.classList.add('recuoPopup');
+                    txtValor.classList.add('inputMoeda');
+
+                    const moeda = document.createElement('p');
+                    moeda.textContent = 'R$';
+                    moeda.classList.add('moeda');
+
+                    formataInputValor(txtValor, null);
+
+                    areaLeft.append(txtValor, moeda);
+                    areaValor.append(labelValor, obrigatorioIcon(areaLeft));
+                    areaInfos.appendChild(areaValor);
+
+                    const btnSalvar = document.createElement('button');
+                    btnSalvar.textContent = 'Salvar';
+                    btnSalvar.classList.add('btnSalvar');
+
+                    areaAlterarValor.append(areaTitulo, areaInfos, btnSalvar);
+                    bloqueio.appendChild(areaAlterarValor);
+
+                    btnSair.addEventListener('click', function(e){
+                        e.preventDefault();
+
+                        areaAlterarValor.remove();
+                        bloqueio.appendChild(areaConsultarCofre)
+                    })
+
+                    btnSalvar.addEventListener('click', function(e){
+                        e.preventDefault();
+
+                        if(txtValor.value == '' || txtValor.value == '0,00')
+                        {
+                            erro(msgErro, txtValor, 'Valor não foi informado!', areaInfos);
+                            return;
+                        }
+
+                        let valorDigitado = txtValor.value;
+                        valorDigitado = valorDigitado.replace(',', '.');
+                        valorDigitado = Number(valorDigitado);
+
+                        let valorPossui = valorDepositadoReal.textContent;
+                        valorPossui = valorPossui.replace(',', '.');
+                        valorPossui = Number(valorPossui);
+
+                        let valorMax = valorLimiteReal.textContent;
+                        valorMax = valorMax = valorMax.replace(',', '.');
+                        valorMax = Number(valorMax);
+
+                        if(btnAlteraValor[index].textContent == 'Guardar')
+                        {
+                            valorTotal = valorPossui + valorDigitado;
+                            
+                            if(valorPossui < valorMax && valorTotal > valorMax)
+                            {
+                                areaAlterarValor.remove();
+
+                                const areaAviso = document.createElement('div');
+                                areaAviso.classList.add('popup');
+                                areaAviso.classList.add('areaAviso');
+
+                                const aviso = document.createElement('p');
+                                aviso.textContent = 'O valor total ultrapassa o valor limite do cofrinho. Deseja depositar mesmo assim?'
+
+                                const areaBotoesDeposito = document.createElement('div');
+                                areaBotoesDeposito.classList.add('areaBotoesDeposito');
+
+                                const btnDepositar = document.createElement('button');
+                                btnDepositar.classList.add('btnDepositar');
+                                btnDepositar.textContent = 'Depositar';
+
+                                const btnCancelar = document.createElement('button');
+                                btnCancelar.classList.add('btnCancelarDeposito');
+                                btnCancelar.textContent = 'Cancelar';
+
+                                areaBotoesDeposito.append(btnDepositar, btnCancelar)
+                                areaAviso.append(aviso, areaBotoesDeposito);
+                                bloqueio.appendChild(areaAviso);
+
+                                btnDepositar.addEventListener('click', function(e){
+                                    e.preventDefault();
+
+                                    areaAviso.remove();
+                                    bloqueio.appendChild(areaConsultarCofre);
+
+                                    valorTotal = valorTotal.toFixed(2);
+                                    valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                                
+                                })
+
+                                btnCancelar.addEventListener('click', function(e){
+                                    e.preventDefault();
+
+                                    areaAviso.remove();
+                                    bloqueio.appendChild(areaConsultarCofre);
+                                })
+                            }
+                            else
+                            {
+                                areaAlterarValor.remove();
+                                bloqueio.appendChild(areaConsultarCofre);
+
+                                valorTotal = valorTotal.toFixed(2);
+                                valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                            
+                            }
+                        }
+                        else
+                        {
+                            if(valorDigitado > valorPossui)
+                            {
+                                erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
+                                return;
+                            }
+                            else
+                            {
+                                areaAlterarValor.remove();
+                                bloqueio.appendChild(areaConsultarCofre);
+
+                                valorTotal = valorPossui - valorDigitado;
+                                valorTotal = valorTotal.toFixed(2);
+                                valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                            
+                            }
+                        }
+
+                        let percentual = (valorTotal * 100) / valorMax;
+
+                        const statusDeterminado = document.querySelector('.determinado');
+                        console.log(statusDeterminado)
+
+                        if(percentual >= 100)
+                        {
+                            const statusConcluida = document.createElement('img');
+                            statusConcluida.src = 'img/aviso-icon.svg';
+                            statusConcluida.classList.add('status');
+                            statusConcluida.classList.add('concluida');
+
+                            plantaSelecionada.prepend(statusConcluida);
+
+                            porcentagemPlanta.textContent = '100%';
+                            porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+                        }
+                        else
+                        {
+                            porcentagemPlanta.textContent = percentual + '%';
+                        }
+
+                        if(percentual < 20)
+                        {
+                            imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f1.svg');
+                            statusDeterminado.style.top = '60px';
+                        }
+                        else
+                        {
+                            if(percentual >= 20 && percentual < 40)
+                            {
+                                imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f2.svg');
+                                statusDeterminado.style.top = '28px';
+                            }
+                            else
+                            {
+                                if(percentual >= 40 && percentual < 60)
+                                {
+                                    imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f3.svg');
+                                    statusDeterminado.style.top = '5px';
+                                }
+                                else
+                                {
+                                    if(percentual >= 60 && percentual < 80)
+                                    {
+                                        imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f4.svg');
+                                        statusDeterminado.style.top = '0px';
+                                    }
+                                    else
+                                    {
+                                        imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f5.svg');
+                                        statusDeterminado.style.top = '0px';
+                                    }
+                                }
+                            }
+                        }
+                    })
+                })
+
+            }
+
+            btnEditar.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaConsultarCofre.remove();
+
+                const areaEditarDados = document.createElement('div');
+                areaEditarDados.classList.add('popup');
+
+                const areaTitulo = document.createElement('div');
+                areaTitulo.classList.add('areaTitulo');
+
+                const tituloEditar = document.createElement('p');
+                tituloEditar.textContent = 'Editar dados';
+                tituloEditar.classList.add('titulo');
+                tituloEditar.classList.add('tituloPopup');
+
+                btnSair = botaoSair();
+
+                areaTitulo.append(tituloEditar, btnSair);
+
+                const areaInfos = document.createElement('div');
+                areaInfos.classList.add('infos');
+
+                const areaValorLimite = document.createElement('div');
+                areaValorLimite.classList.add('areaDigitar');
+
+                const labelValorLimite = document.createElement('label');
+                labelValorLimite.textContent = 'Valor limite:';
+
+                const areaLeft = document.createElement('div');
+                areaLeft.classList.add('areaLeft');
+
+                const txtValorLimite = document.createElement('input');
+                txtValorLimite.type = 'text';
+                txtValorLimite.inputMode = 'numeric';
+                txtValorLimite.value = valorLimiteReal.textContent;
+                txtValorLimite.classList.add('recuoPopup');
+                txtValorLimite.classList.add('inputMoeda');
+
+                const moeda = document.createElement('p');
+                moeda.textContent = 'R$';
+                moeda.classList.add('moeda');
+
+                formataInputValor(txtValorLimite, valorLimiteReal.textContent);
+
+                areaLeft.append(txtValorLimite, moeda);
+                areaValorLimite.append(labelValorLimite, obrigatorioIcon(areaLeft));
+                areaInfos.appendChild(areaValorLimite);
+
+                if(data)
+                {
+                    const areaData = document.createElement('div');
+                    areaData.classList.add('areaDigitar');
+
+                    const labelData = document.createElement('label');
+                    labelData.textContent = 'Data limite:';
+
+                    const txtData = document.createElement('input');
+                    txtData.type = 'text';
+                    txtData.inputMode = 'numeric';
+                    txtData.id = 'txtData';
+                    txtData.value = areaDataLimite.querySelector('#dataLimite').textContent;
+                    txtData.classList.add('recuoPopup');
+
+                    areaData.append(labelData, obrigatorioIcon(txtData));
+                    areaInfos.appendChild(areaData);
+
+                    formataInputData(txtData, txtData.value.replaceAll('/',''));
+                }
+
+                const btnSalvar = document.createElement('button');
+                btnSalvar.textContent = 'Salvar';
+                btnSalvar.classList.add('btnSalvar');
+
+                areaEditarDados.append(areaTitulo, areaInfos, btnSalvar);
+                bloqueio.appendChild(areaEditarDados);
+
+                btnSair.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaEditarDados.remove();
+                    bloqueio.appendChild(areaConsultarCofre);
+                })
+
+                btnSalvar.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
+                    {
+                        erro(msgErro, txtValorLimite, 'Valor limite não foi informado!', areaInfos);
+                        return;
+                    }
+
+                    if(document.querySelector('#txtData'))
+                    {
+                        const txtData = document.querySelector('#txtData'); 
+                        let erroEncontrado = '';
+                        erroEncontrado = validaData(msgErro, txtData, areaInfos);
+
+                        if(erroEncontrado)
+                        {
+                            return;
+                        }
+                        areaDataLimite.querySelector('#dataLimite').textContent = txtData.value;
+                    }
+
+                    valorLimiteReal.textContent = txtValorLimite.value;
+
+                    areaEditarDados.remove();
+                    bloqueio.appendChild(areaConsultarCofre);
+                })
+
+            })
+
+            btnExcluir.addEventListener('click',function(e){
+                e.preventDefault();
+
+                areaConsultarCofre.remove();
+
+                const areaAviso = document.createElement('div');
+                areaAviso.classList.add('popup');
+                areaAviso.classList.add('areaAviso');
+
+                const aviso = document.createElement('p');
+                aviso.textContent = 'Gostaria de excluir esse cofrinho?'
+
+                const areaBotoesExcluir = document.createElement('div');
+                areaBotoesExcluir.classList.add('areaBotoesExcluir');
+
+                const btnCancelar = document.createElement('button');
+                btnCancelar.classList.add('btnCancelar');
+                btnCancelar.textContent = 'Cancelar';
+                btnCancelar.classList.add('btnCancelar');
+
+                const btnExcluirConfirma = document.createElement('button');
+                btnExcluirConfirma.classList.add('btnExcluirConfirma');
+                btnExcluirConfirma.textContent = 'Excluir';
+                btnExcluirConfirma.classList.add('btnExcluirConfirma');
+
+                areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
+                areaAviso.append(aviso, areaBotoesExcluir);
+                bloqueio.appendChild(areaAviso);
+
+                btnCancelar.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaAviso.remove();
+                    bloqueio.appendChild(areaConsultarCofre);
+                });
+
+                btnExcluirConfirma.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaAviso.remove();
+                    bloqueio.remove();
+                        
+                    if(plantaSelecionada.getAttribute('codigo') == tituloCofres[i].getAttribute('codigo'));
+                    {
+                        tituloCofres[i].remove();
+                    }
+                    
+                    plantaSelecionada.remove();
+                })
+
+            })
+        })
     }
 }
