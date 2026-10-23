@@ -1,0 +1,67 @@
+.areaPerfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.perfilImg{
+    background-color: rgb(204, 246, 162);
+    height: 112px;
+    width: 112px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.areaNome{
+    display: flex;
+    gap: 16px;
+}
+
+.nome{
+    font-size: 24px;
+    font-weight: 550;
+    color: rgb(9, 95, 184);
+}
+
+.areaProgresso{
+    width: 80%;
+}
+
+.areaNivel{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.barraProgresso{
+    width: 100%;
+    position: relative;
+}
+
+.tarefasConcluidas{
+    color: white;
+    -webkit-text-stroke: 0.9px rgb(9, 95, 184);
+    font-weight: 550;
+    position: absolute;
+    right: calc(50% - 10.5px);
+    bottom: 4px;
+}
+
+progress {
+    border-radius: 50%; 
+    width: 100%;
+    height: 24px;
+}
+
+progress::-webkit-progress-bar {
+    background-color: rgb(9, 95, 184, 0.21);
+    border-radius: 14px;
+}
+
+progress::-webkit-progress-value {
+    background-color: rgb(9, 95, 184);
+    border-radius: 14px;
+}
