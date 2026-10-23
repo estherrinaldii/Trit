@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/trit/login.html";
 }
 
-import { erro, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData } from "./funcoes.js";
+import { erro, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor } from "./funcoes.js";
 
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
@@ -150,9 +150,12 @@ btnNovaEntrada.addEventListener('click', function(e){
     areaLeft.classList.add('areaLeft');
 
     const txtValorEntrada = document.createElement('input');
-    txtValorEntrada.type = 'number';
+    txtValorEntrada.type = 'text';
+    txtValorEntrada.inputMode = 'numeric';
+    txtValorEntrada.value = '0,00';
     txtValorEntrada.classList.add('recuoPopup');
     txtValorEntrada.classList.add('inputMoeda');
+    formataInputValor(txtValorEntrada, null);
 
     const moeda = document.createElement('p');
     moeda.textContent = 'R$';
@@ -315,14 +318,16 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
     .finally(function () {
     });
 
-function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
-    let valorAtualEx = String(txtValorAtual).replace('.',',');
-    let valorLimiteEx = String(txtValorLimite).replace('.',',');
+function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite, codigo){
+    let valorAtualEx = Number(txtValorAtual).toFixed(2);
+    let valorLimiteEx = Number(txtValorLimite).toFixed(2);
 
-    valorAtualEx = procuraVirgula(valorAtualEx);
-    valorLimiteEx = procuraVirgula(valorLimiteEx);
+    valorAtualEx = String(valorAtualEx).replace('.',',');
+    valorLimiteEx = String(valorLimiteEx).replace('.',',');
+
     
     const cardControlado = document.createElement('div');
+    cardControlado.id = codigo;
     cardControlado.classList.add("card");
     cardControlado.classList.add("controlado");
 
@@ -393,9 +398,8 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
         icone.src = "img/seta.png";
         icone.addEventListener('click', function(e){
             e.preventDefault();
-            console.log('clicou');
             body.appendChild(bloqueio);
-            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx);
+            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx, codigo);
         })
 
     cardControlado.appendChild(infosControlado);
@@ -591,9 +595,12 @@ function areaSelecao(local, areaNovaSaida)
         areaLeft.classList.add('areaLeft');
 
         const txtValorLimite = document.createElement('input');
-        txtValorLimite.type = 'number';
+        txtValorLimite.type = 'text';
+        txtValorLimite.inputMode = 'numeric';
+        txtValorLimite.value = '0,00';
         txtValorLimite.classList.add('recuoPopup');
         txtValorLimite.classList.add('inputMoeda');
+        formataInputValor(txtValorLimite, null);
         areaRight = obrigatorioIcon(txtValorLimite);
 
         const moeda = document.createElement('p');
@@ -707,7 +714,6 @@ function areaSelecao(local, areaNovaSaida)
                 console.warn(error);
             })
             .finally(function () {
-                // let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
                 areaNovaCategoria.remove();
                 criarAreaSaida('Categorizada');
                 selecionada();
@@ -782,14 +788,6 @@ function alterarProgresso(txtValor, local){
 
 }
 
-function procuraVirgula(valorEx){
-    if(!valorEx.includes(',')){
-        return valorEx + ',00';
-    }else{
-        return valorEx;
-    }
-}
-
 function listarCategorias(indiceLista, dadosLista){
     for (let i = 0; i < indiceLista; i++) {
         const categoria = dadosLista[i];
@@ -817,7 +815,7 @@ function listarCategorias(indiceLista, dadosLista){
                 let valorLimite = String(categoria.ValorLimite).replace(',','.');
                 valor = Number(valor);
                 valorLimite = Number(valorLimite);
-                criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite);
+                criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite, categoria.Codigo);
             }
             
         })
@@ -941,9 +939,12 @@ function criarAreaSaida(txtTipo){
     areaLeft.classList.add('areaLeft');
 
     const txtValorSaida = document.createElement('input');
-    txtValorSaida.type = 'number';
+    txtValorSaida.type = 'text';
+    txtValorSaida.inputMode = 'numeric';
+    txtValorSaida.value = '0,00';
     txtValorSaida.classList.add('recuoPopup');
     txtValorSaida.classList.add('inputMoeda');
+    formataInputValor(txtValorSaida, null);
 
     const moeda = document.createElement('p');
     moeda.textContent = 'R$';
@@ -1166,8 +1167,7 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
     });
 }
 
-function areaPopupEditar(local, txtNome, txtValorAtual, txtValorLimite){
-    console.log(txtValorAtual);
+function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo){
     const popup = document.createElement('div');
     popup.classList.add('popup');
 
@@ -1200,10 +1200,12 @@ function areaPopupEditar(local, txtNome, txtValorAtual, txtValorLimite){
                 areaLeft.classList.add('areaLeft');
 
                 const inputValorAtual = document.createElement('input');
-                inputValorAtual.type = 'number';
+                inputValorAtual.type = 'text';
+                inputValorAtual.inputMode = 'numeric';
+                inputValorAtual.value = predValorAtual;
                 inputValorAtual.classList.add('recuoPopup');
                 inputValorAtual.classList.add('inputMoeda');
-                inputValorAtual.value = txtValorAtual;
+                formataInputValor(inputValorAtual, predValorAtual);
 
                     let moeda = document.createElement('p');
                     moeda.textContent = 'R$';
@@ -1226,10 +1228,12 @@ function areaPopupEditar(local, txtNome, txtValorAtual, txtValorLimite){
                 areaLeft.classList.add('areaLeft');
 
                 const inputValorLimite = document.createElement('input');
-                inputValorLimite.type = 'number';
+                inputValorLimite.type = 'text';
+                inputValorLimite.inputMode = 'numeric';
+                inputValorLimite.value = predValorLimite;
                 inputValorLimite.classList.add('recuoPopup');
                 inputValorLimite.classList.add('inputMoeda');
-                inputValorLimite.value = txtValorLimite;
+                formataInputValor(inputValorLimite, predValorLimite);
 
                     moeda = document.createElement('p');
                     moeda.textContent = 'R$';
@@ -1246,13 +1250,53 @@ function areaPopupEditar(local, txtNome, txtValorAtual, txtValorLimite){
         const areaBotoesPopup = document.createElement('div');
         areaBotoesPopup.classList.add('areaBotoesPopup');
 
-            const btnSalvar = document.createElement('button');
-            btnSalvar.classList.add('btnSalvar');
-            btnSalvar.textContent = 'Salvar';
+        
+        
+        const btnSalvar = document.createElement('button');
+        btnSalvar.classList.add('btnSalvar');
+        btnSalvar.textContent = 'Salvar';
+        btnSalvar.addEventListener('click', function(e){
+            e.preventDefault();
+                let valorAtualEnviar = inputValorAtual.value;
+                let valorLimiteEnviar = inputValorLimite.value;
+                valorAtualEnviar = valorAtualEnviar.replace(',','.');
+                valorLimiteEnviar = valorLimiteEnviar.replace(',','.');
+                valorAtualEnviar = Number(valorAtualEnviar);
+                valorLimiteEnviar = Number(valorLimiteEnviar);
+            });
 
             const btnExcluir = document.createElement('button');
             btnExcluir.classList.add('btnExcluirElemento');
             btnExcluir.textContent = 'Excluir';
+            btnExcluir.addEventListener('click', function(e){
+                e.preventDefault();
+                const parametro = new URLSearchParams({
+                    codigo : codigo
+                });
+                fetch("http://localhost/trit/api/deletarCategoria.php?"+parametro, {
+                method: "DELETE",
+                    credentials: "include",
+                })
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                    if (dadosJSON) {
+                        document.getElementById(codigo).remove();
+                        bloqueio.remove();
+                    } 
+                })
+                .catch(function (error) {
+                    console.warn(error);
+                    // O que fazer se der erro na requisição
+                })
+                .finally(function () {
+                    // O que fazer independente de ter dado erro ou não
+                });
+            });
         areaBotoesPopup.appendChild(btnSalvar);
         areaBotoesPopup.appendChild(btnExcluir);
     
