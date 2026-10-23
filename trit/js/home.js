@@ -318,7 +318,7 @@ fetch("http://localhost/trit/api/listarCategorias.php", {
     .finally(function () {
     });
 
-function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
+function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite, codigo){
     let valorAtualEx = Number(txtValorAtual).toFixed(2);
     let valorLimiteEx = Number(txtValorLimite).toFixed(2);
 
@@ -327,6 +327,7 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
 
     
     const cardControlado = document.createElement('div');
+    cardControlado.id = codigo;
     cardControlado.classList.add("card");
     cardControlado.classList.add("controlado");
 
@@ -397,9 +398,8 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite){
         icone.src = "img/seta.png";
         icone.addEventListener('click', function(e){
             e.preventDefault();
-            console.log('clicou');
             body.appendChild(bloqueio);
-            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx);
+            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx, codigo);
         })
 
     cardControlado.appendChild(infosControlado);
@@ -714,7 +714,6 @@ function areaSelecao(local, areaNovaSaida)
                 console.warn(error);
             })
             .finally(function () {
-                // let nomeCategoriaAtual = txtNomeCategoria.value.charAt(0).toUpperCase() + txtNomeCategoria.value.slice(1);
                 areaNovaCategoria.remove();
                 criarAreaSaida('Categorizada');
                 selecionada();
@@ -816,7 +815,7 @@ function listarCategorias(indiceLista, dadosLista){
                 let valorLimite = String(categoria.ValorLimite).replace(',','.');
                 valor = Number(valor);
                 valorLimite = Number(valorLimite);
-                criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite);
+                criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite, categoria.Codigo);
             }
             
         })
@@ -1168,7 +1167,7 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
     });
 }
 
-function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite){
+function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo){
     const popup = document.createElement('div');
     popup.classList.add('popup');
 
@@ -1264,12 +1263,40 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite){
                 valorLimiteEnviar = valorLimiteEnviar.replace(',','.');
                 valorAtualEnviar = Number(valorAtualEnviar);
                 valorLimiteEnviar = Number(valorLimiteEnviar);
-                console.log(valorAtualEnviar, valorLimiteEnviar);
             });
 
             const btnExcluir = document.createElement('button');
             btnExcluir.classList.add('btnExcluirElemento');
             btnExcluir.textContent = 'Excluir';
+            btnExcluir.addEventListener('click', function(e){
+                e.preventDefault();
+                const parametro = new URLSearchParams({
+                    codigo : codigo
+                });
+                fetch("http://localhost/trit/api/deletarCategoria.php?"+parametro, {
+                method: "DELETE",
+                    credentials: "include",
+                })
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                    if (dadosJSON) {
+                        document.getElementById(codigo).remove();
+                        bloqueio.remove();
+                    } 
+                })
+                .catch(function (error) {
+                    console.warn(error);
+                    // O que fazer se der erro na requisição
+                })
+                .finally(function () {
+                    // O que fazer independente de ter dado erro ou não
+                });
+            });
         areaBotoesPopup.appendChild(btnSalvar);
         areaBotoesPopup.appendChild(btnExcluir);
     

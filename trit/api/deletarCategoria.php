@@ -29,16 +29,14 @@ if(!isset($_SESSION['logado'])){
 }
 
 try { 
-	$corpo = json_decode(file_get_contents("php://input"), true);
-	if (!validaCorpoRequisicao($corpo)) {
+	
+	if (!isset($_GET['codigo']) || $_GET['codigo'] == '') {
+		http_response_code(400);
+		echo json_encode(['mensagem' => 'Parâmetros obrigatórios insuficientes']);
 		return;
 	}
-	$chaves = ['email','codigo'];
-	if (!validaChaves($corpo, $chaves)) {
-		return;
-	}
-	$email = $corpo['email'];
-	$codigo = $corpo['codigo'];
+	$codigo = $_GET['codigo'];
+	$email = $_SESSION['logado'];
 
 	CategoriaController::Deletar($email, $codigo);
 
