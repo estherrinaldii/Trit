@@ -720,5 +720,24 @@ delimiter $$
 	if qtdCofrinho >= 10 then
 		insert into usuario_insignia values (pEmail, 5);
 	end if;
-	END$$   	 
+	END$$
+    
+    DROP PROCEDURE IF EXISTS listar_insignias$$
+	CREATE PROCEDURE listar_insignias(pEmail VARCHAR(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+        
+        select ui.FK_nm_email, ui.FK_cd_insignia,
+			i.nm_insignia, i.nm_tipo_insignia
+			from usuario_insignia ui
+			JOIN insignia i
+			ON 
+			i.cd_insignia = ui.FK_cd_insignia
+			WHERE FK_nm_email = pEmail;       
+	END$$
 delimiter ;
