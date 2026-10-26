@@ -26,10 +26,10 @@ if(!isset($_SESSION['logado'])){
 try {
 	$email = $_SESSION['logado'];
 
-	$categorias = CategoriaController::Listar($email);
+	$cofrinhos = CofrinhoController::Listar($email);
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true']);
+	echo json_encode(['status' => 'true', 'cofrinhos'=> $cofrinhos]);
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();
 	if (strpos($mensagemCompleta, 'SQLSTATE') !== false && strpos($mensagemCompleta, '1644') !== false) {
