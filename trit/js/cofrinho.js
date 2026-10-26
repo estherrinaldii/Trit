@@ -1,26 +1,10 @@
 import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
-const main = document.querySelector('main');
 const body = document.querySelector('body');
+const main = document.querySelector('main');
 
 let areaSemCofre = '';
-
-if(!document.querySelector('.planta'))
-{
-    areaSemCofre = document.createElement('div');
-    areaSemCofre.classList.add('areaSemCofre');
-
-    const btnAdicionar = document.createElement('img');
-    btnAdicionar.src = 'img/adicionar.svg';
-    btnAdicionar.classList.add('btnAdicionar');
-
-    const txtSemCofre = document.createElement('p');
-    txtSemCofre.textContent = 'Crie um cofrinho para suas economias!'
-    txtSemCofre.classList.add('semCofre');
-
-    areaSemCofre.append(btnAdicionar, txtSemCofre);
-    main.appendChild(areaSemCofre);
-}
+exibirCofres();
 
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
@@ -446,7 +430,16 @@ function botaoAdicionar()
 
             const plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
 
-            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, txtDataCofre.value, txtValorCofre.value, plantaEnviada);
+            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, txtDataCofre.value, '0,00', txtValorCofre.value, plantaEnviada, 0);
+
+            // fetch criar cofre:
+            // nome = txtNomeCofre.value
+            // periodo = document.querySelector('.periodoSelecionado').textContent (envia em texto com primeira letra maiuscula, formata do jeito q o banco espera receber)
+            // data = txtDataCofre.value >> se for indeterminado é null 
+            // valor limite = txtValorCofre.value
+            // planta = plantaEnviada
+            // progresso/porcentagem é zero, já que está sendo criada uma planta nova
+            // valor atual tambem é 0,00 pela mesma lógica do anterior
 
             areaCriarCofre.remove();
             bloqueio.remove();
@@ -454,10 +447,64 @@ function botaoAdicionar()
     })
 }
 
-function criarPlanta(nome, periodo, data, valor, planta)
+function exibirCofres()
+{
+    if(!document.querySelector('.planta'))
+    {
+        areaSemCofre = document.createElement('div');
+        areaSemCofre.classList.add('areaSemCofre');
+
+        const btnAdicionar = document.createElement('img');
+        btnAdicionar.src = 'img/adicionar.svg';
+        btnAdicionar.classList.add('btnAdicionar');
+
+        const txtSemCofre = document.createElement('p');
+        txtSemCofre.textContent = 'Crie um cofrinho para suas economias!'
+        txtSemCofre.classList.add('semCofre');
+
+        areaSemCofre.append(btnAdicionar, txtSemCofre);
+        main.appendChild(areaSemCofre);
+    }
+    
+    // fetch exibir cofrinhos:
+    // enviar infos para a function criarPlanta()
+}
+
+function criarPlanta(nome, periodo, data, valorAtual, valor, planta, porcentagem)
 {
     let areaAdicionar = '';
     let tituloAdicionar = '';
+    let qualImagem = 0;
+
+    if(porcentagem < 20)
+    {
+        qualImagem = 1;
+    }
+    else
+    {
+        if(porcentagem >= 20 && porcentagem < 40)
+        {
+            qualImagem = 2;
+        }
+        else
+        {
+            if(porcentagem >= 40 && porcentagem < 60)
+            {
+                qualImagem = 3;
+            }
+            else
+            {
+                if(porcentagem >= 60 && porcentagem < 80)
+                {
+                    qualImagem = 4;
+                }
+                else
+                {
+                    qualImagem = 5;
+                }
+            }
+        }
+    }
 
     if(!document.querySelector('.planta'))
     {
@@ -479,6 +526,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
     const cofrinhos = document.querySelector('.cofrinhos');
     const prateleirasPlantas = document.querySelectorAll('.plantaPrateleira');
+    const todasPlantas = document.querySelectorAll('.planta');
 
     if(prateleirasPlantas.length == 0)
     {
@@ -494,10 +542,11 @@ function criarPlanta(nome, periodo, data, valor, planta)
         prateleira.classList.add('prateleira');
 
         const plantaCriada = document.createElement('div');
-        plantaCriada.classList.add('planta');
+        plantaCriada.classList.add('planta'); 
+        plantaCriada.id = todasPlantas.length;
 
         const plantaImg = document.createElement('img');
-        plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+        plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
         plantaImg.classList.add('plantaImg');
 
         const vasoPlanta = document.createElement('img');
@@ -505,7 +554,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
         const porcentagemPlanta = document.createElement('p');
         porcentagemPlanta.classList.add('porcentagem');
-        porcentagemPlanta.textContent = '0%'
+        porcentagemPlanta.textContent = porcentagem + '%';
 
         plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
 
@@ -543,9 +592,10 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const plantaCriada = document.createElement('div');
             plantaCriada.classList.add('planta');
+            plantaCriada.id = todasPlantas.length;
 
             const plantaImg = document.createElement('img');
-            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
             plantaImg.classList.add('plantaImg');
 
             const vasoPlanta = document.createElement('img');
@@ -553,7 +603,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const porcentagemPlanta = document.createElement('p');
             porcentagemPlanta.classList.add('porcentagem');
-            porcentagemPlanta.textContent = '0%'
+            porcentagemPlanta.textContent = porcentagem + '%';
 
             plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
 
@@ -586,9 +636,10 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const plantaCriada = document.createElement('div');
             plantaCriada.classList.add('planta');
+            plantaCriada.id = todasPlantas.length;
 
             const plantaImg = document.createElement('img');
-            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f1.svg';
+            plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
             plantaImg.classList.add('plantaImg');
 
             const vasoPlanta = document.createElement('img');
@@ -596,7 +647,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
 
             const porcentagemPlanta = document.createElement('p');
             porcentagemPlanta.classList.add('porcentagem');
-            porcentagemPlanta.textContent = '0%'
+            porcentagemPlanta.textContent = porcentagem + '%';
 
             plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
 
@@ -622,7 +673,7 @@ function criarPlanta(nome, periodo, data, valor, planta)
     {
         data = null;
     }
-    informacoesCofre(nome, periodo, '22/10/2026', data, valor, planta);
+    informacoesCofre(nome, periodo, '22/10/2026', data, valorAtual, valor, planta);
 
     function addStatus()
     {
@@ -641,9 +692,8 @@ function criarPlanta(nome, periodo, data, valor, planta)
     }
 }
 
-function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
+function informacoesCofre(nome, periodo, dataAtual, data, valorAtual, valor, planta)
 {
-    let valorTotal = 0;
     const plantas = document.querySelectorAll('.planta');
     let areaConsultarCofre = '';
 
@@ -656,6 +706,12 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
         
         plantaSelecionada.addEventListener('click', function(e){
             e.preventDefault()
+
+            // fetch consultar planta:
+            // toda a function abaixo dessa linha vai ficar dentro do fetch
+            // as variaveis passadas para ca (nome, periodo, dataAtual, data, valor e planta) serão substituidas pelas variaveis vindas do banco 
+            // (pode tirar elas de dentro dos parenteses de onde essa function é chamada tb)
+            // vc vai fazer uma comparação do código da planta selecionada (plantaSelecionada.getAttribute('id')) com o codigo das plantas do banco, para identificar as informações referentes a planta clicada
 
             if(plantaSelecionada.querySelector('.concluida'))
             {
@@ -723,7 +779,7 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
             valorDepositadoMoeda.textContent = 'R$';
 
             const valorDepositadoReal = document.createElement('p');
-            valorDepositadoReal.textContent = Number(valorTotal).toFixed(2).replace('.',',');
+            valorDepositadoReal.textContent = valorAtual;
         
 
             valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
@@ -994,6 +1050,8 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                         valorMax = valorMax = valorMax.replace(',', '.');
                         valorMax = Number(valorMax);
 
+                        let valorTotal = 0;
+
                         if(btnAlteraValor[index].textContent == 'Guardar')
                         {
                             valorTotal = valorPossui + valorDigitado;
@@ -1051,6 +1109,10 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                                 valorDepositadoReal.textContent = valorTotal.replace('.',',');
                             
                             }
+
+                            // fetch guardar / resgatar valor:
+                            // aqui eu já faço a soma / subtração (sim, fiz um eventlistener só), entao acho melhor só substituir o valor atual
+                            // variavel: valorTotal 
                         }
                         else
                         {
@@ -1072,9 +1134,8 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                         }
 
                         let percentual = (valorTotal * 100) / valorMax;
-
-                        const statusDeterminado = document.querySelector('.determinado');
-                        console.log(statusDeterminado)
+                        let qualImagem = 0;
+                        let posicaoStatus = ''
 
                         if(percentual >= 100)
                         {
@@ -1095,37 +1156,45 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
 
                         if(percentual < 20)
                         {
-                            imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f1.svg');
-                            statusDeterminado.style.top = '60px';
+                            qualImagem = 1;
+                            posicaoStatus = '60px';
                         }
                         else
                         {
                             if(percentual >= 20 && percentual < 40)
                             {
-                                imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f2.svg');
-                                statusDeterminado.style.top = '28px';
+                                qualImagem = 2;
+                                posicaoStatus = '28px';
                             }
                             else
                             {
                                 if(percentual >= 40 && percentual < 60)
                                 {
-                                    imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f3.svg');
-                                    statusDeterminado.style.top = '5px';
+                                    qualImagem = 3;
+                                    posicaoStatus = '5px';
                                 }
                                 else
                                 {
                                     if(percentual >= 60 && percentual < 80)
                                     {
-                                        imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f4.svg');
-                                        statusDeterminado.style.top = '0px';
+                                        qualImagem = 4;
+                                        posicaoStatus = '0px';
                                     }
                                     else
                                     {
-                                        imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f5.svg');
-                                        statusDeterminado.style.top = '0px';
+                                        qualImagem = 5;
+                                        posicaoStatus = '0px';
                                     }
                                 }
                             }
+                        }
+
+                        imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg');
+
+                        const statusDeterminado = document.querySelector('.determinado');
+                        if(statusDeterminado)
+                        {
+                            statusDeterminado.style.top = posicaoStatus;
                         }
                     })
                 })
@@ -1219,6 +1288,8 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                 btnSalvar.addEventListener('click', function(e){
                     e.preventDefault();
 
+                    let txtData = null;
+
                     if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
                     {
                         erro(msgErro, txtValorLimite, 'Valor limite não foi informado!', areaInfos);
@@ -1227,7 +1298,8 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
 
                     if(document.querySelector('#txtData'))
                     {
-                        const txtData = document.querySelector('#txtData'); 
+                        txtData = document.querySelector('#txtData');
+
                         let erroEncontrado = '';
                         erroEncontrado = validaData(msgErro, txtData, areaInfos);
 
@@ -1239,6 +1311,10 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                     }
 
                     valorLimiteReal.textContent = txtValorLimite.value;
+
+                    // fetch editar cofrinho:
+                    // valor limite = txtValorLimite.value;
+                    // data limite (se determinado) = txtData.value
 
                     areaEditarDados.remove();
                     bloqueio.appendChild(areaConsultarCofre);
@@ -1294,6 +1370,11 @@ function informacoesCofre(nome, periodo, dataAtual, data, valor, planta)
                     }
                     
                     plantaSelecionada.remove();
+
+                    // fetch excluir cofrinho
+                    // acho q so precisa do codigo (plantaSelecionada.getAttribute('id'))
+                    // chamar dnv a function exibirCofres()
+
                 })
 
             })
