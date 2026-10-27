@@ -32,11 +32,11 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','codigo_cofrinho','valor'];
+	$chaves = ['codigo_cofrinho','valor'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
-	$email = $corpo['email'];
+	$email = $_SESSION['logado'];
 	$codigoCofrinho = $corpo['codigo_cofrinho'];
 	$valor = $corpo['valor']; 
 

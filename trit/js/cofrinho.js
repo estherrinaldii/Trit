@@ -1009,6 +1009,7 @@ function informacoesCofre()
                     })
         
                     const btnAlteraValor = document.querySelectorAll('.btnAlteraValor');
+                    
         
                     for (let index = 0; index < btnAlteraValor.length; index++) {
                     
@@ -1108,6 +1109,7 @@ function informacoesCofre()
         
                                 if(btnAlteraValor[index].textContent == 'Guardar')
                                 {
+                                    console.log('guardou');
                                     valorTotal = valorPossui + valorDigitado;
                                     
                                     if(valorPossui < valorMax && valorTotal > valorMax)
@@ -1154,67 +1156,70 @@ function informacoesCofre()
                                             bloqueio.appendChild(areaConsultarCofre);
                                         })
 
-                                        fetch("http://localhost/Trit/trit/api/guardarMovimentacao.php", {
-                                        method: "POST",
-                                        credentials: "include",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify(
-                                            {
-                                                "valor":valorTotal
-                                            }
-                                        ),
-                                        })
-                                        .then(function (resposta) {
-                                            if (!resposta.ok) {
-                                            throw new Error("Erro HTTP: " + resposta.status);
-                                            }
-                                            return resposta.json();
-                                        })
-                                        .then(function (dadosJSON) {
-                                            if (dadosJSON) {
-                                            console.log(dadosJSON);
-                                            }
-                                        })
-                                        .catch(function (error) {
-                                            console.warn(error);
-                                        });
+                                        // fetch("http://localhost/Trit/trit/api/guardarMovimentacao.php", {
+                                        // method: "POST",
+                                        // credentials: "include",
+                                        // headers: {
+                                        //     "Content-Type": "application/json",
+                                        // },
+                                        // body: JSON.stringify(
+                                        //     {
+                                        //         "valor":valorTotal,
+                                        //         "codigo_cofrinho":cofrinho.Codigo
+                                        //     }
+                                        // ),
+                                        // })
+                                        // .then(function (resposta) {
+                                        //     if (!resposta.ok) {
+                                        //     throw new Error("Erro HTTP: " + resposta.status);
+                                        //     }
+                                        //     return resposta.json();
+                                        // })
+                                        // .then(function (dadosJSON) {
+                                        //     if (dadosJSON) {
+                                        //     console.log(dadosJSON);
+                                        //     }
+                                        // })
+                                        // .catch(function (error) {
+                                        //     console.warn(error);
+                                        // });
                                     }
                                     else
                                     {
+                                        console.log('resgatou');
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
         
                                         valorTotal = valorPossui - valorDigitado;
                                         valorTotal = valorTotal.toFixed(2);
                                         valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                                        fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
-                                        method: "POST",
-                                        credentials: "include",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify(
-                                            {
-                                                "valor":valorTotal
-                                            }   
-                                        ),
-                                        })
-                                        .then(function (resposta) {
-                                            if (!resposta.ok) {
-                                            throw new Error("Erro HTTP: " + resposta.status);
-                                            }
-                                            return resposta.json();
-                                        })
-                                        .then(function (dadosJSON) {
-                                            if (dadosJSON) {
-                                            console.log(dadosJSON);
-                                            }
-                                        })
-                                        .catch(function (error) {
-                                            console.warn(error);
-                                        });
+                                        // fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
+                                        // method: "POST",
+                                        // credentials: "include",
+                                        // headers: {
+                                        //     "Content-Type": "application/json",
+                                        // },
+                                        // body: JSON.stringify(
+                                        //     {
+                                        //         "valor":valorTotal,
+                                        //         "codigo_cofrinho":cofrinho.Codigo
+                                        //     }   
+                                        // ),
+                                        // })
+                                        // .then(function (resposta) {
+                                        //     if (!resposta.ok) {
+                                        //     throw new Error("Erro HTTP: " + resposta.status);
+                                        //     }
+                                        //     return resposta.json();
+                                        // })
+                                        // .then(function (dadosJSON) {
+                                        //     if (dadosJSON) {
+                                        //     console.log(dadosJSON);
+                                        //     }
+                                        // })
+                                        // .catch(function (error) {
+                                        //     console.warn(error);
+                                        // });
                                     }
                                     
                                     // fetch guardar / resgatar valor:

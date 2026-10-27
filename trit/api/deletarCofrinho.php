@@ -33,11 +33,11 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','codigo'];
+	$chaves = ['codigo'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
-	$email = $corpo['email'];
+	$email = $_SESSION['logado'];
 	$codigo = $corpo['codigo'];
 
 	CofrinhoController::Deletar($email, $codigo);
