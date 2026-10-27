@@ -19,5 +19,9 @@ class CategoriaController {
     public static function Deletar($email, $codigo){
         return Categoria::Deletar($email, $codigo);
     }
+
+    public static function Editar($email, $codigoCategoria, $nome, $valor){
+        return Categoria::Editar($email, $codigoCategoria, $nome, $valor);
+    }
 }
 ?>

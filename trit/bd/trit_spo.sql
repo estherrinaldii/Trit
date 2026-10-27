@@ -107,7 +107,7 @@ delimiter $$
 	end$$
 	   
 	DROP PROCEDURE IF EXISTS editar_categoria$$
-	CREATE PROCEDURE editar_categoria (pEmail VARCHAR(200), pCodigoCategoria INT, pNovoNome VARCHAR(100))
+	CREATE PROCEDURE editar_categoria (pEmail VARCHAR(200), pCodigoCategoria INT, pNovoNome VARCHAR(100), pValorLimite decimal(10,2))
 	BEGIN
 		DECLARE qtdUsuario INT DEFAULT 0;
 		DECLARE qtdCategoria INT DEFAULT 0;
@@ -126,8 +126,9 @@ delimiter $$
 		END IF;
 
 		UPDATE categoria_gasto 
-		SET nm_categoria_gasto = pNovoNome 
-		WHERE cd_categoria_gasto = pCodigoCategoria AND FK_nm_email = pEmail;
+		SET nm_categoria_gasto = pNovoNome ,
+        vl_limite = coalesce(pValorLimite, vl_limite)
+				WHERE cd_categoria_gasto = pCodigoCategoria AND FK_nm_email = pEmail;
 	END$$
     
     DROP PROCEDURE IF EXISTS deletar_categoria$$

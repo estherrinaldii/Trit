@@ -42,8 +42,15 @@ class Categoria extends Banco
 		return self::Executar('deletar_categoria', $parametros);
 	}
 
-	public static function Editar(){
-		
+	public static function Editar($email, $codigoCategoria, $nome, $valor){
+		$parametros = [
+			'pEmail' => $email,
+			'pCodigoCategoria' => $codigoCategoria,
+			'pNovoNome' => $nome,
+			'pValorLimite' => $valor
+		];
+
+		return self::Executar('editar_categoria', $parametros);
 	}
 }
 ?>
