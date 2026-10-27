@@ -8,12 +8,11 @@ class SaidaController
     }
 
     public static function CalcularValorGastoCategoria($email, $categoria){
-    $resultado = Saida::CalcularValorGastoCategoria($email, $categoria);
-    
+        $resultado = Saida::CalcularValorGastoCategoria($email, $categoria);
 
-    $total = $resultado[0]['total'] ?? 0;
-    
-    return $total;
-}
+        $total = $resultado[0]['total'] ?? 0;
+        
+        return $total;  
+    }
 }
 ?>
