@@ -63,7 +63,7 @@ CREATE TABLE Planta (
 CREATE TABLE Cofrinho (
   cd_cofrinho INT NOT NULL,
   nm_cofrinho VARCHAR(100) NOT NULL,
-  dt_cofrinho DATETIME NOT NULL,
+  dt_cofrinho DATE NOT NULL,
   dt_prazo DATE NULL,
   vl_cofrinho_final DECIMAL(10,2) NOT NULL,
   ic_tipo_cofrinho ENUM('determinado', 'indeterminado') NOT NULL,
@@ -207,17 +207,17 @@ INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_ti
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (12, 'Compra da feira', 10, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (13, 'Banana', 1, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 21);
 
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (1, 'Viagem para Florianópolis', '2026-07-15 10:00:00', '2027-01-20', 3000.00, 'determinado', 1200.00, 'sabrina.carpinteira@gmail.com', 1);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (2, 'Notebook novo', '2026-06-01 14:30:00', '2026-11-01', 4500.00, 'determinado', 4300.00, 'sabrina.carpinteira@gmail.com', 2);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (3, 'Curso de inglês', '2026-03-10 09:00:00', '2026-09-30', 1200.00, 'determinado', 1200.00, 'sabrina.carpinteira@gmail.com', 3);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (4, 'Presente de formatura', '2026-05-20 16:45:00', '2026-09-01', 800.00, 'determinado', 300.00, 'sabrina.carpinteira@gmail.com', 1);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (5, 'Playstation 5', '2026-10-12 08:00:00', '2027-12-31', 2000.00, 'determinado', 0.00, 'sabrina.carpinteira@gmail.com', 4);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (6, 'Reserva de emergência', '2026-01-05 11:00:00', NULL, 10000.00, 'indeterminado', 2300.00,'sabrina.carpinteira@gmail.com', 2);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (7, 'Fundo para imprevistos', '2026-10-10 20:15:00', NULL, 1000.00, 'indeterminado', 0.00,'sabrina.carpinteira@gmail.com', 3);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (8, 'Cofrinho de moedas', '2026-02-14 13:00:00', NULL, 500.00, 'indeterminado', 620.00,'sabrina.carpinteira@gmail.com', 4);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (9, 'Reforma da cozinha', '2026-08-01 09:00:00', '2027-02-28', 6000.00, 'determinado', 1500.00,'maria.souza@gmail.com', 1);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (10, 'Aposentadoria', '2026-04-12 10:30:00', NULL, 50000.00, 'indeterminado', 8200.00, 'joao.silva@gmail.com', 2);
-INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (11, 'Moto nova', '2026-02-02 15:00:00', '2026-08-15', 9000.00, 'determinado', 9000.00,'ana.costa@gmail.com', 3);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (1, 'Viagem para Florianópolis', '2026-07-15', '2027-01-20', 3000.00, 'determinado', 1200.00, 'sabrina.carpinteira@gmail.com', 1);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (2, 'Notebook novo', '2026-06-01', '2026-11-01', 4500.00, 'determinado', 4300.00, 'sabrina.carpinteira@gmail.com', 2);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (3, 'Curso de inglês', '2026-03-10', '2026-09-30', 1200.00, 'determinado', 1200.00, 'sabrina.carpinteira@gmail.com', 3);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (4, 'Presente de formatura', '2026-05-20', '2026-09-01', 800.00, 'determinado', 300.00, 'sabrina.carpinteira@gmail.com', 1);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (5, 'Playstation 5', '2026-10-12', '2027-12-31', 2000.00, 'determinado', 0.00, 'sabrina.carpinteira@gmail.com', 4);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (6, 'Reserva de emergência', '2026-01-05', NULL, 10000.00, 'indeterminado', 2300.00,'sabrina.carpinteira@gmail.com', 2);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (7, 'Fundo para imprevistos', '2026-10-10', NULL, 1000.00, 'indeterminado', 0.00,'sabrina.carpinteira@gmail.com', 3);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (8, 'Cofrinho de moedas', '2026-02-14', NULL, 500.00, 'indeterminado', 620.00,'sabrina.carpinteira@gmail.com', 4);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (9, 'Reforma da cozinha', '2026-08-01', '2027-02-28', 6000.00, 'determinado', 1500.00,'maria.souza@gmail.com', 1);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (10, 'Aposentadoria', '2026-04-12', NULL, 50000.00, 'indeterminado', 8200.00, 'joao.silva@gmail.com', 2);
+INSERT INTO Cofrinho (cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual,  FK_nm_email, FK_cd_planta) VALUES (11, 'Moto nova', '2026-02-02', '2026-08-15', 9000.00, 'determinado', 9000.00,'ana.costa@gmail.com', 3);
 
 INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (1, 'Salário Mensal', 1400.00, '2026-08-01', 1);
 INSERT INTO Entrada (cd_entrada, nm_entrada, vl_entrada, dt_entrada, FK_cd_carteira) VALUES (2, 'Trabalho Freelance', 350.00, '2026-08-10', 1);

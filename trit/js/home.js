@@ -264,7 +264,7 @@ btnNovaEntrada.addEventListener('click', function(e){
 
 const areaCategorias = document.querySelector('.areaCategorias');
 let btnMais = document.createElement('button');
-btnMais.textContent = 'Ver Mais';
+btnMais.textContent = 'Ver Mais...';
 btnMais.classList.add('verMais');
 
 
