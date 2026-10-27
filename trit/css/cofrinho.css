@@ -155,12 +155,6 @@ section{
     justify-content: center;
 }
 
-.areaTitulo{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 button{
     width: 100%;
     height: 40px;
@@ -181,26 +175,6 @@ button{
     gap: 24px;
 }
 
-input{
-    width: 100%;
-    height: 40px;
-    font-size: 18px;
-    padding: 4px;
-    border: solid rgb(9, 95, 184) 2px;
-    border-radius: 10px;
-    color: rgb(29, 59, 90);
-    outline-color: rgb(29, 59, 90);
-}
-
-input:disabled{
-    border: solid rgba(9, 95, 184, 0.21) 2px;
-    color: rgb(29, 59, 90, 0.57);
-}
-
-.inputErro{ 
-    border: solid rgb(255, 85, 85) 2px !important;
-}
-
 select{
     height: 40px;
     font-size: 18px;
@@ -209,10 +183,6 @@ select{
     border-radius: 10px;
     color: rgb(29, 59, 90);
     outline-color: rgb(29, 59, 90);
-}
-
-.areaRight, .areaLeft{
-    position: relative;
 }
 
 .obrigatorio{
@@ -333,17 +303,6 @@ select{
     color: rgb(29, 59, 90);
     font-size: 16px;
     gap: 24px;
-}
-
-.areaInfos{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.tituloInfos{
-    color: rgb(9, 95, 184);
-    font-weight: 550;
 }
 
 .areaDica{

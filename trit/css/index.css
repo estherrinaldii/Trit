@@ -55,11 +55,17 @@ header{
 
 .areaAviso{
     font-size: 24px;
-    color: rgb(9, 95, 184);
+    color: rgb(9, 95, 184) !important;
     text-align: center;
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.areaTitulo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .btnOk, .btnSalvar, .btnGuardar, .btnCancelar, .btnDepositar{
@@ -93,6 +99,61 @@ header{
     gap: 8px;
 }
 
+.areaRight, .areaLeft{
+    position: relative;
+}
+
+input{
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    padding: 4px;
+    border: solid rgb(9, 95, 184) 2px;
+    border-radius: 10px;
+    color: rgb(29, 59, 90);
+    outline-color: rgb(29, 59, 90);
+}
+
+input:disabled{
+    border: solid rgba(9, 95, 184, 0.21) 2px;
+    color: rgb(29, 59, 90, 0.57);
+}
+
+.inputErro{ 
+    border: solid rgb(255, 85, 85) 2px !important;
+}
+
+.divAlinhamento{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.obrigatorio{
+    position: absolute;
+    right: -10px;
+    bottom: 4px;
+    font-size: 26px;
+    font-weight: 450;
+    color: rgb(255, 85, 85);
+}
+
+.recuoPopup{
+    width: 97% !important;
+}
+
+.inputMoeda{
+    padding-left: 34px;
+}
+
+.moeda{
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    color: rgb(29, 59, 90);
+    font-weight: 500;
+}
+
 .bloqueio{
     position: fixed;
     top: 0;
@@ -116,6 +177,7 @@ header{
     gap: 16px;
     padding: 16px;
     width: 80%;
+    color: rgb(29, 59, 90);
 }
 
 .btnSair{
@@ -146,7 +208,7 @@ header{
     gap: 8px;
 }
 
-.btnEditar{
+.btnEditar, .btnAlterarSenha{
     color: rgb(9, 95, 184);
 }
 
@@ -158,4 +220,15 @@ header{
     background-color: rgb(225, 85, 85);
     border: solid transparent 2px;
     color: white;
+}
+
+.areaInfos, .areaOpcoes{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tituloInfos{
+    color: rgb(9, 95, 184);
+    font-weight: 550;
 }
