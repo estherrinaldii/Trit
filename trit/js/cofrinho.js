@@ -1,3 +1,7 @@
+if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
+    window.location.href = "http://localhost/trit/login.html";
+}
+
 import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
 
 const body = document.querySelector('body');
@@ -466,8 +470,40 @@ function exibirCofres()
         main.appendChild(areaSemCofre);
     }
     
-    // fetch exibir cofrinhos:
-    // enviar infos para a function criarPlanta()
+    fetch("http://localhost/trit/api/listarCofrinhos.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        console.log(dadosJSON);
+            for (let i = 0; i < dadosJSON.cofrinhos.length; i++) {
+                const cofrinho = dadosJSON.cofrinhos[i];
+                let valorAtual = cofrinho.ValorAtual;
+                let valorFinal = cofrinho.ValorFinal;
+                let porcentagem = (Number(valorAtual) / Number(valorFinal)) * 100;
+                if(porcentagem > 100){
+                    porcentagem = 100;
+                }else{
+                    porcentagem = porcentagem.toFixed(0);
+                }
+
+                criarPlanta(cofrinho.Nome, cofrinho.Tipo, cofrinho.Data, cofrinho.ValorAtual, cofrinho.ValorFinal, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
+            }
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    })
+    .finally(function () {
+    });
+
 }
 
 function criarPlanta(nome, periodo, data, valorAtual, valor, planta, porcentagem)
@@ -712,6 +748,7 @@ function informacoesCofre(nome, periodo, dataAtual, data, valorAtual, valor, pla
             // as variaveis passadas para ca (nome, periodo, dataAtual, data, valor e planta) serão substituidas pelas variaveis vindas do banco 
             // (pode tirar elas de dentro dos parenteses de onde essa function é chamada tb)
             // vc vai fazer uma comparação do código da planta selecionada (plantaSelecionada.getAttribute('id')) com o codigo das plantas do banco, para identificar as informações referentes a planta clicada
+            
 
             if(plantaSelecionada.querySelector('.concluida'))
             {

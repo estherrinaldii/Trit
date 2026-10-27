@@ -309,8 +309,11 @@ delimiter $$
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
 		END IF; 
         
-		select cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta
-			from cofrinho where fk_nm_email = pEmail;
+		select c.cd_cofrinho, c.nm_cofrinho, c.dt_cofrinho, c.dt_prazo, c.vl_cofrinho_final, c.ic_tipo_cofrinho, c.vl_cofrinho_atual, c.FK_nm_email, c.FK_cd_planta, p.nm_planta         
+			from cofrinho c
+            join planta p
+            ON p.cd_planta = c.FK_cd_planta
+            where fk_nm_email = pEmail;
 	END$$
     
          DROP PROCEDURE IF EXISTS criar_cofrinho$$

@@ -6,7 +6,7 @@ class CofrinhoController {
         $cofrinhos = [];
         
         foreach($resposta as $linha){
-            $planta = new Planta($linha['cd_planta']);
+            $planta = new Planta($linha['FK_cd_planta'], $linha['nm_planta']);
 
             $cofrinho = new Cofrinho($linha['cd_cofrinho'],
             $linha['nm_cofrinho'],
