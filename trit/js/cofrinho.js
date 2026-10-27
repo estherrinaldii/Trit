@@ -741,13 +741,6 @@ function informacoesCofre()
         
         plantaSelecionada.addEventListener('click', function(e){
             e.preventDefault();
-            console.log(plantaSelecionada);
-
-            // fetch consultar planta:
-            // toda a function abaixo dessa linha vai ficar dentro do fetch
-            // as variaveis passadas para ca (nome, periodo, dataAtual, data, valor e planta) serão substituidas pelas variaveis vindas do banco 
-            // (pode tirar elas de dentro dos parenteses de onde essa function é chamada tb)
-            // vc vai fazer uma comparação do código da planta selecionada (plantaSelecionada.getAttribute('id')) com o codigo das plantas do banco, para identificar as informações referentes a planta clicada
             fetch("http://localhost/Trit/trit/api/listarCofrinhos.php", {
             method: "GET",
                 credentials: "include",
@@ -858,9 +851,22 @@ function informacoesCofre()
                     const tituloDataCriacao = document.createElement('p');
                     tituloDataCriacao.textContent = 'Data:';
                     tituloDataCriacao.classList.add('tituloInfos');
-        
+                    // data 
+                    let dataAtual = cofrinho.Data;
+                    let conjuntoDataAtual = dataAtual.split("-");
+                    
+                    let dataAtualFormatada = `${conjuntoDataAtual[2]}-${conjuntoDataAtual[1]}-${conjuntoDataAtual[0]}`;
+                    let dataPrazoFormatada = 0;
+
+                    if(cofrinho.Prazo){
+
+                        let dataPrazo = cofrinho.Prazo;
+                        let conjuntoDataPrazo = dataPrazo.split("-");
+                        dataPrazoFormatada = `${conjuntoDataPrazo[2]}-${conjuntoDataPrazo[1]}-${conjuntoDataPrazo[0]}`;
+                    }
+
                     const dataCriacao = document.createElement('p');
-                    dataCriacao.textContent = cofrinho.Data;
+                    dataCriacao.textContent = dataAtualFormatada.replaceAll('-', '/');
         
                     areaDataCriacao.append(tituloDataCriacao, dataCriacao);
         
@@ -878,37 +884,30 @@ function informacoesCofre()
         
                     let areaDica = '';
                     let areaDataLimite = '';
-
-                    let dataAtual = cofrinho.Data;
-                    let conjuntoData = dataAtual.split("-");
-                    
-                    let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
         
-                    if(cofrinho.Prazo)
+                    if(dataPrazoFormatada)
                     {
-                        let diaAtual = cofrinho.Data.replaceAll('-','');
+                        let diaAtual = dataAtualFormatada.replaceAll('-','');
                         diaAtual = diaAtual.slice(0,2);
                         
-                        let mesAtual = cofrinho.Data.replaceAll('-','');
+                        let mesAtual = dataAtualFormatada.replaceAll('-','');
                         mesAtual = mesAtual.slice(2,4);
         
-                        let anoAtual = cofrinho.Data.replaceAll('-','');
+                        let anoAtual = dataAtualFormatada.replaceAll('-','');
                         anoAtual = anoAtual.slice(4);
 
-                        let diaLimite = cofrinho.Prazo.replaceAll('-','');
+                        let diaLimite = dataPrazoFormatada.replaceAll('-','');
                         diaLimite = diaLimite.slice(0,2);
         
-                        let mesLimite = cofrinho.Prazo.replaceAll('-','');
+                        let mesLimite = dataPrazoFormatada.replaceAll('-','');
                         mesLimite = mesLimite.slice(2,4);
         
-                        let anoLimite = cofrinho.Prazo.replaceAll('-','');
+                        let anoLimite = dataPrazoFormatada.replaceAll('-','');
                         anoLimite = anoLimite.slice(4);
         
                         let diferencaAno = anoLimite - anoAtual;
-                        console.log(diferencaAno);
                         let diferencaMes = mesLimite - mesAtual;
                         diferencaMes = diferencaMes + (diferencaAno * 12);
-                        console.log(diferencaMes);
         
                         if(diaAtual > diaLimite)
                         {
@@ -927,7 +926,7 @@ function informacoesCofre()
                         tituloDataLimite.classList.add('tituloInfos');
         
                         const dataLimite = document.createElement('p');
-                        dataLimite.textContent = cofrinho.Prazo;
+                        dataLimite.textContent = dataPrazoFormatada.replaceAll('-', '/');
                         dataLimite.id = 'dataLimite';
         
                         areaDataLimite.append(tituloDataLimite, dataLimite);
