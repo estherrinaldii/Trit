@@ -1,3 +1,13 @@
+main{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 24px;
+    color: rgb(29, 59, 90);
+    font-size: 16px;
+}
+
 .areaPerfil{
     display: flex;
     flex-direction: column;
@@ -15,11 +25,6 @@
     justify-content: center;
 }
 
-.areaNome{
-    display: flex;
-    gap: 16px;
-}
-
 .nome{
     font-size: 24px;
     font-weight: 550;
@@ -27,7 +32,7 @@
 }
 
 .areaProgresso{
-    width: 80%;
+    width: 85%;
 }
 
 .areaNivel{
@@ -42,9 +47,8 @@
 }
 
 .tarefasConcluidas{
-    color: white;
-    -webkit-text-stroke: 0.9px rgb(9, 95, 184);
-    font-weight: 550;
+    color: rgb(9, 95, 184);
+    font-weight: 650;
     position: absolute;
     right: calc(50% - 10.5px);
     bottom: 4px;
@@ -57,11 +61,139 @@ progress {
 }
 
 progress::-webkit-progress-bar {
-    background-color: rgb(9, 95, 184, 0.21);
+    background-color: rgb(204, 246, 162, 0.50);
     border-radius: 14px;
 }
 
 progress::-webkit-progress-value {
-    background-color: rgb(9, 95, 184);
+    background-color: rgb(157, 235, 125);
     border-radius: 14px;
+}
+
+.desafios{
+    background-color: rgb(9, 95, 184, 0.21);
+    width: 85%;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tituloGeral{
+    font-size: 24px;
+    font-weight: 650;
+    text-align: center;
+}
+
+.tituloPagina{
+    color: rgb(9, 95, 184);
+}
+
+.tituloMenor{
+    font-size: 20px;
+    font-weight: 550;
+}
+
+.tituloPopup{
+    color: rgb(29, 59, 90);
+}
+
+.areaDesafios{
+    background-color: white;
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desafio{
+    display: flex;
+    gap: 8px;
+    align-items: center
+}
+
+.checkbox{
+    background-color: rgb(29, 59, 90, 0.46);
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox > img{
+    width: 90%;
+    display: none;
+}
+
+.concluido > p{
+    color: rgb(29, 59, 90, 0.57);
+}
+
+.concluido > div{
+    background-color: rgb(157, 235, 125) !important;
+}
+
+.concluido > div > img{
+    display: block !important;
+}
+
+.areaInsignias{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.areaInsigniaTipo{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+    margin-left: 24px;
+}
+
+.tituloInsignias{
+    display: flex;
+    gap: 8px;
+    font-size: 20px;
+}
+
+.insignias{
+    display: flex;
+    overflow-x: hidden;
+    gap: 16px;
+}
+
+.naoPossui{
+    opacity: 0.5;
+}
+
+.areaTituloExibir{
+    display: flex;
+    position: relative;
+}
+
+.btnVoltar{
+    position: absolute;
+    left: -70px
+}
+
+.exibirInsignias{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 24px;
+}
+
+.insigniaExibir{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
 }

@@ -395,7 +395,7 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite, codigo
         infosControlado.appendChild(barraProgresso);
 
         const icone = document.createElement('img');
-        icone.src = "img/seta.png";
+        icone.src = "img/seta.svg";
         icone.addEventListener('click', function(e){
             e.preventDefault();
             body.appendChild(bloqueio);
@@ -440,7 +440,7 @@ function areaSelecao(local, areaNovaSaida)
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
 
     const iconMaisOpcoes = document.createElement('img');
-    iconMaisOpcoes.src = "img/seta.png";
+    iconMaisOpcoes.src = "img/seta.svg";
     iconMaisOpcoes.classList.add('maisOpcoes');
 
     const naoSelecionado = document.createElement('div');

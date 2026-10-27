@@ -72,7 +72,6 @@ header{
     border: solid transparent 2px;
 }
 
-
 .infos{
     display: flex;
     flex-direction: column;
@@ -142,7 +141,7 @@ header{
     color: rgb(255, 85, 85);
 }
 
-.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito{
+.btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito, .areaNome{
     display: flex;
     gap: 8px;
 }

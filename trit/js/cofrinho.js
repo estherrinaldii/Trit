@@ -34,7 +34,7 @@ function areaSelecaoPlanta()
     btnMaisPlantas.classList.add('btnMaisOpcoes');
 
     const iconMaisPlantas = document.createElement('img');
-    iconMaisPlantas.src = "img/seta.png";
+    iconMaisPlantas.src = "img/seta.svg";
     iconMaisPlantas.classList.add('maisOpcoes');
 
     const plantaNaoSelecionada = document.createElement('div');
@@ -184,7 +184,7 @@ function areaSelecaoPeriodo(dataLimite)
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
 
     const iconMaisOpcoes = document.createElement('img');
-    iconMaisOpcoes.src = "img/seta.png";
+    iconMaisOpcoes.src = "img/seta.svg";
     iconMaisOpcoes.classList.add('maisOpcoes');
 
     const naoSelecionado = document.createElement('div');
