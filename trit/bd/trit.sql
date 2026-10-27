@@ -68,6 +68,7 @@ CREATE TABLE Cofrinho (
   vl_cofrinho_final DECIMAL(10,2) NOT NULL,
   ic_tipo_cofrinho ENUM('determinado', 'indeterminado') NOT NULL,
   vl_cofrinho_atual DECIMAL(10,2) NOT NULL,
+  dt_exclusao DATETIME NULL DEFAULT NULL,
   FK_nm_email VARCHAR(200) NOT NULL,
   FK_cd_planta INT NOT NULL,
   CONSTRAINT PK_Cofrinho PRIMARY KEY (cd_cofrinho, FK_nm_email),

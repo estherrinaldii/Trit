@@ -298,7 +298,7 @@ delimiter $$
 		Select u.nm_email, u.nm_usuario, c.vl_carteira, c.cd_carteira, u.vl_renda, u.qt_pontos from usuario u
 		join carteira c on (c.FK_nm_email = u.nm_email) 
 		where u.nm_email = pEmail;
-    END$$    
+    END$$
     
     DROP PROCEDURE IF EXISTS listar_cofrinhos$$
 	CREATE PROCEDURE listar_cofrinhos(pEmail varchar(200))
@@ -314,10 +314,11 @@ delimiter $$
 			from cofrinho c
             join planta p
             ON p.cd_planta = c.FK_cd_planta
-            where fk_nm_email = pEmail;
+            where c.FK_nm_email = pEmail
+              and c.dt_exclusao IS NULL;
 	END$$
     
-         DROP PROCEDURE IF EXISTS criar_cofrinho$$
+    DROP PROCEDURE IF EXISTS criar_cofrinho$$
     CREATE PROCEDURE criar_cofrinho(pEmail VARCHAR(200), pNomeCofrinho VARCHAR(100), pTipo ENUM('determinado','indeterminado'), pValorFinal DECIMAL(10,2), pPrazo DATE, pPlanta INT)
     BEGIN
         DECLARE pCodigoCofrinho INT DEFAULT 0;
@@ -351,16 +352,18 @@ delimiter $$
             END IF;
 
             INSERT INTO cofrinho(cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta)
-                VALUES (pCodigoCofrinho, pNomeCofrinho, NOW(), pPrazo, pValorFinal, 'determinado', 0.00, pEmail, pPlanta);
+                VALUES (pCodigoCofrinho, pNomeCofrinho, CURDATE(), pPrazo, pValorFinal, 'determinado', 0.00, pEmail, pPlanta);
         END IF;
 
         IF pTipo = 'indeterminado' THEN
             INSERT INTO cofrinho(cd_cofrinho, nm_cofrinho, dt_cofrinho, dt_prazo, vl_cofrinho_final, ic_tipo_cofrinho, vl_cofrinho_atual, FK_nm_email, FK_cd_planta)
-                VALUES (pCodigoCofrinho, pNomeCofrinho, NOW(), NULL, pValorFinal, 'indeterminado', 0.00, pEmail, pPlanta);
+                VALUES (pCodigoCofrinho, pNomeCofrinho, CURDATE(), NULL, pValorFinal, 'indeterminado', 0.00, pEmail, pPlanta);
         END IF;
+        
+        CALL verificar_insignias_cofrinho(pEmail);
     END$$
     
-        DROP PROCEDURE IF EXISTS editar_cofrinho$$
+    DROP PROCEDURE IF EXISTS editar_cofrinho$$
     CREATE PROCEDURE editar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT, pNovoNome VARCHAR(100), pNovoValorFinal DECIMAL(10,2), pNovoPrazo DATE, pNovaPlanta INT)
     BEGIN
         DECLARE qtdUsuario INT DEFAULT 0;
@@ -376,7 +379,9 @@ delimiter $$
 
         SELECT COUNT(*) INTO qtdCofrinho
             FROM cofrinho
-            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+            WHERE cd_cofrinho = pCodigoCofrinho
+              AND FK_nm_email = pEmail
+              AND dt_exclusao IS NULL;
         IF qtdCofrinho = 0 THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
         END IF;
@@ -392,7 +397,9 @@ delimiter $$
 
         SELECT ic_tipo_cofrinho, dt_prazo INTO vTipo, vPrazoAtual
             FROM cofrinho
-            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+            WHERE cd_cofrinho = pCodigoCofrinho
+              AND FK_nm_email = pEmail
+              AND dt_exclusao IS NULL;
 
         IF vTipo = 'determinado' THEN
             IF pNovoPrazo IS NULL THEN
@@ -410,86 +417,105 @@ delimiter $$
                 SET nm_cofrinho = pNovoNome, vl_cofrinho_final = pNovoValorFinal, FK_cd_planta = pNovaPlanta
                 WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
         END IF;
+        CALL verificar_insignias_cofrinho(pEmail);
     END$$
 
-    DROP PROCEDURE IF EXISTS deletar_cofrinho$$
-    CREATE PROCEDURE deletar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT)
-    BEGIN
-    
+	DROP PROCEDURE IF EXISTS deletar_cofrinho$$
+	CREATE PROCEDURE deletar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT)
+	BEGIN
 		DECLARE pCarteira INT DEFAULT 0;
-        DECLARE qtdUsuario INT DEFAULT 0;
-        DECLARE qtdCofrinho INT DEFAULT 0;
+		DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE qtdCofrinho INT DEFAULT 0;
+		DECLARE vValorAtual DECIMAL(10,2) DEFAULT 0;
 
-        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-            IF qtdUsuario = 0 THEN
-                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-        END IF;
+		SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+		
+		SELECT COUNT(*) INTO qtdCofrinho
+			FROM cofrinho
+			WHERE cd_cofrinho = pCodigoCofrinho
+			  AND FK_nm_email = pEmail
+			  AND dt_exclusao IS NULL;
+		IF qtdCofrinho = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+		END IF;
 
-        SELECT COUNT(*) INTO qtdCofrinho
-            FROM cofrinho
-            WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
-        IF qtdCofrinho = 0 THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
-        END IF;
-        
-        SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
-        SELECT vl_cofrinho_atual FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho;
-        
-        INSERT INTO carteira (cd_carteira, vl_carteira, FK_nm_email) VALUES (pCarteira, pValorAtual, pEmail);
+		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
 
-        DELETE FROM cofrinho WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
-    END$$
-    
-    DROP PROCEDURE IF EXISTS guardar_cofrinho$$
-    CREATE PROCEDURE  guardar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
-   BEGIN
-			DECLARE pCarteira INT DEFAULT 0;
-			DECLARE qtdUsuario INT DEFAULT 0;
-			DECLARE qtdCofrinho INT DEFAULT 0;
-			DECLARE pCodigoMovimentacao INT DEFAULT 0;
-			DECLARE maiorCodigo INT DEFAULT 0;
-            			
-			SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		SELECT vl_cofrinho_atual INTO vValorAtual
+		FROM cofrinho
+			WHERE cd_cofrinho = pCodigoCofrinho
+			  AND FK_nm_email = pEmail
+			  AND dt_exclusao IS NULL;
+
+		UPDATE cofrinho
+			SET dt_exclusao = NOW(),
+			    vl_cofrinho_atual = 0
+			WHERE cd_cofrinho = pCodigoCofrinho
+			  AND FK_nm_email = pEmail
+			  AND dt_exclusao IS NULL;
+
+		UPDATE carteira
+			SET vl_carteira = vl_carteira + vValorAtual
+			WHERE cd_carteira = pCarteira;
+	END$$
+
+	DROP PROCEDURE IF EXISTS guardar_cofrinho$$
+	CREATE PROCEDURE guardar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT, pValor DECIMAL(10,2))
+	BEGIN
+		DECLARE pCarteira INT DEFAULT 0;
+		DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE qtdCofrinho INT DEFAULT 0;
+		DECLARE pCodigoMovimentacao INT DEFAULT 0;
+		DECLARE maiorCodigo INT DEFAULT 0;
+					
+		SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+
+		SELECT COUNT(*) INTO qtdCofrinho
+			FROM cofrinho
+			WHERE cd_cofrinho = pCodigoCofrinho
+			  AND FK_nm_email = pEmail
+			  AND dt_exclusao IS NULL;
+		IF qtdCofrinho = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
+		END IF;
+		
+			IF pValor <= 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
 			END IF;
-
-			SELECT COUNT(*) INTO qtdCofrinho
-				FROM cofrinho
-				WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
-			IF qtdCofrinho = 0 THEN
-				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
-			END IF;
-            
-                IF pValor <= 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
-				END IF;
-            
-            SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
-				SET pCodigoMovimentacao = maiorCodigo + 1;
+		
+		SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
+			SET pCodigoMovimentacao = maiorCodigo + 1;
+		
+		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
+		
+		INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'guardar', pEmail, pCodigoCofrinho);
+					
+		UPDATE carteira
+			SET vl_carteira = vl_carteira - pValor
+			WHERE cd_carteira = pCarteira;
 			
-			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
-            
-            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'guardar', pEmail, pCodigoCofrinho);
-            			
-			UPDATE carteira
-				SET vl_carteira = vl_carteira - pValor
-				WHERE cd_carteira = pCarteira;
-				
-			 UPDATE cofrinho
-				SET vl_cofrinho_atual = vl_cofrinho_atual + pValor
-				WHERE  cd_cofrinho = pCodigoCofrinho;
-		END$$
-        
+		 UPDATE cofrinho
+			SET vl_cofrinho_atual = vl_cofrinho_atual + pValor
+			WHERE  cd_cofrinho = pCodigoCofrinho;
+			
+			CALL verificar_insignias_cofrinho(pEmail);
+	END$$
+		
 	DROP PROCEDURE IF EXISTS resgatar_cofrinho$$
-    CREATE PROCEDURE  resgatar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
-    BEGIN
+	CREATE PROCEDURE resgatar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT, pValor DECIMAL(10,2))
+	BEGIN
 			DECLARE pCarteira INT DEFAULT 0;
 			DECLARE qtdUsuario INT DEFAULT 0;
 			DECLARE qtdCofrinho INT DEFAULT 0;
 			DECLARE pCodigoMovimentacao INT DEFAULT 0;
 			DECLARE maiorCodigo INT DEFAULT 0;
-            			
+						
 			SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
 				IF qtdUsuario = 0 THEN
 					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
@@ -497,22 +523,24 @@ delimiter $$
 
 			SELECT COUNT(*) INTO qtdCofrinho
 				FROM cofrinho
-				WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
+				WHERE cd_cofrinho = pCodigoCofrinho
+				  AND FK_nm_email = pEmail
+				  AND dt_exclusao IS NULL;
 			IF qtdCofrinho = 0 THEN
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cofrinho não encontrado para esse usuário';
 			END IF;
-            
-            IF pValor <= 0 THEN
+			
+			IF pValor <= 0 THEN
 					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
 				END IF;
-            
-            SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
+			
+			SELECT IFNULL(MAX(cd_movimentacao), 0) INTO maiorCodigo FROM movimentacao_cofrinho;
 				SET pCodigoMovimentacao = maiorCodigo + 1;
 			
 			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
-            
-            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'resgatar', pEmail, pCodigoCofrinho);
-            			
+			
+			INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'resgatar', pEmail, pCodigoCofrinho);
+						
 			UPDATE carteira
 				SET vl_carteira = vl_carteira + pValor
 				WHERE cd_carteira = pCarteira;
@@ -586,144 +614,70 @@ delimiter $$
 
 		ORDER BY data DESC;
 	END$$
-    
+
+    DROP PROCEDURE IF EXISTS calcular_insignia_completados$$
+	CREATE PROCEDURE calcular_insignia_completados(pEmail VARCHAR(200), pQuantidade INT, pCodigoInsignia INT)
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE qtdCofrinho INT DEFAULT 0;
+	 
+		SELECT count(*) INTO qtdUsuario FROM Usuario WHERE nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+	 
+		SELECT count(*) INTO qtdCofrinho FROM cofrinho
+			WHERE FK_nm_email = pEmail AND vl_cofrinho_atual >= vl_cofrinho_final;
+	 
+		IF qtdCofrinho >= pQuantidade THEN
+			INSERT IGNORE INTO usuario_insignia (FK_nm_email, FK_cd_insignia) VALUES (pEmail, pCodigoInsignia);
+		END IF;
+	END$$
     DROP PROCEDURE IF EXISTS calcular_primeiro_cofrinho_criado$$
-    CREATE PROCEDURE calcular_primeiro_cofrinho_criado(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;	
-    
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 1;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail;
-	
-	if qtdCofrinho >= 1 then
-		insert into usuario_insignia values (pEmail, 1);  
-	end if;
-	END$$ 
-        
-	DROP PROCEDURE IF EXISTS calcular_primeiro_cofrinho_completado$$
-    CREATE PROCEDURE calcular_primeiro_cofrinho_completado(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;
-	
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 2;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final;
-	
-	if qtdCofrinho >= 1 then
-		insert into usuario_insignia values (pEmail, 2);  
-	end if;
+	CREATE PROCEDURE calcular_primeiro_cofrinho_criado(pEmail VARCHAR(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE qtdCofrinho INT DEFAULT 0;
+
+		SELECT count(*) INTO qtdUsuario FROM Usuario WHERE nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+
+		SELECT count(*) INTO qtdCofrinho FROM cofrinho WHERE FK_nm_email = pEmail;
+
+		IF qtdCofrinho >= 1 THEN
+			INSERT IGNORE INTO usuario_insignia (FK_nm_email, FK_cd_insignia) VALUES (pEmail, 1);
+		END IF;
 	END$$
-    
-    DROP PROCEDURE IF EXISTS calcular_cinco_cofrinhos_completados$$
-    CREATE PROCEDURE calcular_cinco_cofrinhos_completados(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;
-	
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 3;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final;
-	
-	if qtdCofrinho >= 5 then
-		insert into usuario_insignia values (pEmail, 3);
-	end if;
-	END$$
-    
-      DROP PROCEDURE IF EXISTS calcular_cinco_cofrinhos_completados$$
-    CREATE PROCEDURE calcular_cinco_cofrinhos_completados(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;
-	
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 3;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final;
-	
-	if qtdCofrinho >= 5 then
-		insert into usuario_insignia values (pEmail, 3);
-	end if;
-	END$$
-    
     DROP PROCEDURE IF EXISTS calcular_primeiro_cofrinho_determinado_completado$$
-    CREATE PROCEDURE calcular_primeiro_cofrinho_determinado_completado(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;
-	
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 4;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final and ic_tipo_cofrinho = 'determinado';
-	
-	if qtdCofrinho >= 1 then
-		insert into usuario_insignia values (pEmail, 4);  
-	end if;
+	CREATE PROCEDURE calcular_primeiro_cofrinho_determinado_completado(pEmail VARCHAR(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE qtdCofrinho INT DEFAULT 0;
+	 
+		SELECT count(*) INTO qtdUsuario FROM Usuario WHERE nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+	 
+		SELECT count(*) INTO qtdCofrinho FROM cofrinho
+			WHERE FK_nm_email = pEmail
+			  AND ic_tipo_cofrinho = 'determinado'
+			  AND vl_cofrinho_atual >= vl_cofrinho_final;
+	 
+		IF qtdCofrinho >= 1 THEN
+			INSERT IGNORE INTO usuario_insignia (FK_nm_email, FK_cd_insignia) VALUES (pEmail, 4);
+		END IF;
 	END$$
-    
-    
-    DROP PROCEDURE IF EXISTS calcular_dez_cofrinhos_completados$$
-    CREATE PROCEDURE calcular_dez_cofrinhos_completados(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE qtdInsignia INT DEFAULT 0;
-    DECLARE qtdCofrinho INT DEFAULT 0;
-	
-    SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-				IF qtdUsuario = 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
-				END IF;
-	SELECT count(*) into qtdInsignia from usuario_insignia where FK_nm_email = pEmail and FK_cd_insignia = 5;
-				IF qtdInsignia > 0 THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario já possui essa insígnia';
-				END IF;
-                
-	select count(*) into qtdCofrinho from cofrinho where FK_nm_email = pEmail and vl_cofrinho_atual >= vl_cofrinho_final;
-	
-	if qtdCofrinho >= 10 then
-		insert into usuario_insignia values (pEmail, 5);
-	end if;
+    DROP PROCEDURE IF EXISTS verificar_insignias_cofrinho$$
+	CREATE PROCEDURE verificar_insignias_cofrinho(pEmail VARCHAR(200))
+	BEGIN
+		CALL calcular_primeiro_cofrinho_criado(pEmail);
+		CALL calcular_insignia_completados(pEmail, 1, 2);
+		CALL calcular_insignia_completados(pEmail, 5, 3);
+		CALL calcular_insignia_completados(pEmail, 10, 5);
+		CALL calcular_primeiro_cofrinho_determinado_completado(pEmail);
 	END$$
     
     DROP PROCEDURE IF EXISTS listar_insignias$$
