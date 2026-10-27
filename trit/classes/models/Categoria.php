@@ -17,8 +17,7 @@ class Categoria extends Banco
 		$this->Tipo = $tipo;
 	}
 
-	public static function Listar($email)
-	{
+	public static function Listar($email){
 		$parametros = [
 			"pEmail" => $email
 		];
