@@ -186,10 +186,10 @@ INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (7, 'At
 INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (8, 'Atinja o nível 5', 'nivel');
 INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (9, 'Atinja o nível 10', 'nivel');
 
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (1, 'Zamioculca');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (2, 'Lírio');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (3, 'Cacto');
-INSERT INTO Planta (cd_planta, nm_planta) VALUES (4, 'Peônia');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (1, 'zamioculca');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (2, 'lirio');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (3, 'cacto');
+INSERT INTO Planta (cd_planta, nm_planta) VALUES (4, 'peonia');
 
 -- MASSA DE TESTE
 

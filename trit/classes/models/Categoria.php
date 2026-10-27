@@ -41,5 +41,9 @@ class Categoria extends Banco
 		];
 		return self::Executar('deletar_categoria', $parametros);
 	}
+
+	public static function Editar(){
+		
+	}
 }
 ?>
