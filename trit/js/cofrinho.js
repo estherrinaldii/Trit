@@ -1153,17 +1153,70 @@ function informacoesCofre()
                                             areaAviso.remove();
                                             bloqueio.appendChild(areaConsultarCofre);
                                         })
+
+                                        fetch("http://localhost/Trit/trit/api/guardarMovimentacao.php", {
+                                        method: "POST",
+                                        credentials: "include",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(
+                                            {
+                                                "valor":valorTotal
+                                            }
+                                        ),
+                                        })
+                                        .then(function (resposta) {
+                                            if (!resposta.ok) {
+                                            throw new Error("Erro HTTP: " + resposta.status);
+                                            }
+                                            return resposta.json();
+                                        })
+                                        .then(function (dadosJSON) {
+                                            if (dadosJSON) {
+                                            console.log(dadosJSON);
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                            console.warn(error);
+                                        });
                                     }
                                     else
                                     {
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
         
+                                        valorTotal = valorPossui - valorDigitado;
                                         valorTotal = valorTotal.toFixed(2);
                                         valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                                    
+                                        fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
+                                        method: "POST",
+                                        credentials: "include",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(
+                                            {
+                                                "valor":valorTotal
+                                            }   
+                                        ),
+                                        })
+                                        .then(function (resposta) {
+                                            if (!resposta.ok) {
+                                            throw new Error("Erro HTTP: " + resposta.status);
+                                            }
+                                            return resposta.json();
+                                        })
+                                        .then(function (dadosJSON) {
+                                            if (dadosJSON) {
+                                            console.log(dadosJSON);
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                            console.warn(error);
+                                        });
                                     }
-        
+                                    
                                     // fetch guardar / resgatar valor:
                                     // aqui eu já faço a soma / subtração (sim, fiz um eventlistener só), entao acho melhor só substituir o valor atual
                                     // variavel: valorTotal 
@@ -1180,7 +1233,6 @@ function informacoesCofre()
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
         
-                                        valorTotal = valorPossui - valorDigitado;
                                         valorTotal = valorTotal.toFixed(2);
                                         valorDepositadoReal.textContent = valorTotal.replace('.',',');
                                     
@@ -1202,6 +1254,8 @@ function informacoesCofre()
         
                                     porcentagemPlanta.textContent = '100%';
                                     porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+
+                                    // fetch para somar um ao total de metas concluidas pelo user
                                 }
                                 else
                                 {
@@ -1243,7 +1297,7 @@ function informacoesCofre()
                                     }
                                 }
         
-                                imgPlanta.setAttribute('src', 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg');
+                                imgPlanta.setAttribute('src', 'img/plantas/' + cofrinho.Planta.Nome + '/' + cofrinho.Planta.Nome + '-f' + qualImagem + '.svg');
         
                                 const statusDeterminado = document.querySelector('.determinado');
                                 if(statusDeterminado)
