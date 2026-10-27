@@ -33,11 +33,11 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','codigo_categoria','nome','valor'];
+	$chaves = ['codigo_categoria','nome','valor'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
-	$email = $corpo['email'];
+	$email = $_SESSION['logado'];
 	$codigoCategoria = $corpo['codigo_categoria'];
 	$nome = $corpo['nome'];
 	$valor = $corpo['valor'];

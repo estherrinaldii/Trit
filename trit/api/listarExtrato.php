@@ -28,11 +28,11 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['email','ano','mes'];
+	$chaves = ['ano','mes'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
-	$email = $corpo['email'];
+	$email = $_SESSION['logado'];
 	$ano = $corpo['ano'];
 	$mes = $corpo['mes'];
 
