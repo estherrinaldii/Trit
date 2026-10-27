@@ -4,6 +4,8 @@ const body = document.querySelector('body');
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 
+const nomeUsuario = document.querySelector('.nome');
+
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
 
@@ -42,6 +44,7 @@ if(btnEditar)
 
         const txtNome = document.createElement('input');
         txtNome.type = 'text';
+        txtNome.value = nomeUsuario.textContent;        
 
         areaNome.append(labelNome, txtNome);
 
@@ -125,6 +128,11 @@ if(btnEditar)
                 erro(msgErro, txtRenda, 'Renda não foi informada!', areaInfos);
                 return;
             }
+
+            nomeUsuario.textContent = txtNome.value.charAt(0).toUpperCase() + txtNome.value.slice(1);
+
+            areaEditarConta.remove();
+            bloqueio.remove();
         })
     })
 }
@@ -164,7 +172,7 @@ if(abrirInsignias)
             const qualPagina = btnAbrirInsignias.querySelector('p').textContent;
             localStorage.setItem('qualPagina', qualPagina);
         
-            window.location.href = "http://localhost/Trit/trit/trit/insignias.html";
+            window.location.href = "http://localhost/Trit/trit/insignias.html";
         })
     }
 }
@@ -176,7 +184,7 @@ if(btnVoltar)
     btnVoltar.addEventListener('click', function(e){
         e.preventDefault();
         
-        window.location.href = "http://localhost/Trit/trit/trit/conta.html";
+        window.location.href = "http://localhost/Trit/trit/conta.html";
     })    
 }
 
