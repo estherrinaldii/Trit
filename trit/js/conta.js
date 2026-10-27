@@ -164,7 +164,7 @@ if(abrirInsignias)
             const qualPagina = btnAbrirInsignias.querySelector('p').textContent;
             localStorage.setItem('qualPagina', qualPagina);
         
-            window.location.href = "http://localhost/Trit/trit/insignias.html";
+            window.location.href = "http://localhost/Trit/trit/trit/insignias.html";
         })
     }
 }
@@ -176,7 +176,7 @@ if(btnVoltar)
     btnVoltar.addEventListener('click', function(e){
         e.preventDefault();
         
-        window.location.href = "http://localhost/Trit/trit/conta.html";
+        window.location.href = "http://localhost/Trit/trit/trit/conta.html";
     })    
 }
 

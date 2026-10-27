@@ -205,7 +205,7 @@ btnEntrar.addEventListener('click', function(e){
         return;  
     }
 
-    fetch("http://localhost/trit/api/acessar.php", {
+    fetch("http://localhost/Trit/trit/api/acessar.php", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -228,7 +228,7 @@ btnEntrar.addEventListener('click', function(e){
             if (dadosJSON) {
                 sessionStorage['logado'] = dadosJSON.usuario.Email;
                 if(sessionStorage['logado'] != null){
-                    window.location.href = "http://localhost/trit/home.html";
+                    window.location.href = "http://localhost/Trit/trit/home.html";
                 }
                 
             } else {

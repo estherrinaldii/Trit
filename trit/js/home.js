@@ -1,5 +1,5 @@
 if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
-    window.location.href = "http://localhost/trit/login.html";
+    window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
 import { erro, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor } from "./funcoes.js";
@@ -47,7 +47,7 @@ function mudaFaseArvore(valorAtual, valorTotal){
 let valorAtual = 0;
 let valorTotal = 0;
 
-fetch("http://localhost/trit/api/buscarDadosUsuario.php", {
+fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
 method: "GET",
     credentials: "include",
 })
@@ -67,7 +67,7 @@ method: "GET",
 
             mudaFaseArvore(valorAtual, valorTotal);
     } else {
-        window.location.href = "http://localhost/trit/login.html";
+        window.location.href = "http://localhost/Trit/trit/login.html";
     }
 })
 .catch(function (error) {
@@ -206,7 +206,7 @@ btnNovaEntrada.addEventListener('click', function(e){
         let valor = Number(txtValorEntrada.value);
         let dataEntrada = FormatarData(txtDataEntrada, txtDataEntrada, areaInfos);
 
-        fetch("http://localhost/trit/api/criarEntrada.php", {
+        fetch("http://localhost/Trit/trit/api/criarEntrada.php", {
         method: "PUT",
         credentials: "include",
         headers: {
@@ -268,7 +268,7 @@ btnMais.textContent = 'Ver Mais';
 btnMais.classList.add('verMais');
 
 
-fetch("http://localhost/trit/api/listarCategorias.php", {
+fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
     method: "GET",
     credentials: "include",
 })
@@ -464,7 +464,7 @@ function areaSelecao(local, areaNovaSaida)
 
     btnNovaCategoria.append(imgNovaCategoria, opcaoNovaCategoria);
 
-    fetch("http://localhost/trit/api/listarCategorias.php", {
+    fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
     method: "GET",
         credentials: "include",
     })
@@ -644,7 +644,7 @@ function areaSelecao(local, areaNovaSaida)
 
             valorSaida = Number(valorSaida);
 
-            fetch("http://localhost/trit/api/criarCategoria.php", {
+            fetch("http://localhost/Trit/trit/api/criarCategoria.php", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -665,7 +665,7 @@ function areaSelecao(local, areaNovaSaida)
             })
             .then(function (dadosJSON) {
                 if (dadosJSON) {
-                    fetch("http://localhost/trit/api/listarCategorias.php", {
+                    fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
                     method: "GET",
                     credentials: "include",
                 })
@@ -791,7 +791,7 @@ function alterarProgresso(txtValor, local){
 function listarCategorias(indiceLista, dadosLista){
     for (let i = 0; i < indiceLista; i++) {
         const categoria = dadosLista[i];
-        fetch("http://localhost/trit/api/calcularValorGastoCategoria.php", {
+        fetch("http://localhost/Trit/trit/api/calcularValorGastoCategoria.php", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -1107,7 +1107,7 @@ function criarAreaSaida(txtTipo){
 }
 
 function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria, selecionado){
-    fetch("http://localhost/trit/api/criarSaida.php", {
+    fetch("http://localhost/Trit/trit/api/criarSaida.php", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -1273,7 +1273,7 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                 const parametro = new URLSearchParams({
                     codigo : codigo
                 });
-                fetch("http://localhost/trit/api/deletarCategoria.php?"+parametro, {
+                fetch("http://localhost/Trit/trit/api/deletarCategoria.php?"+parametro, {
                 method: "DELETE",
                     credentials: "include",
                 })
