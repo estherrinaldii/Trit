@@ -442,7 +442,7 @@ delimiter $$
     
     DROP PROCEDURE IF EXISTS guardar_cofrinho$$
     CREATE PROCEDURE  guardar_cofrinho(pEmail VARCHAR(200), pCodigoCofrinho INT,  pValor DECIMAL(10,2))
-    BEGIN
+   BEGIN
 			DECLARE pCarteira INT DEFAULT 0;
 			DECLARE qtdUsuario INT DEFAULT 0;
 			DECLARE qtdCofrinho INT DEFAULT 0;
@@ -470,7 +470,7 @@ delimiter $$
 			
 			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
             
-            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'depositar', pEmail, pCodigoCofrinho);
+            INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'guardar', pEmail, pCodigoCofrinho);
             			
 			UPDATE carteira
 				SET vl_carteira = vl_carteira - pValor
