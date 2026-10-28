@@ -5,6 +5,18 @@ const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 
 const nomeUsuario = document.querySelector('.nome');
+const nivelAtual = document.querySelector('#nivelAtual');
+const proximoNivel = document.querySelector('#proximoNivel');
+const tarefasConcluidas = document.querySelector('.taferasConcluidas');
+const todasInsignias = document.querySelectorAll('.insignia');
+
+// fetch exibicao
+// nomeUsuario.textContent = nome do usuario
+// nivelAtual.textContent = 'Nivel ' + nivel em que o usuario está
+// proximoNivel.textContent = 'Nivel ' + nivel em que o usuario está +1
+// tarefasConcluidas.textContent = pontos q o usuario fez no seu nivel atual + '/15'
+// for que compara cada item de (todasInsignias) com as insignias que o usuario possui e se ele possuir remove a class (naoPossui)
+
 
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
