@@ -32,7 +32,7 @@ class MovimentacaoCofrinho extends Banco {
 			'pValor' => $valor
 		];
 
-		return self::Executar('guardar_cofrinho', $parametros);
+		return self::Executar('resgatar_cofrinho', $parametros);
 	}
 }
 ?>
