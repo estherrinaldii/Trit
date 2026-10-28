@@ -1,4 +1,4 @@
-import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const bloqueio = document.createElement('div');
@@ -9,7 +9,8 @@ const nomeUsuario = document.querySelector('.nome');
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
 
-let btnSair = botaoSair();
+let btnSair = '';
+let areaRight = '';
 
 const btnEditar = document.querySelector('.btnEditar');
 
@@ -30,6 +31,8 @@ if(btnEditar)
         tituloEditar.textContent = 'Editar perfil';
         tituloEditar.classList.add('tituloMenor');
         tituloEditar.classList.add('tituloPopup');
+
+        btnSair = botaoSair();
 
         areaTitulo.append(tituloEditar, btnSair);
 
@@ -131,8 +134,266 @@ if(btnEditar)
 
             nomeUsuario.textContent = txtNome.value.charAt(0).toUpperCase() + txtNome.value.slice(1);
 
+            // fetch editar nome/renda
+            // variaveis:
+            // txtNome.value
+            // txtRenda.value
+
             areaEditarConta.remove();
             bloqueio.remove();
+        })
+
+        btnAlterarSenha.addEventListener('click', function(e){
+
+            areaEditarConta.remove();
+
+            const areaAlterarSenha = document.createElement('div');
+            areaAlterarSenha.classList.add('popup');
+
+            const areaTitulo = document.createElement('div');
+            areaTitulo.classList.add('areaTitulo');
+
+            const tituloAlterarSenha = document.createElement('p');
+            tituloAlterarSenha.textContent = 'Alterar senha';
+            tituloAlterarSenha.classList.add('tituloMenor');
+            tituloAlterarSenha.classList.add('tituloPopup');
+
+            btnSair = botaoSair();
+
+            areaTitulo.append(tituloAlterarSenha, btnSair);
+
+            const areaInfos = document.createElement('div')
+            areaInfos.classList.add('infos');
+
+            const areaSenhaAnterior = document.createElement('div');
+            areaSenhaAnterior.classList.add('areaDigitar');
+
+            const labelSenhaAnterior = document.createElement('label');
+            labelSenhaAnterior.textContent = 'Senha anterior:';
+
+            const txtSenhaAnterior = document.createElement('input');
+            txtSenhaAnterior.type = 'password';
+            txtSenhaAnterior.classList.add('inputSenha');
+            txtSenhaAnterior.classList.add('recuoPopup');
+            
+            areaRight = obrigatorioIcon(txtSenhaAnterior);
+            areaRight.prepend(exibirSenha(txtSenhaAnterior));
+
+            areaSenhaAnterior.append(labelSenhaAnterior, areaRight);
+
+            const areaNovaSenha = document.createElement('div');
+            areaNovaSenha.classList.add('areaDigitar');
+
+            const labelNovaSenha = document.createElement('label');
+            labelNovaSenha.textContent = 'Nova senha:';
+
+            const txtNovaSenha = document.createElement('input');
+            txtNovaSenha.type = 'password';
+            txtNovaSenha.classList.add('inputSenha');
+            txtNovaSenha.classList.add('recuoPopup');
+            
+            areaRight = obrigatorioIcon(txtNovaSenha);
+            areaRight.prepend(exibirSenha(txtNovaSenha));
+
+            areaNovaSenha.append(labelNovaSenha, areaRight);
+
+            const areaConfirmaSenha = document.createElement('div');
+            areaConfirmaSenha.classList.add('areaDigitar');
+
+            const labelConfirmaSenha = document.createElement('label');
+            labelConfirmaSenha.textContent = 'Confirme a senha:';
+
+            const txtConfirmaSenha = document.createElement('input');
+            txtConfirmaSenha.type = 'password';
+            txtConfirmaSenha.classList.add('inputSenha');
+            txtConfirmaSenha.classList.add('recuoPopup');
+            
+            areaRight = obrigatorioIcon(txtConfirmaSenha);
+            areaRight.prepend(exibirSenha(txtConfirmaSenha));
+
+            areaConfirmaSenha.append(labelConfirmaSenha, areaRight);
+
+            const requisitos = document.createElement('div');
+            requisitos.classList.add('requisitos');
+
+            const requisito1 = document.createElement('p');
+            requisito1.id = 'requisito1'
+            requisito1.textContent = 'Mínimo de 8 caracteres';
+
+            const requisito2 = document.createElement('p');
+            requisito2.id = 'requisito2'
+            requisito2.textContent = 'Requer letra maiúscula';
+
+            const requisito3 = document.createElement('p');
+            requisito3.id = 'requisito3'
+            requisito3.textContent = 'Requer letra minúscula';
+
+            const requisito4 = document.createElement('p');
+            requisito4.id = 'requisito4'
+            requisito4.textContent = 'Requer número';
+
+            const requisito5 = document.createElement('p');
+            requisito5.id = 'requisito5'
+            requisito5.textContent = 'Requer caractér especial';
+            
+            requisitos.append(requisito1, requisito2, requisito3, requisito4, requisito5);
+
+            txtNovaSenha.addEventListener('input', function(e){
+                requisitosSenha(txtNovaSenha.value.trim());
+            })
+
+            const btnSalvar = document.createElement('button');
+            btnSalvar.textContent = 'Salvar';
+            btnSalvar.classList.add('btnSalvar');
+
+            areaInfos.append(areaSenhaAnterior, areaNovaSenha, areaConfirmaSenha, requisitos);
+
+            areaAlterarSenha.append(areaTitulo, areaInfos, btnSalvar);
+            bloqueio.appendChild(areaAlterarSenha);
+
+            btnSair.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaAlterarSenha.remove();
+                bloqueio.appendChild(areaEditarConta);
+            })
+
+            btnSalvar.addEventListener('click', function(e){
+                e.preventDefault();
+
+                if(txtSenhaAnterior.value == '')
+                {
+                    erro(msgErro, txtSenhaAnterior, 'Senha anterior não foi informada!', areaInfos);
+                    return;
+                }
+
+                if(txtNovaSenha.value == '')
+                {
+                    erro(msgErro, txtNovaSenha, 'Nova senha não foi informada!', areaInfos);
+                    return;
+                }
+
+                if(txtConfirmaSenha.value == '')
+                {
+                    erro(msgErro, txtConfirmaSenha, 'Confirme a senha!', areaInfos);
+                    return;
+                }
+
+                if(txtSenhaAnterior.value == txtNovaSenha.value)
+                {
+                    erro(msgErro, txtNovaSenha, 'A senha nova deve ser diferente da anterior!', areaInfos);
+                    return;
+                }
+
+                if(!requisito1.classList.contains('requisitoAtendido') || !requisito2.classList.contains('requisitoAtendido') || !requisito3.classList.contains('requisitoAtendido') || !requisito4.classList.contains('requisitoAtendido') || !requisito5.classList.contains('requisitoAtendido'))
+                {
+                    erro(msgErro, txtNovaSenha, null, null);
+                    return;
+                }
+
+                if(txtNovaSenha.value != txtConfirmaSenha.value)
+                {
+                    erro(msgErro, txtConfirmaSenha, 'Confirmação de senha incompatível!', areaInfos);
+                    return;
+                }
+
+                // fetch alterar senha
+                // 1. conferir se a senha anterior está certa
+                //     variavel: txtSenhaAnterior.value
+                //     se nao estiver, da erro: erro(msgErro, txtSenhaAnterior, 'Senha incorreta!', areaInfos);
+
+                // 2. registrar senha nova
+                //     variavel: txtNovaSenha.value
+
+                areaAlterarSenha.remove();
+                bloqueio.remove();
+            })
+        })
+
+        btnExcluirConta.addEventListener('click', function(e){
+
+            areaEditarConta.remove();
+
+            const areaAviso = document.createElement('div');
+            areaAviso.classList.add('popup');
+            areaAviso.classList.add('areaAviso');
+
+            const aviso = document.createElement('p');
+            aviso.textContent = 'Gostaria de excluir sua conta?'
+
+            const areaBotoesExcluir = document.createElement('div');
+            areaBotoesExcluir.classList.add('areaBotoesExcluir');
+
+            const btnCancelar = document.createElement('button');
+            btnCancelar.classList.add('btnCancelar');
+            btnCancelar.textContent = 'Cancelar';
+            btnCancelar.classList.add('btnCancelar');
+
+            const btnExcluirConfirma = document.createElement('button');
+            btnExcluirConfirma.classList.add('btnExcluirConfirma');
+            btnExcluirConfirma.textContent = 'Excluir';
+
+            areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
+            areaAviso.append(aviso, areaBotoesExcluir);
+            bloqueio.appendChild(areaAviso);
+
+            let paginaExcluir = 0;
+
+            btnExcluirConfirma.addEventListener('click', function(e){
+                e.preventDefault();
+
+                if(paginaExcluir == 0)
+                {
+                    aviso.remove();
+
+                    const areaInfos = document.createElement('div');
+                    areaInfos.classList.add('areaInfos');
+
+                    const areaVerificacao = document.createElement('div');
+
+                    const tituloVerificacao = document.createElement('p');
+                    tituloVerificacao.textContent = 'Verificação da senha';
+                    tituloVerificacao.classList.add('tituloVerificacao');
+
+                    const dsVerificacao = document.createElement('p');
+                    dsVerificacao.textContent = 'Insira sua senha para continuar';
+                    dsVerificacao.classList.add('dsVerificacao');
+
+                    areaVerificacao.append(tituloVerificacao, dsVerificacao);
+
+                    const txtSenha = document.createElement('input');
+                    txtSenha.type = 'password';
+                    txtSenha.classList.add('inputSenha');
+                    txtSenha.classList.add('recuoPopup');
+                    
+                    areaRight = obrigatorioIcon(txtSenha);
+                    areaRight.prepend(exibirSenha(txtSenha));
+
+                    areaInfos.append(areaVerificacao, areaRight);
+                    areaAviso.prepend(areaInfos);
+
+                    paginaExcluir = 1;
+                }
+                else
+                {
+                    // fetch excluir conta
+                    // conferir se a senha está certa
+                    //     variavel: txtSenha.value
+                    //     se nao estiver, da erro: erro(msgErro, txtSenha, 'Senha incorreta!', areaInfos);
+                    //     se estiver, exclui a conta
+
+
+                    areaAviso.remove();
+                    bloqueio.remove();
+                }
+            })
+
+            btnCancelar.addEventListener('click', function(e){
+                e.preventDefault();
+
+                areaAviso.remove();
+                bloqueio.appendChild(areaEditarConta);
+            })
         })
     })
 }
@@ -213,7 +474,7 @@ if(tituloExibir)
         qtdRepeticao = 4;
         tipoInsignias = 'nivel';
     }
-
+    
     for (let i = 0; i < qtdRepeticao; i++) {
         
         const insigniaExibir = document.createElement('div');
@@ -224,10 +485,13 @@ if(tituloExibir)
         imgInsignia.classList.add('naoPossui');
 
         const nomeInsignia = document.createElement('p');
-        nomeInsignia.textContent = 'Alcançar x metas';
 
         insigniaExibir.append(imgInsignia, nomeInsignia);
         exibirInsignias.appendChild(insigniaExibir);
         
+        // fetch exibir insignias
+        // definir o nome correto dessa insignia (nomeInsignia.textContent)
+        // ver se o usuario possui ela, se sim:
+        //     imgInsignia.classList.remove('naoPossui'); 
     }
 }

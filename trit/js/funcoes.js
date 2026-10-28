@@ -87,6 +87,101 @@ export function botaoSair()
     return btnSair;
 }
 
+export function exibirSenha(input){
+
+    const btnExibirSenha = document.createElement('img');
+    btnExibirSenha.src = 'img/exibirSenha.svg';
+    btnExibirSenha.classList.add('exibirSenha');
+
+    let senhaExibida = false;
+
+    btnExibirSenha.addEventListener('click', function(e){
+
+        if(!senhaExibida)
+        {
+            input.setAttribute('type', 'text');
+            btnExibirSenha.src = 'img/ocultarSenha.svg';
+            senhaExibida = true;
+        }
+        else
+        {
+            input.setAttribute('type', 'password');
+            btnExibirSenha.src = 'img/exibirSenha.svg'
+            senhaExibida = false;
+        }
+    })
+
+    return btnExibirSenha;
+}
+
+export function requisitosSenha(senha)
+{
+    let r1 = false;
+    let r2 = false;
+    let r3 = false;
+    let r4 = false;
+    let r5 = false;
+
+    if(senha.length >= 8)
+    {
+        r1 = true;
+    }
+
+    if(r1)
+    {
+        requisito1.classList.add('requisitoAtendido');
+    }
+    else
+    {
+        requisito1.classList.remove('requisitoAtendido');
+    }
+
+    r2 = /[A-Z]/.test(senha);
+
+    if(r2)
+    {
+        requisito2.classList.add('requisitoAtendido');
+    }
+    else
+    {
+        requisito2.classList.remove('requisitoAtendido');
+    }
+
+    r3 = /[a-z]/.test(senha);
+
+    if(r3)
+    {
+        requisito3.classList.add('requisitoAtendido');
+    }
+    else
+    {
+        requisito3.classList.remove('requisitoAtendido');
+    }
+
+    r4 = /[0-9]/.test(senha);
+
+    if(r4)
+    {
+        requisito4.classList.add('requisitoAtendido');
+    }
+    else
+    {
+        requisito4.classList.remove('requisitoAtendido');
+    }
+
+    r5 = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(senha);
+
+    if(r5)
+    {
+        requisito5.classList.add('requisitoAtendido');
+    }
+    else
+    {
+        requisito5.classList.remove('requisitoAtendido');
+    }
+
+}
+
 export function validaData(msgErro, input, local){
     
     let valorVerificar = input.value.replaceAll('/', '');

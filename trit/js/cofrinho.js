@@ -1458,7 +1458,6 @@ function informacoesCofre()
                         const btnExcluirConfirma = document.createElement('button');
                         btnExcluirConfirma.classList.add('btnExcluirConfirma');
                         btnExcluirConfirma.textContent = 'Excluir';
-                        btnExcluirConfirma.classList.add('btnExcluirConfirma');
         
                         areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
                         areaAviso.append(aviso, areaBotoesExcluir);

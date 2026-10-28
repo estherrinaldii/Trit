@@ -203,6 +203,10 @@ input:disabled{
     color: rgb(255, 85, 85);
 }
 
+.btnExcluirConfirma:active{
+    background-color: rgb(9, 95, 184, 0.05);
+}
+
 .btnEditar, .btnExcluir, .areaBotoesExcluir, .valor, .areaBotoesDeposito, .areaNome{
     display: flex;
     gap: 8px;
@@ -231,4 +235,13 @@ input:disabled{
 .tituloInfos{
     color: rgb(9, 95, 184);
     font-weight: 550;
+}
+
+.requisitos{
+    color: rgb(29, 59, 90, 0.57); 
+    margin-bottom: 8px;
+}
+
+.requisitoAtendido{
+    color: rgb(9, 95, 184) !important;
 }
