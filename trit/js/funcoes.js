@@ -317,3 +317,11 @@ export function formataInputValor(input, valorInicial)
         input.value = valorExibir;
     })
 }
+
+export function FormatarData(txtData){
+    let data = txtData.value;
+    let conjuntoData = data.split("/");
+    
+    let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
+    return dataFormatada;
+}

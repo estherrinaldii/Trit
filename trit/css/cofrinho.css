@@ -93,7 +93,8 @@ section{
 }
 
 .determinado{
-    top: 60px;
+    /* top: 60px; */
+    top: 0;
     display: flex;
     color: rgb(9, 95, 184);
     font-size: 15px;
