@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor } from "./funcoes.js";
+import { erro, FormatarData, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor } from "./funcoes.js";
 
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
@@ -732,14 +732,6 @@ function areaSelecao(local, areaNovaSaida)
             }
         }
     }
-}
-
-function FormatarData(txtData){
-    let data = txtData.value;
-    let conjuntoData = data.split("/");
-    
-    let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
-    return dataFormatada;
 }
 
 

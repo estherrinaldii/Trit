@@ -10,6 +10,7 @@ const main = document.querySelector('main');
 let areaSemCofre = '';
 exibirCofres();
 
+
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
 
@@ -487,7 +488,6 @@ function exibirCofres()
                 let valorAtual = cofrinho.ValorAtual;
                 let valorFinal = cofrinho.ValorFinal;
                 let porcentagem = (Number(valorAtual) / Number(valorFinal)) * 100;
-                console.log(cofrinho.Prazo);
                 if(porcentagem > 100){
                     porcentagem = 100;
                 }else{
@@ -496,8 +496,11 @@ function exibirCofres()
 
                 let primeiraLetra = String(cofrinho.Tipo).charAt(0);
                 let tipo = primeiraLetra.toUpperCase() + String(cofrinho.Tipo).slice(1);
+                let data = String(cofrinho.Prazo);
+                let conjuntoData = data.split("-");
+                let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
 
-                criarPlanta(cofrinho.Nome, tipo, cofrinho.Prazo, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
+                criarPlanta(cofrinho.Nome, tipo, dataFormatada, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
             }
             informacoesCofre();
         }
@@ -506,6 +509,11 @@ function exibirCofres()
         console.warn(error);
     })
     .finally(function () {
+        const plantinhas = document.querySelectorAll('.planta');
+       for (let iPlanta = 0; iPlanta < plantinhas.length; iPlanta++) {
+        const plantinha = plantinhas[iPlanta];
+        ajustaPercentual(null, null, plantinha);
+       }
     });
 
 }
@@ -741,7 +749,6 @@ function informacoesCofre()
         const tituloCofres = document.querySelectorAll('.tituloCofre');
 
         const imgPlanta = plantaSelecionada.querySelector('.plantaImg');
-        const porcentagemPlanta = plantaSelecionada.querySelector('.porcentagem');
         
         plantaSelecionada.addEventListener('click', function(e){
             e.preventDefault();
@@ -824,7 +831,7 @@ function informacoesCofre()
                     valorDepositadoMoeda.textContent = 'R$';
         
                     const valorDepositadoReal = document.createElement('p');
-                    valorDepositadoReal.textContent = cofrinho.ValorAtual;
+                    valorDepositadoReal.textContent = String(cofrinho.ValorAtual).replaceAll('.',',');
                 
         
                     valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
@@ -844,7 +851,7 @@ function informacoesCofre()
                     valorLimiteMoeda.textContent = 'R$';
         
                     const valorLimiteReal = document.createElement('p');
-                    valorLimiteReal.textContent = cofrinho.ValorFinal;
+                    valorLimiteReal.textContent = String(cofrinho.ValorFinal).replaceAll('.',',');
         
                     valorLimite.append(valorLimiteMoeda, valorLimiteReal);
                     areaValorLimite.append(tituloValorLimite, valorLimite);
@@ -1244,7 +1251,8 @@ function informacoesCofre()
                                     
                                 }
 
-                                valorDepositadoReal.textContent = String(valorTotal).replace('.',',');
+                                let valorExibir = Number(valorTotal).toFixed(2);
+                                valorDepositadoReal.textContent = String(valorExibir).replace('.',',');
                                 ajustaPercentual(valorTotal, valorMax, plantaSelecionada);
         
                                 imgPlanta.setAttribute('src', 'img/plantas/' + cofrinho.Planta.Nome + '/' + cofrinho.Planta.Nome + '-f' + qualImagem + '.svg');
@@ -1447,11 +1455,14 @@ function informacoesCofre()
 }
 
 function ajustaPercentual(valorTotal, valorMax, local){
-    console.log(local);
     const porcentagemPlanta = local.querySelector('.porcentagem');
-    let percentual = (valorTotal * 100) / valorMax;
+    let porcentagemBruta = String(porcentagemPlanta.textContent).split('%');
+    let percentual = porcentagemBruta[0];
     let qualImagem = 0;
     let posicaoStatus = ''
+    if(valorTotal && valorMax){
+        percentual = (valorTotal * 100) / valorMax;
+    }
 
     if(percentual >= 100)
     {
