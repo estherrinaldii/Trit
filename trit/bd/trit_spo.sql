@@ -698,4 +698,54 @@ delimiter $$
 			i.cd_insignia = ui.FK_cd_insignia
 			WHERE FK_nm_email = pEmail;       
 	END$$
+    
+	DROP PROCEDURE IF EXISTS listar_desafios$$
+	CREATE PROCEDURE listar_desafios()
+    BEGIN
+		SELECT `desafio`.`cd_desafio`,
+			`desafio`.`nm_desafio`,
+			`desafio`.`qt_nivel_desafio`,
+			`desafio`.`qt_pontos_desafio`
+		FROM `trit`.`desafio`;
+    END$$
+    
+    DROP PROCEDURE IF EXISTS selecionar_desafios$$
+	CREATE PROCEDURE selecionar_desafios(pEmail VARCHAR(200))
+    BEGIN
+    DECLARE qtdUsuario INT DEFAULT 0;
+    DECLARE vNivel INT DEFAULT 0;
+    DECLARE pPontos INT DEFAULT 0;
+        
+        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+        
+        SELECT `qt_pontos` into pPontos FROM `trit`.`usuario` where nm_email = pEmail;
+
+		SELECT
+			FLOOR(qt_pontos / 15) into vNivel
+			FROM Usuario 
+			WHERE nm_email = pEmail;
+         
+          if vNivel  < 1 then      
+			SELECT `desafio`.`cd_desafio`,
+			`desafio`.`nm_desafio`,
+			`desafio`.`qt_nivel_desafio`,
+			`desafio`.`qt_pontos_desafio`
+				FROM `trit`.`desafio` 
+                where vNivel + 1 >= qt_nivel_desafio; 
+		else
+			SELECT
+				 FLOOR(qt_pontos / 15)  into vNivel
+				FROM Usuario 
+				WHERE nm_email = pEmail;
+		end if;
+		SELECT `desafio`.`cd_desafio`,
+			`desafio`.`nm_desafio`,
+			`desafio`.`qt_nivel_desafio`,
+			`desafio`.`qt_pontos_desafio`
+		FROM `trit`.`desafio` where vNivel >= qt_nivel_desafio;       
+        
+    END$$
 delimiter ;

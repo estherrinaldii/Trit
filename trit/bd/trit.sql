@@ -167,7 +167,7 @@ INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('juliana.rocha@gmail.com', 'Juliana Rocha', md5(123), 4750.30, 210);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('rafael.santos@gmail.com', 'Rafael Santos', md5(123), 2950.00, 60);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('patricia.gomes@gmail.com', 'Patrícia Gomes', md5(123), 3300.90, 95);
-INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('sabrina.carpinteira@gmail.com', 'Sabrina Carpinteira', md5('123'), 1400.00, 0);
+INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('sabrina.carpinteira@gmail.com', 'Sabrina Carpinteira', md5('123'), 1400.00, 45);
 
 INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (1, 'Alimentação', 800.00, 'ana.costa@gmail.com');
 INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email) VALUES (2, 'Moradia', 1500.00, 'carlos.pereira@gmail.com');
