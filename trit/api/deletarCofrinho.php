@@ -29,16 +29,14 @@ if(!isset($_SESSION['logado'])){
 }
 
 try {
-	$corpo = json_decode(file_get_contents("php://input"), true);
-	if (!validaCorpoRequisicao($corpo)) {
+	
+	if (!isset($_GET['codigo']) || $_GET['codigo'] == '') {
+		http_response_code(400);
+		echo json_encode(['mensagem' => 'Parâmetros obrigatórios insuficientes']);
 		return;
 	}
-	$chaves = ['codigo'];
-	if (!validaChaves($corpo, $chaves)) {
-		return;
-	}
+	$codigo = $_GET['codigo'];
 	$email = $_SESSION['logado'];
-	$codigo = $corpo['codigo'];
 
 	CofrinhoController::Deletar($email, $codigo);
 
