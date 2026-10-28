@@ -24,7 +24,8 @@ delimiter $$
 		END IF;
 		
 		select cd_categoria_gasto, nm_categoria_gasto, vl_limite, ic_tipo_categoria  from categoria_gasto 
-			where FK_nm_email = pEmail;    
+			where FK_nm_email = pEmail
+            order by vl_limite asc;    
 	end$$
 
 	DROP PROCEDURE IF EXISTS selecionar_categoria$$
@@ -315,7 +316,8 @@ delimiter $$
             join planta p
             ON p.cd_planta = c.FK_cd_planta
             where c.FK_nm_email = pEmail
-              and c.dt_exclusao IS NULL;
+              and c.dt_exclusao IS NULL
+              order by vl_cofrinho_atual desc;
 	END$$
     
     DROP PROCEDURE IF EXISTS criar_cofrinho$$
