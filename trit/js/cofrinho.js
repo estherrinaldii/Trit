@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon } from "./funcoes.js";
+import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const main = document.querySelector('main');
@@ -49,6 +49,7 @@ function areaSelecaoPlanta()
     planta1.classList.add('opcao');
     planta1.classList.add('plantasEscolher');
     planta1.setAttribute('planta', 'cacto');
+    planta1.setAttribute('id', 3);    
     
     const planta1Img = document.createElement('img');
     planta1Img.src = 'img/plantas/icons/cacto-icon.svg';
@@ -62,6 +63,7 @@ function areaSelecaoPlanta()
     planta2.classList.add('opcao');
     planta2.classList.add('plantasEscolher');
     planta2.setAttribute('planta', 'lirio');
+    planta2.setAttribute('id', 2);    
     
     const planta2Img = document.createElement('img');
     planta2Img.src = 'img/plantas/icons/lirio-icon.svg';
@@ -75,6 +77,7 @@ function areaSelecaoPlanta()
     planta3.classList.add('opcao');
     planta3.classList.add('plantasEscolher');
     planta3.setAttribute('planta', 'peonia');
+    planta3.setAttribute('id', 4);    
     
     const planta3Img = document.createElement('img');
     planta3Img.src = 'img/plantas/icons/peonia-icon.svg';
@@ -88,6 +91,7 @@ function areaSelecaoPlanta()
     planta4.classList.add('opcao');
     planta4.classList.add('plantasEscolher');
     planta4.setAttribute('planta', 'zamioculca');
+    planta4.setAttribute('id', 1);    
     
     const planta4Img = document.createElement('img');
     planta4Img.src = 'img/plantas/icons/zamioculca-icon.svg';
@@ -126,6 +130,7 @@ function areaSelecaoPlanta()
                 plantaSelecionada.textContent = '';
                 plantaSelecionada.append(imgOpcaoAtual.cloneNode(true), txtOpcaoAtual.cloneNode(true));
                 plantaSelecionada.setAttribute('planta', opcaoAtual.getAttribute('planta'));
+                plantaSelecionada.setAttribute('id', opcaoAtual.getAttribute('id'));
                 selecionada();
 
                 abaAberta = true;
@@ -435,8 +440,6 @@ function botaoAdicionar()
 
             const plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
 
-            criarPlanta(txtNomeCofre.value, document.querySelector('.periodoSelecionado').textContent, txtDataCofre.value, '0,00', txtValorCofre.value, plantaEnviada, 0);
-
             // fetch criar cofre:
             // nome = txtNomeCofre.value
             // periodo = document.querySelector('.periodoSelecionado').textContent (envia em texto com primeira letra maiuscula, formata do jeito q o banco espera receber)
@@ -445,7 +448,49 @@ function botaoAdicionar()
             // planta = plantaEnviada
             // progresso/porcentagem é zero, já que está sendo criada uma planta nova
             // valor atual tambem é 0,00 pela mesma lógica do anterior
+            let valorLimiteEnviar = txtValorCofre.value;
+            valorLimiteEnviar = String(valorLimiteEnviar).replaceAll(',','.');
+            valorLimiteEnviar = Number(valorLimiteEnviar);
+            let periodo = String(document.querySelector('.periodoSelecionado').textContent).toLowerCase();
+            let periodoEx = document.querySelector('.periodoSelecionado').textContent;
+            let prazo = FormatarData(txtDataCofre);
+            let codigoPlanta = document.querySelector('.plantaSelecionada').id;
+            if(document.querySelector('.periodoSelecionado').textContent === 'Indeterminado'){
+                prazo = null;
+            }
 
+            fetch("http://localhost/Trit/trit/api/criarCofrinho.php", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    "nome":txtNomeCofre.value,
+                    "tipo":periodo,
+                    "valor_final":valorLimiteEnviar,
+                    "prazo":prazo,
+                    "planta":codigoPlanta
+                }
+            ),
+            })
+            .then(function (resposta) {
+                if (!resposta.ok) {
+                throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+            })
+            .then(function (dadosJSON) {
+                if (dadosJSON) {
+                    criarPlanta(txtNomeCofre.value, periodoEx, txtDataCofre.value, plantaEnviada, 0, null);
+                    informacoesCofre();
+                }
+            })
+            .catch(function (error) {
+                console.warn(error);
+            });
+            
             areaCriarCofre.remove();
             bloqueio.remove();
         })
@@ -500,7 +545,7 @@ function exibirCofres()
                 let conjuntoData = data.split("-");
                 let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
 
-                criarPlanta(cofrinho.Nome, tipo, dataFormatada, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
+                criarPlanta(cofrinho.Nome, tipo, dataFormatada, cofrinho.Planta.Nome.toLowerCase(), porcentagem, cofrinho.Codigo);
             }
             informacoesCofre();
         }
@@ -512,13 +557,16 @@ function exibirCofres()
         const plantinhas = document.querySelectorAll('.planta');
        for (let iPlanta = 0; iPlanta < plantinhas.length; iPlanta++) {
         const plantinha = plantinhas[iPlanta];
-        ajustaPercentual(null, null, plantinha);
+        let nomePlanta = plantinha.querySelector('.plantaImg');
+        nomePlanta = String(nomePlanta.src).split('/');
+        nomePlanta = nomePlanta[7];
+        ajustaPercentual(null, null, plantinha, nomePlanta, plantinha.querySelector('.plantaImg'));
        }
     });
 
 }
 
-function criarPlanta(nome, periodo, data, planta, porcentagem)
+function criarPlanta(nome, periodo, data, planta, porcentagem, codigo)
 {
     let areaAdicionar = '';
     let tituloAdicionar = '';
@@ -591,7 +639,9 @@ function criarPlanta(nome, periodo, data, planta, porcentagem)
 
         const plantaCriada = document.createElement('div');
         plantaCriada.classList.add('planta'); 
-        plantaCriada.id = todasPlantas.length;
+        if(codigo){
+            plantaCriada.id = codigo;
+        }
 
         const plantaImg = document.createElement('img');
         plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
@@ -640,7 +690,9 @@ function criarPlanta(nome, periodo, data, planta, porcentagem)
 
             const plantaCriada = document.createElement('div');
             plantaCriada.classList.add('planta');
-            plantaCriada.id = todasPlantas.length;
+            if(codigo){
+                plantaCriada.id = codigo;
+            }
 
             const plantaImg = document.createElement('img');
             plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
@@ -684,7 +736,9 @@ function criarPlanta(nome, periodo, data, planta, porcentagem)
 
             const plantaCriada = document.createElement('div');
             plantaCriada.classList.add('planta');
-            plantaCriada.id = todasPlantas.length;
+            if(codigo){
+                plantaCriada.id = codigo;
+            }
 
             const plantaImg = document.createElement('img');
             plantaImg.src = 'img/plantas/' + planta + '/' + planta + '-f' + qualImagem + '.svg';
@@ -1107,14 +1161,10 @@ function informacoesCofre()
                                 let valorDigitado = txtValor.value;
                                 valorDigitado = valorDigitado.replace(',', '.');
                                 valorDigitado = Number(valorDigitado);
-
-                                console.log(valorDigitado)
         
                                 let valorPossui = valorDepositadoReal.textContent;
                                 valorPossui = valorPossui.replace(',', '.');
                                 valorPossui = Number(valorPossui);
-
-                                console.log(valorPossui)
         
                                 let valorMax = valorLimiteReal.textContent;
                                 valorMax = valorMax = valorMax.replace(',', '.');
@@ -1124,9 +1174,7 @@ function informacoesCofre()
         
                                 if(btnAlteraValor[index].textContent == 'Guardar')
                                 {
-                                    console.log('guardou');
                                     valorTotal = valorPossui + valorDigitado;
-                                    console.log(valorTotal)
                                     
                                     if(valorPossui < valorMax && valorTotal > valorMax)
                                     {
@@ -1199,7 +1247,6 @@ function informacoesCofre()
                                     })
                                     .then(function (dadosJSON) {
                                         if (dadosJSON) {
-                                        console.log(dadosJSON);
                                         }
                                     })
                                     .catch(function (error) {
@@ -1208,7 +1255,6 @@ function informacoesCofre()
                                 }
                                 else
                                 {
-                                    console.log('resgatou');
                                     if(valorDigitado > valorPossui)
                                     {
                                         erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
@@ -1238,7 +1284,6 @@ function informacoesCofre()
                                     })
                                     .then(function (dadosJSON) {
                                         if (dadosJSON) {
-                                        console.log(dadosJSON);
                                         }
                                     })
                                     .catch(function (error) {
@@ -1253,15 +1298,7 @@ function informacoesCofre()
 
                                 let valorExibir = Number(valorTotal).toFixed(2);
                                 valorDepositadoReal.textContent = String(valorExibir).replace('.',',');
-                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada);
-        
-                                imgPlanta.setAttribute('src', 'img/plantas/' + cofrinho.Planta.Nome + '/' + cofrinho.Planta.Nome + '-f' + qualImagem + '.svg');
-        
-                                const statusDeterminado = document.querySelector('.determinado');
-                                if(statusDeterminado)
-                                {
-                                    statusDeterminado.style.top = posicaoStatus;
-                                }
+                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta);
                             })
                         })
         
@@ -1289,6 +1326,19 @@ function informacoesCofre()
         
                         const areaInfos = document.createElement('div');
                         areaInfos.classList.add('infos');
+
+                        const areaNome = document.createElement('div');
+                        areaNome.classList.add('areaDigitar');
+    
+                        const labelNome = document.createElement('label');
+                        labelNome.textContent = 'Nome:';
+    
+                        const txtNome = document.createElement('input');
+                        txtNome.type = 'text';
+                        txtNome.value = cofrinho.Nome;
+
+                        areaNome.appendChild(labelNome);
+                        areaNome.appendChild(txtNome);
         
                         const areaValorLimite = document.createElement('div');
                         areaValorLimite.classList.add('areaDigitar');
@@ -1303,7 +1353,6 @@ function informacoesCofre()
                         txtValorLimite.type = 'text';
                         txtValorLimite.inputMode = 'numeric';
                         txtValorLimite.value = valorLimiteReal.textContent;
-                        txtValorLimite.classList.add('recuoPopup');
                         txtValorLimite.classList.add('inputMoeda');
         
                         const moeda = document.createElement('p');
@@ -1313,14 +1362,15 @@ function informacoesCofre()
                         formataInputValor(txtValorLimite, valorLimiteReal.textContent);
         
                         areaLeft.append(txtValorLimite, moeda);
-                        areaValorLimite.append(labelValorLimite, obrigatorioIcon(areaLeft));
+                        areaValorLimite.append(labelValorLimite, areaLeft);
+                        areaInfos.appendChild(areaNome);
                         areaInfos.appendChild(areaValorLimite);
         
-                        if(data)
+                        if(cofrinho.Prazo)
                         {
                             const areaData = document.createElement('div');
                             areaData.classList.add('areaDigitar');
-        
+
                             const labelData = document.createElement('label');
                             labelData.textContent = 'Data limite:';
         
@@ -1329,9 +1379,8 @@ function informacoesCofre()
                             txtData.inputMode = 'numeric';
                             txtData.id = 'txtData';
                             txtData.value = areaDataLimite.querySelector('#dataLimite').textContent;
-                            txtData.classList.add('recuoPopup');
         
-                            areaData.append(labelData, obrigatorioIcon(txtData));
+                            areaData.append(labelData, txtData);
                             areaInfos.appendChild(areaData);
         
                             formataInputData(txtData, txtData.value.replaceAll('/',''));
@@ -1377,11 +1426,41 @@ function informacoesCofre()
                             }
         
                             valorLimiteReal.textContent = txtValorLimite.value;
+
+                            let valorEnviar = String(txtValorLimite.value).replaceAll(',','.');
+                            valorEnviar = Number(valorEnviar);
         
                             // fetch editar cofrinho:
                             // valor limite = txtValorLimite.value;
                             // data limite (se determinado) = txtData.value
-        
+                            fetch("http://localhost/trit/api/editarCofrinho.php", {
+                            method: "PUT",
+                            credentials: "include",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(
+                                {
+                                    "codigo":cofrinho.Codigo,
+                                    "nome":String(txtNome.value),
+                                    "valor_final":valorEnviar,
+                                    "prazo":FormatarData(txtData)
+                                }
+                            ),
+                            })
+                            .then(function (resposta) {
+                                if (!resposta.ok) {
+                                throw new Error("Erro HTTP: " + resposta.status);
+                                }
+                                return resposta.json();
+                            })
+                            .then(function (dadosJSON) {
+                                if (dadosJSON) {
+                                } 
+                            })
+                            .catch(function (error) {
+                                console.warn(error);
+                            });
                             areaEditarDados.remove();
                             bloqueio.appendChild(areaConsultarCofre);
                         })
@@ -1434,12 +1513,29 @@ function informacoesCofre()
                                 tituloCofres[i].remove();
                             }
                             
-                            plantaSelecionada.remove();
+                            const parametro = new URLSearchParams({
+                                codigo : plantaSelecionada.getAttribute('id')
+                            });
         
-                            // fetch excluir cofrinho
-                            // acho q so precisa do codigo (plantaSelecionada.getAttribute('id'))
-                            // chamar dnv a function exibirCofres()
-        
+                            fetch("http://localhost/Trit/trit/api/deletarCofrinho.php?"+parametro, {
+                            method: "DELETE",
+                                credentials: "include",
+                            })
+                            .then(function (resposta) {
+                                if (!resposta.ok) {
+                                throw new Error("Erro HTTP: " + resposta.status);
+                                }
+                                return resposta.json();
+                            })
+                            .then(function (dadosJSON) {
+                                if (dadosJSON) {
+                                    main.querySelector('.cofrinhos').textContent = '';
+                                    exibirCofres();
+                                }
+                            })
+                            .catch(function (error) {
+                                console.warn(error);
+                            });
                         })
         
                     })
@@ -1454,10 +1550,10 @@ function informacoesCofre()
     }
 }
 
-function ajustaPercentual(valorTotal, valorMax, local){
+function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img){
     const porcentagemPlanta = local.querySelector('.porcentagem');
     let porcentagemBruta = String(porcentagemPlanta.textContent).split('%');
-    let percentual = porcentagemBruta[0];
+    let percentual = Number(porcentagemBruta[0]);
     let qualImagem = 0;
     let posicaoStatus = ''
     if(valorTotal && valorMax){
@@ -1480,7 +1576,7 @@ function ajustaPercentual(valorTotal, valorMax, local){
     }
     else
     {
-        porcentagemPlanta.textContent = percentual + '%';
+        porcentagemPlanta.textContent = percentual.toFixed(0) + '%';
     }
 
     if(percentual < 20)
@@ -1514,7 +1610,15 @@ function ajustaPercentual(valorTotal, valorMax, local){
                     qualImagem = 5;
                     posicaoStatus = '0px';
                 }
+
             }
         }
+    }
+
+    img.setAttribute('src', 'img/plantas/' + nomePlanta + '/' + nomePlanta + '-f' + qualImagem + '.svg');
+    const statusDeterminado = document.querySelector('.determinado');
+    if(statusDeterminado)
+    {
+        statusDeterminado.style.top = posicaoStatus;
     }
 }
