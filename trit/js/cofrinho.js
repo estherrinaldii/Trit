@@ -1245,64 +1245,7 @@ function informacoesCofre()
                                 }
 
                                 valorDepositadoReal.textContent = String(valorTotal).replace('.',',');
-        
-                                let percentual = (valorTotal * 100) / valorMax;
-                                let qualImagem = 0;
-                                let posicaoStatus = ''
-        
-                                if(percentual >= 100)
-                                {
-                                    const statusConcluida = document.createElement('img');
-                                    statusConcluida.src = 'img/aviso-icon.svg';
-                                    statusConcluida.classList.add('status');
-                                    statusConcluida.classList.add('concluida');
-        
-                                    plantaSelecionada.prepend(statusConcluida);
-        
-                                    porcentagemPlanta.textContent = '100%';
-                                    porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
-
-                                    // fetch para somar um ao total de metas concluidas pelo user
-                                }
-                                else
-                                {
-                                    porcentagemPlanta.textContent = percentual + '%';
-                                }
-        
-                                if(percentual < 20)
-                                {
-                                    qualImagem = 1;
-                                    posicaoStatus = '60px';
-                                }
-                                else
-                                {
-                                    if(percentual >= 20 && percentual < 40)
-                                    {
-                                        qualImagem = 2;
-                                        posicaoStatus = '28px';
-                                    }
-                                    else
-                                    {
-                                        if(percentual >= 40 && percentual < 60)
-                                        {
-                                            qualImagem = 3;
-                                            posicaoStatus = '5px';
-                                        }
-                                        else
-                                        {
-                                            if(percentual >= 60 && percentual < 80)
-                                            {
-                                                qualImagem = 4;
-                                                posicaoStatus = '0px';
-                                            }
-                                            else
-                                            {
-                                                qualImagem = 5;
-                                                posicaoStatus = '0px';
-                                            }
-                                        }
-                                    }
-                                }
+                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada);
         
                                 imgPlanta.setAttribute('src', 'img/plantas/' + cofrinho.Planta.Nome + '/' + cofrinho.Planta.Nome + '-f' + qualImagem + '.svg');
         
@@ -1500,5 +1443,67 @@ function informacoesCofre()
             .finally(function () {
             });
         })
+    }
+}
+
+function ajustaPercentual(valorTotal, valorMax, local){
+    console.log(local);
+    const porcentagemPlanta = local.querySelector('.porcentagem');
+    let percentual = (valorTotal * 100) / valorMax;
+    let qualImagem = 0;
+    let posicaoStatus = ''
+
+    if(percentual >= 100)
+    {
+        const statusConcluida = document.createElement('img');
+        statusConcluida.src = 'img/aviso-icon.svg';
+        statusConcluida.classList.add('status');
+        statusConcluida.classList.add('concluida');
+
+        local.prepend(statusConcluida);
+
+        porcentagemPlanta.textContent = '100%';
+        porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+
+        // fetch para somar um ao total de metas concluidas pelo user
+    }
+    else
+    {
+        porcentagemPlanta.textContent = percentual + '%';
+    }
+
+    if(percentual < 20)
+    {
+        qualImagem = 1;
+        posicaoStatus = '60px';
+    }
+    else
+    {
+        if(percentual >= 20 && percentual < 40)
+        {
+            qualImagem = 2;
+            posicaoStatus = '28px';
+        }
+        else
+        {
+            if(percentual >= 40 && percentual < 60)
+            {
+                qualImagem = 3;
+                posicaoStatus = '5px';
+            }
+            else
+            {
+                if(percentual >= 60 && percentual < 80)
+                {
+                    qualImagem = 4;
+                    posicaoStatus = '0px';
+                }
+                else
+                {
+                    qualImagem = 5;
+                    posicaoStatus = '0px';
+                }
+            }
+        }
     }
 }
