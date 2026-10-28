@@ -1189,37 +1189,6 @@ function informacoesCofre()
                                         console.log('resgatou');
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
-        
-                                        valorTotal = valorPossui - valorDigitado;
-                                        valorTotal = valorTotal.toFixed(2);
-                                        valorDepositadoReal.textContent = valorTotal.replace('.',',');
-                                        // fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
-                                        // method: "POST",
-                                        // credentials: "include",
-                                        // headers: {
-                                        //     "Content-Type": "application/json",
-                                        // },
-                                        // body: JSON.stringify(
-                                        //     {
-                                        //         "valor":valorTotal,
-                                        //         "codigo_cofrinho":cofrinho.Codigo
-                                        //     }   
-                                        // ),
-                                        // })
-                                        // .then(function (resposta) {
-                                        //     if (!resposta.ok) {
-                                        //     throw new Error("Erro HTTP: " + resposta.status);
-                                        //     }
-                                        //     return resposta.json();
-                                        // })
-                                        // .then(function (dadosJSON) {
-                                        //     if (dadosJSON) {
-                                        //     console.log(dadosJSON);
-                                        //     }
-                                        // })
-                                        // .catch(function (error) {
-                                        //     console.warn(error);
-                                        // });
                                     }
                                     
                                     // fetch guardar / resgatar valor:
@@ -1233,15 +1202,42 @@ function informacoesCofre()
                                         erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
                                         return;
                                     }
-                                    else
-                                    {
-                                        areaAlterarValor.remove();
-                                        bloqueio.appendChild(areaConsultarCofre);
-        
-                                        valorTotal = valorTotal.toFixed(2);
-                                        valorDepositadoReal.textContent = valorTotal.replace('.',',');
+
+                                    valorTotal = valorPossui - valorDigitado;
+                                    valorTotal = valorTotal.toFixed(2);
+                                    valorDepositadoReal.textContent = valorTotal.replace('.',',');
+                                    fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(
+                                        {
+                                            "valor":valorTotal,
+                                            "codigo_cofrinho":cofrinho.Codigo
+                                        }   
+                                    ),
+                                    })
+                                    .then(function (resposta) {
+                                        if (!resposta.ok) {
+                                        throw new Error("Erro HTTP: " + resposta.status);
+                                        }
+                                        return resposta.json();
+                                    })
+                                    .then(function (dadosJSON) {
+                                        if (dadosJSON) {
+                                        console.log(dadosJSON);
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.warn(error);
+                                    });
+
+                                    areaAlterarValor.remove();
+                                    bloqueio.appendChild(areaConsultarCofre);
                                     
-                                    }
+                                    
                                 }
         
                                 let percentual = (valorTotal * 100) / valorMax;
