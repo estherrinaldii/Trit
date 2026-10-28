@@ -418,6 +418,7 @@ delimiter $$
                 WHERE cd_cofrinho = pCodigoCofrinho AND FK_nm_email = pEmail;
         END IF;
         CALL verificar_insignias_cofrinho(pEmail);
+        CALL `trit`.`verificar_desafios`(pEmail);
     END$$
 
 	DROP PROCEDURE IF EXISTS deletar_cofrinho$$
@@ -503,8 +504,17 @@ delimiter $$
 		 UPDATE cofrinho
 			SET vl_cofrinho_atual = vl_cofrinho_atual + pValor
 			WHERE  cd_cofrinho = pCodigoCofrinho;
+            
+            UPDATE cofrinho
+				SET dt_conclusao = NOW()
+				WHERE cd_cofrinho = pCodigoCofrinho
+				AND FK_nm_email = pEmail
+				AND dt_conclusao IS NULL
+				AND vl_cofrinho_atual >= vl_cofrinho_final;
 			
 			CALL verificar_insignias_cofrinho(pEmail);
+            CALL `trit`.`verificar_desafios`(pEmail);
+
 	END$$
 		
 	DROP PROCEDURE IF EXISTS resgatar_cofrinho$$
@@ -699,53 +709,87 @@ delimiter $$
 			WHERE FK_nm_email = pEmail;       
 	END$$
     
-	DROP PROCEDURE IF EXISTS listar_desafios$$
-	CREATE PROCEDURE listar_desafios()
-    BEGIN
-		SELECT `desafio`.`cd_desafio`,
-			`desafio`.`nm_desafio`,
-			`desafio`.`qt_nivel_desafio`,
-			`desafio`.`qt_pontos_desafio`
-		FROM `trit`.`desafio`;
-    END$$
+	DROP PROCEDURE IF EXISTS listar_desafios_usuario$$
+	CREATE PROCEDURE listar_desafios_usuario(pEmail VARCHAR(200))
+	BEGIN
+		DECLARE qtdUsuario INT DEFAULT 0;
+		
+        CALL selecionar_desafios (pEmail);
+		
+		SELECT count(*) INTO qtdUsuario FROM Usuario WHERE nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;
+
+		SELECT du.FK_cd_desafio, du.FK_nm_email, du.ic_concluido, d.nm_desafio
+		FROM Desafio_Usuario du
+		JOIN Desafio d ON d.cd_desafio = du.FK_cd_desafio
+		WHERE du.FK_nm_email = pEmail
+		  AND du.ic_concluido = 0;
+END$$
     
     DROP PROCEDURE IF EXISTS selecionar_desafios$$
 	CREATE PROCEDURE selecionar_desafios(pEmail VARCHAR(200))
-    BEGIN
-    DECLARE qtdUsuario INT DEFAULT 0;
-    DECLARE vNivel INT DEFAULT 0;
-    DECLARE pPontos INT DEFAULT 0;
-        
-        SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
-			IF qtdUsuario = 0 THEN
-				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+	BEGIN		
+        DECLARE qtdUsuario INT DEFAULT 0;
+		DECLARE vNivel INT DEFAULT 0;
+		DECLARE vPendentes INT DEFAULT 0;
+		DECLARE vFaltam INT DEFAULT 0;
+     
+		SELECT count(*) INTO qtdUsuario FROM Usuario WHERE nm_email = pEmail;
+		IF qtdUsuario = 0 THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
 		END IF;
-        
-        SELECT `qt_pontos` into pPontos FROM `trit`.`usuario` where nm_email = pEmail;
 
-		SELECT
-			FLOOR(qt_pontos / 15) into vNivel
-			FROM Usuario 
+		SELECT FLOOR(qt_pontos / 15) INTO vNivel FROM Usuario WHERE nm_email = pEmail;
+
+		SELECT COUNT(*) INTO vPendentes
+			FROM Desafio_Usuario
+			WHERE FK_nm_email = pEmail AND ic_concluido = 0;
+		SET vFaltam = GREATEST(2 - vPendentes, 0);
+
+		INSERT IGNORE INTO Desafio_Usuario (FK_cd_desafio, FK_nm_email, ic_concluido)
+		SELECT cd_desafio, pEmail, 0
+			FROM Desafio
+			WHERE qt_nivel_desafio <= GREATEST(vNivel, 1)
+			ORDER BY RAND()
+			LIMIT vFaltam;
+	END$$
+    
+	DROP PROCEDURE IF EXISTS calcular_desafios_cofrinhos_concluidos$$
+	CREATE PROCEDURE calcular_desafios_cofrinhos_concluidos(pEmail VARCHAR(200))
+	BEGIN
+		UPDATE Usuario
+			SET qt_pontos = qt_pontos + (
+				SELECT IFNULL(SUM(d.qt_pontos_desafio), 0)
+				FROM Desafio_Usuario du
+				JOIN Desafio d ON d.cd_desafio = du.FK_cd_desafio
+				WHERE du.FK_nm_email = pEmail
+				  AND du.ic_concluido = 0
+				  AND d.nm_tipo_desafio = 'cofrinhos_concluidos'
+				  AND (SELECT COUNT(*) FROM Cofrinho c
+					   WHERE c.FK_nm_email = pEmail
+						 AND c.dt_exclusao IS NULL
+						 AND c.dt_conclusao >= du.dt_atribuicao) >= d.qt_meta_desafio)
 			WHERE nm_email = pEmail;
-         
-          if vNivel  < 1 then      
-			SELECT `desafio`.`cd_desafio`,
-			`desafio`.`nm_desafio`,
-			`desafio`.`qt_nivel_desafio`,
-			`desafio`.`qt_pontos_desafio`
-				FROM `trit`.`desafio` 
-                where vNivel + 1 >= qt_nivel_desafio; 
-		else
-			SELECT
-				 FLOOR(qt_pontos / 15)  into vNivel
-				FROM Usuario 
-				WHERE nm_email = pEmail;
-		end if;
-		SELECT `desafio`.`cd_desafio`,
-			`desafio`.`nm_desafio`,
-			`desafio`.`qt_nivel_desafio`,
-			`desafio`.`qt_pontos_desafio`
-		FROM `trit`.`desafio` where vNivel >= qt_nivel_desafio;       
-        
-    END$$
+
+		UPDATE Desafio_Usuario du
+			JOIN Desafio d ON d.cd_desafio = du.FK_cd_desafio
+			SET du.ic_concluido = 1
+			WHERE du.FK_nm_email = pEmail
+			  AND du.ic_concluido = 0
+			  AND d.nm_tipo_desafio = 'cofrinhos_concluidos'
+			  AND (SELECT COUNT(*) FROM Cofrinho c
+				   WHERE c.FK_nm_email = pEmail
+					 AND c.dt_exclusao IS NULL
+					 AND c.dt_conclusao >= du.dt_atribuicao) >= d.qt_meta_desafio;
+	END$$
+
+	DROP PROCEDURE IF EXISTS verificar_desafios$$
+	CREATE PROCEDURE verificar_desafios(pEmail VARCHAR(200))
+	BEGIN
+		CALL calcular_desafios_cofrinhos_concluidos(pEmail);
+	END$$
+    
+    
 delimiter ;

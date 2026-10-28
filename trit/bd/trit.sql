@@ -69,6 +69,7 @@ CREATE TABLE Cofrinho (
   ic_tipo_cofrinho ENUM('determinado', 'indeterminado') NOT NULL,
   vl_cofrinho_atual DECIMAL(10,2) NOT NULL,
   dt_exclusao DATETIME NULL DEFAULT NULL,
+  dt_conclusao DATETIME NULL DEFAULT NULL,
   FK_nm_email VARCHAR(200) NOT NULL,
   FK_cd_planta INT NOT NULL,
   CONSTRAINT PK_Cofrinho PRIMARY KEY (cd_cofrinho, FK_nm_email),
@@ -139,24 +140,26 @@ CREATE TABLE Movimentacao_Cofrinho(
 CREATE TABLE Desafio(
 	cd_desafio int not null,
     nm_desafio VARCHAR(200) NOT NULL,
+    nm_tipo_desafio VARCHAR(50) NOT NULL,
 	qt_nivel_desafio int not null,
     qt_pontos_desafio int not null,
+    qt_meta_desafio int,
 	CONSTRAINT PK_Desafio PRIMARY KEY (cd_desafio)
 );
 
 CREATE TABLE Desafio_Usuario(
-	FK_cd_desafio int not null,
-    FK_nm_email VARCHAR(200) NOT NULL,
-    ic_completado boolean,
-    CONSTRAINT PK_Desafio_Usuario PRIMARY KEY (FK_cd_desafio, FK_nm_email),
-    CONSTRAINT FK_Desafio_Usuario_Usuario
-		FOREIGN KEY (FK_nm_email)
-		REFERENCES usuario (nm_email),
-	CONSTRAINT FK_Desafio_Usuario_Desafio
-		FOREIGN KEY (FK_cd_desafio)
-		REFERENCES Desafio (cd_desafio)
+  cd_desafio_usuario INT AUTO_INCREMENT  PRIMARY KEY,
+  FK_cd_desafio INT NOT NULL,
+  FK_nm_email VARCHAR(200) NOT NULL,
+  ic_concluido boolean not null default 0,
+  dt_atribuicao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  constraint FK_Desafio 
+  foreign key (FK_cd_desafio) 
+  REFERENCES Desafio (cd_desafio),  
+  CONSTRAINT FK_Usuario 
+  FOREIGN KEY (FK_nm_email)
+  REFERENCES Usuario (nm_email)
 );
-
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('joao.silva@gmail.com', 'João Silva', md5(123), 3500.00, 120);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('maria.souza@gmail.com', 'Maria Souza', md5(123), 4200.50, 85);
 INSERT INTO Usuario (nm_email, nm_usuario, nm_senha, vl_renda, qt_pontos) VALUES ('pedro.oliveira@gmail.com', 'Pedro Oliveira', md5(123), 2800.75, 0);
@@ -208,12 +211,12 @@ INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (7, 'At
 INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (8, 'Atinja o nível 5', 'nivel');
 INSERT INTO Insignia (cd_insignia, nm_insignia, nm_tipo_insignia) VALUES (9, 'Atinja o nível 10', 'nivel');
 
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (1, 'Complete 1 cofrinho', 1, 5);
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (2, 'Complete 2 cofrinhos', 1, 5);
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (3, 'Complete 3 cofrinhos', 2, 5);
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (4, 'Complete 4 cofrinhos', 2, 5);
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (5, 'Complete 5 cofrinhos', 3, 5);
-INSERT INTO Desafio (cd_desafio, nm_desafio, qt_nivel_desafio, qt_pontos_desafio) VALUES (6, 'Complete 6 cofrinhos', 3, 5);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (1, 'Complete 1 cofrinho', 'cofrinhos_concluidos', 1, 5, 1);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (2, 'Complete 2 cofrinhos', 'cofrinhos_concluidos', 1, 5, 2);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (3, 'Complete 3 cofrinhos', 'cofrinhos_concluidos', 2, 5, 3);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (4, 'Complete 4 cofrinhos', 'cofrinhos_concluidos', 2, 5, 4);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (5, 'Complete 5 cofrinhos', 'cofrinhos_concluidos', 3, 5, 5);
+INSERT INTO Desafio (cd_desafio, nm_desafio, nm_tipo_desafio, qt_nivel_desafio, qt_pontos_desafio, qt_meta_desafio) VALUES (6, 'Complete 6 cofrinhos', 'cofrinhos_concluidos', 3, 5, 6);
 
 INSERT INTO Planta (cd_planta, nm_planta) VALUES (1, 'zamioculca');
 INSERT INTO Planta (cd_planta, nm_planta) VALUES (2, 'lirio');
