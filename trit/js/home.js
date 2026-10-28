@@ -203,7 +203,9 @@ btnNovaEntrada.addEventListener('click', function(e){
             return;
         }
 
-        let valor = Number(txtValorEntrada.value);
+        let valor = txtValorEntrada.value;
+        valor = valor.replaceAll(',', '.');
+        valor = Number(valor);
         let dataEntrada = FormatarData(txtDataEntrada, txtDataEntrada, areaInfos);
 
         fetch("http://localhost/Trit/trit/api/criarEntrada.php", {
@@ -396,11 +398,6 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite, codigo
 
         const icone = document.createElement('img');
         icone.src = "img/seta.svg";
-        icone.addEventListener('click', function(e){
-            e.preventDefault();
-            body.appendChild(bloqueio);
-            areaPopupEditar(bloqueio, txtTitulo, valorAtualEx, valorLimiteEx, codigo);
-        })
 
     cardControlado.appendChild(infosControlado);
     cardControlado.appendChild(icone);
@@ -680,7 +677,6 @@ function areaSelecao(local, areaNovaSaida)
                         let indiceLimite = 4;
                         areaCategorias.textContent = '';
                         if(dadosJSON.categorias.length > 4){
-                            console.log(dadosJSON.categorias);
                             listarCategorias(dadosJSON.categorias.length, dadosJSON.categorias);
                             areaCategorias.appendChild(btnMais);
 
@@ -758,33 +754,32 @@ function alterarProgresso(txtValor, local){
 
     let progressoAtual = local.querySelector('progress');
     progressoAtual.setAttribute('value', valorProgresso);
+    progressoAtual.classList.remove('limite');
+    progressoAtual.classList.remove('alta');
+    progressoAtual.classList.remove('leve');
+    local.querySelector('#valorAtualControlado').style.color = 'rgb(29, 59, 90)';
+    local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(29, 59, 90)';
 
-    if(valorProgresso <= 100)
-        {
-            progressoAtual.setAttribute('value', valorProgresso);
-
-            if(valorProgresso >= 35 && valorProgresso < 65){
-                progressoAtual.classList.add('leve');
-            }else{
-                if(valorProgresso >= 65 && valorProgresso < 100){
-                    progressoAtual.classList.add('alto');
-                }else{
-                    if(valorProgresso >= 100){
-                        progressoAtual.classList.add('limite');
-                        progressoAtual.setAttribute('value', 100);
-                        local.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
-                        local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
-                    }
-                }
+    if(valorProgresso >= 35 && valorProgresso < 65){
+        progressoAtual.classList.add('leve');
+    }else{
+        if(valorProgresso >= 65 && valorProgresso < 100){
+            progressoAtual.classList.add('alto');
+        }else{
+            if(valorProgresso >= 100){
+                progressoAtual.classList.add('limite');
+                progressoAtual.setAttribute('value', 100);
+                local.querySelector('#valorAtualControlado').style.color = 'rgb(255, 85, 85)';
+                local.querySelector('#valorAtualControladoMoeda').style.color = 'rgb(255, 85, 85)';
             }
-
         }
+    }
 
-        if(!String(valorAdicionado).includes('.'))
-        {
-            valorAdicionado = valorAdicionado + ',00';
-        }
-        local.querySelector('#valorAtualControlado').textContent = String(valorAdicionado).replace('.',',');
+    if(!String(valorAdicionado).includes('.'))
+    {
+        valorAdicionado = valorAdicionado + ',00';
+    }
+    local.querySelector('#valorAtualControlado').textContent = String(valorAdicionado).replace('.',',');
 
 }
 
@@ -816,6 +811,7 @@ function listarCategorias(indiceLista, dadosLista){
                 valor = Number(valor);
                 valorLimite = Number(valorLimite);
                 criarCategorias(areaCategorias, categoria.Nome, valor, valorLimite, categoria.Codigo);
+                areaPopupEditar(bloqueio, categoria.Nome, valor, categoria.ValorLimite.replaceAll('.',','), categoria.Codigo);
             }
             
         })
@@ -1150,12 +1146,10 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
             }
 
             if(txtTipo === 'Fixa'){
-                console.log('fixou!');
                 alterarCarteira(txtValor);
             }
 
             if(txtTipo === 'Parcelada'){
-                console.log('parcelou!');
                 alterarCarteira(txtValor);
             }
         }
@@ -1168,141 +1162,206 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
 }
 
 function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo){
-    const popup = document.createElement('div');
-    popup.classList.add('popup');
-
-        const areaTitulo = document.createElement('div');
-        areaTitulo.classList.add('areaTitulo');
-
-            const tituloPopup = document.createElement('h1');
-            tituloPopup.classList.add('titulo');
-            tituloPopup.classList.add('tituloPopup');
-            tituloPopup.textContent = txtNome;
-
-            btnSair.addEventListener('click', function(e){
-                e.preventDefault();
-        
-                popup.remove();
-                avisoSair(bloqueio);
-            })
-        areaTitulo.appendChild(tituloPopup);
-        areaTitulo.appendChild(btnSair);
-
-        const areaValor = document.createElement('div');
-        areaValor.classList.add('divAlinhamento');
-            const areaValorAtual = document.createElement('div');
-            areaValorAtual.classList.add('areaDigitar');
-
-                const labelValorAtual = document.createElement('label');
-                labelValorAtual.textContent = 'Valor:'
-
-                let areaLeft = document.createElement('div');
-                areaLeft.classList.add('areaLeft');
-
-                const inputValorAtual = document.createElement('input');
-                inputValorAtual.type = 'text';
-                inputValorAtual.inputMode = 'numeric';
-                inputValorAtual.value = predValorAtual;
-                inputValorAtual.classList.add('recuoPopup');
-                inputValorAtual.classList.add('inputMoeda');
-                formataInputValor(inputValorAtual, predValorAtual);
-
-                    let moeda = document.createElement('p');
-                    moeda.textContent = 'R$';
-                    moeda.classList.add('moeda');
-
-                areaLeft.appendChild(inputValorAtual);
-                areaLeft.appendChild(moeda);
-
-            areaValorAtual.appendChild(labelValorAtual);
-            areaValorAtual.appendChild(areaLeft);
-
-
-            const areaValorLimite = document.createElement('div');
-            areaValorLimite.classList.add('areaDigitar');
-
-                const labelValorLimite = document.createElement('label');
-                labelValorLimite.textContent = 'Valor Limite:'
-
-                areaLeft = document.createElement('div');
-                areaLeft.classList.add('areaLeft');
-
-                const inputValorLimite = document.createElement('input');
-                inputValorLimite.type = 'text';
-                inputValorLimite.inputMode = 'numeric';
-                inputValorLimite.value = predValorLimite;
-                inputValorLimite.classList.add('recuoPopup');
-                inputValorLimite.classList.add('inputMoeda');
-                formataInputValor(inputValorLimite, predValorLimite);
-
-                    moeda = document.createElement('p');
-                    moeda.textContent = 'R$';
-                    moeda.classList.add('moeda');
-
-                areaLeft.appendChild(inputValorLimite);
-                areaLeft.appendChild(moeda);
-            areaValorLimite.appendChild(labelValorLimite);
-            areaValorLimite.appendChild(areaLeft);
-        
-        areaValor.appendChild(areaValorAtual);
-        areaValor.appendChild(areaValorLimite);
-
-        const areaBotoesPopup = document.createElement('div');
-        areaBotoesPopup.classList.add('areaBotoesPopup');
-
-        
-        
-        const btnSalvar = document.createElement('button');
-        btnSalvar.classList.add('btnSalvar');
-        btnSalvar.textContent = 'Salvar';
-        btnSalvar.addEventListener('click', function(e){
-            e.preventDefault();
-                let valorAtualEnviar = inputValorAtual.value;
-                let valorLimiteEnviar = inputValorLimite.value;
-                valorAtualEnviar = valorAtualEnviar.replace(',','.');
-                valorLimiteEnviar = valorLimiteEnviar.replace(',','.');
-                valorAtualEnviar = Number(valorAtualEnviar);
-                valorLimiteEnviar = Number(valorLimiteEnviar);
-            });
-
-            const btnExcluir = document.createElement('button');
-            btnExcluir.classList.add('btnExcluirElemento');
-            btnExcluir.textContent = 'Excluir';
-            btnExcluir.addEventListener('click', function(e){
-                e.preventDefault();
-                const parametro = new URLSearchParams({
-                    codigo : codigo
-                });
-                fetch("http://localhost/Trit/trit/api/deletarCategoria.php?"+parametro, {
-                method: "DELETE",
-                    credentials: "include",
-                })
-                .then(function (resposta) {
-                    if (!resposta.ok) {
-                    throw new Error("Erro HTTP: " + resposta.status);
-                    }
-                    return resposta.json();
-                })
-                .then(function (dadosJSON) {
-                    if (dadosJSON) {
-                        document.getElementById(codigo).remove();
-                        bloqueio.remove();
-                    } 
-                })
-                .catch(function (error) {
-                    console.warn(error);
-                    // O que fazer se der erro na requisição
-                })
-                .finally(function () {
-                    // O que fazer independente de ter dado erro ou não
-                });
-            });
-        areaBotoesPopup.appendChild(btnSalvar);
-        areaBotoesPopup.appendChild(btnExcluir);
+    const categoria = document.getElementById(codigo);
+    const btnDetalhar = categoria.querySelector('img');
+    btnDetalhar.addEventListener('click', function(e){
+        e.preventDefault();
+        body.appendChild(bloqueio);
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
     
-    popup.appendChild(areaTitulo);
-    popup.appendChild(areaValor);
-    popup.appendChild(areaBotoesPopup);
+            const areaTitulo = document.createElement('div');
+            areaTitulo.classList.add('areaTitulo');
+    
+                const tituloPopup = document.createElement('h1');
+                tituloPopup.classList.add('titulo');
+                tituloPopup.classList.add('tituloPopup');
+                tituloPopup.textContent = txtNome;
+    
+                btnSair.addEventListener('click', function(e){
+                    e.preventDefault();
+            
+                    popup.remove();
+                    avisoSair(bloqueio);
+                })
+            areaTitulo.appendChild(tituloPopup);
+            areaTitulo.appendChild(btnSair);
+    
+            const areaNome = document.createElement('div');
+            areaNome.classList.add('areaDigitar');
+            const labelNome = document.createElement('label');
+            labelNome.textContent = 'Nome:';
+            const inputNome = document.createElement('input');
+            inputNome.value = txtNome;
+            areaNome.appendChild(labelNome);
+            areaNome.appendChild(inputNome);
+    
+            const areaValor = document.createElement('div');
+            // areaValor.classList.add('divAlinhamento');
+                // const areaValorAtual = document.createElement('div');
+                // areaValorAtual.classList.add('areaDigitar');
+    
+                //     const labelValorAtual = document.createElement('label');
+                //     labelValorAtual.textContent = 'Valor:'
+    
+                    let areaLeft = document.createElement('div');
+                    areaLeft.classList.add('areaLeft');
+    
+                //     const inputValorAtual = document.createElement('input');
+                //     inputValorAtual.type = 'text';
+                //     inputValorAtual.inputMode = 'numeric';
+                //     inputValorAtual.value = predValorAtual;
+                //     inputValorAtual.classList.add('recuoPopup');
+                //     inputValorAtual.classList.add('inputMoeda');
+                //     formataInputValor(inputValorAtual, predValorAtual);
+    
+                        let moeda = document.createElement('p');
+                        moeda.textContent = 'R$';
+                        moeda.classList.add('moeda');
+    
+                //     areaLeft.appendChild(inputValorAtual);
+                //     areaLeft.appendChild(moeda);
+    
+                // areaValorAtual.appendChild(labelValorAtual);
+                // areaValorAtual.appendChild(areaLeft);
+    
+    
+                const areaValorLimite = document.createElement('div');
+                areaValorLimite.classList.add('areaDigitar');
+    
+                    const labelValorLimite = document.createElement('label');
+                    labelValorLimite.textContent = 'Valor Limite:'
+    
+                    areaLeft = document.createElement('div');
+                    areaLeft.classList.add('areaLeft');
+    
+                    const inputValorLimite = document.createElement('input');
+                    inputValorLimite.type = 'text';
+                    inputValorLimite.inputMode = 'numeric';
+                    inputValorLimite.value = predValorLimite;
+                    inputValorLimite.classList.add('recuoPopup');
+                    inputValorLimite.classList.add('inputMoeda');
+                    inputValorLimite.style = 'width: auto';
+                    formataInputValor(inputValorLimite, predValorLimite);
+    
+                        moeda = document.createElement('p');
+                        moeda.textContent = 'R$';
+                        moeda.classList.add('moeda');
+    
+                    areaLeft.appendChild(inputValorLimite);
+                    areaLeft.appendChild(moeda);
+                areaValorLimite.appendChild(labelValorLimite);
+                areaValorLimite.appendChild(areaLeft);
+            
+            // areaValor.appendChild(areaValorAtual);
+            areaValor.appendChild(areaValorLimite);
+    
+            const areaBotoesPopup = document.createElement('div');
+            areaBotoesPopup.classList.add('areaBotoesPopup');
+    
+            
+            
+            const btnSalvar = document.createElement('button');
+            btnSalvar.classList.add('btnSalvar');
+            btnSalvar.textContent = 'Salvar';
+            btnSalvar.addEventListener('click', function(e){
+                e.preventDefault();
+                    if(inputNome.value == null || inputNome.value === ''){
+                        erro(msgErro, inputNome, 'Nome não pode ficar vazio', popup);
+                    }
+    
+                    if(inputValorLimite.value == null || inputValorLimite.value === '' || inputValorLimite.value === '0,00'){
+                        erro(msgErro, inputValorLimite, 'Valor Limite não pode ficar zerado', popup);
+                    }
+                    let nomeEnviar = inputNome.value;
+                    let valorLimiteEnviar = inputValorLimite.value;
+                    valorLimiteEnviar = valorLimiteEnviar.replace(',','.');
+                    valorLimiteEnviar = Number(valorLimiteEnviar);
+                    // let valorAtualEnviar = inputValorAtual.value;
+                    // valorAtualEnviar = valorAtualEnviar.replace(',','.');
+                    // valorAtualEnviar = Number(valorAtualEnviar);
+    
+                    fetch("http://localhost/Trit/trit/api/editarCategoria.php", {
+                    method: "PUT",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(
+                        {
+                            "codigo_categoria":codigo,
+                            "nome": nomeEnviar,
+                            "valor":valorLimiteEnviar
+                        }
+                    ),
+                    })
+                    .then(function (resposta) {
+                        if (!resposta.ok) {
+                        throw new Error("Erro HTTP: " + resposta.status);
+                        }
+                        return resposta.json();
+                    })
+                    .then(function (dadosJSON) {
+                        if (dadosJSON) {
+                            bloqueio.remove();
+                            if(categoria.querySelector('.tituloControlado p').textContent != nomeEnviar){
+                                categoria.querySelector('.tituloControlado p').textContent = nomeEnviar;
+                            }
+    
+                            let txtValor = categoria.querySelector('#valorAtualControlado').textContent;
+                            txtValor = String(txtValor).replaceAll(',','.');
+                            txtValor = Number(txtValor);
+                            if(categoria.querySelector('#valorTotalControlado').textContent != String(valorLimiteEnviar).replaceAll('.',',')){
+                                valorLimiteEnviar = valorLimiteEnviar.toFixed(2);
+                                categoria.querySelector('#valorTotalControlado').textContent = String(valorLimiteEnviar).replaceAll('.',',');
+                                alterarProgresso(0, categoria);
+                            }
 
-    local.appendChild(popup);
+                            areaPopupEditar(bloqueio, nomeEnviar, txtValor, String(valorLimiteEnviar).replaceAll('.',','), categoria.id);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.warn(error);
+                    });            
+                });
+    
+                const btnExcluir = document.createElement('button');
+                btnExcluir.classList.add('btnExcluirElemento');
+                btnExcluir.textContent = 'Excluir';
+                btnExcluir.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const parametro = new URLSearchParams({
+                        codigo : codigo
+                    });
+                    fetch("http://localhost/Trit/trit/api/deletarCategoria.php?"+parametro, {
+                    method: "DELETE",
+                        credentials: "include",
+                    })
+                    .then(function (resposta) {
+                        if (!resposta.ok) {
+                        throw new Error("Erro HTTP: " + resposta.status);
+                        }
+                        return resposta.json();
+                    })
+                    .then(function (dadosJSON) {
+                        if (dadosJSON) {
+                            document.getElementById(codigo).remove();
+                            bloqueio.remove();
+                        } 
+                    })
+                    .catch(function (error) {
+                        console.warn(error);
+                    });
+                });
+            areaBotoesPopup.appendChild(btnSalvar);
+            areaBotoesPopup.appendChild(btnExcluir);
+        
+        popup.appendChild(areaTitulo);
+        popup.appendChild(areaNome);
+        popup.appendChild(areaValor);
+        popup.appendChild(areaBotoesPopup);
+    
+        local.appendChild(popup);
+    })
+
 }

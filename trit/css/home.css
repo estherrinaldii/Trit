@@ -11,10 +11,13 @@ main{
 }
 
 .areaRenda{
+    font-family: "Bricolage Grotesque", sans-serif !important;
     position: relative;
-    right: 8px;
+    right: 32px;
     font-size: 20px;
     color: rgb(9, 95, 184);
+    text-align: center;
+    font-weight: 500;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -296,4 +299,25 @@ progress::-webkit-progress-value {
 
 .areaBotoesPopup button{
     width: 100%;
+}
+
+.detalhe{
+    background-color: #095eb839;
+    font-size: 14px;
+    border-radius: 16px;
+    padding: 4px;
+}
+
+.mini{
+    font-size: 16px;
+    color: #1d3b5aae;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+.total{
+    display: flex;
+    gap: 4px;
 }
