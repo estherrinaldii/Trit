@@ -1,0 +1,5 @@
+.menuExtrato{
+    background-color: rgb(9, 95, 184);
+    display: flex;
+    justify-content: space-around;
+}
