@@ -8,6 +8,6 @@ class MovimentacaoCofrinhoController
 
     public static function Resgatar($email, $codigoCofrinho, $valor)
     {
-        return MovimentacaoCofrinho::Guardar($email, $codigoCofrinho, $valor);
+        return MovimentacaoCofrinho::Resgatar($email, $codigoCofrinho, $valor);
     }
 }

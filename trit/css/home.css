@@ -11,7 +11,6 @@ main{
 }
 
 .areaRenda{
-    font-family: "Bricolage Grotesque", sans-serif !important;
     position: relative;
     right: 32px;
     font-size: 20px;
@@ -21,6 +20,10 @@ main{
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+
+.brics{
+    font-family: "Bricolage Grotesque", sans-serif !important;
 }
 
 .linha{
@@ -217,6 +220,10 @@ progress::-webkit-progress-value {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+.btnMaisOpcoes:active{
+    background-color: transparent;
 }
 
 .maisOpcoes{

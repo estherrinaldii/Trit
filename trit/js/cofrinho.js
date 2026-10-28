@@ -487,13 +487,17 @@ function exibirCofres()
                 let valorAtual = cofrinho.ValorAtual;
                 let valorFinal = cofrinho.ValorFinal;
                 let porcentagem = (Number(valorAtual) / Number(valorFinal)) * 100;
+                console.log(cofrinho.Prazo);
                 if(porcentagem > 100){
                     porcentagem = 100;
                 }else{
                     porcentagem = porcentagem.toFixed(0);
                 }
 
-                criarPlanta(cofrinho.Nome, cofrinho.Tipo, cofrinho.Data, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
+                let primeiraLetra = String(cofrinho.Tipo).charAt(0);
+                let tipo = primeiraLetra.toUpperCase() + String(cofrinho.Tipo).slice(1);
+
+                criarPlanta(cofrinho.Nome, tipo, cofrinho.Prazo, cofrinho.Planta.Nome.toLowerCase(), porcentagem);
             }
             informacoesCofre();
         }
@@ -590,7 +594,7 @@ function criarPlanta(nome, periodo, data, planta, porcentagem)
 
         const porcentagemPlanta = document.createElement('p');
         porcentagemPlanta.classList.add('porcentagem');
-        porcentagemPlanta.textContent = porcentagem + '%';
+        porcentagemPlanta.textContent = Number(porcentagem).toFixed(0) + '%';
 
         plantaCriada.append(plantaImg, vasoPlanta, porcentagemPlanta);
 
@@ -1096,10 +1100,14 @@ function informacoesCofre()
                                 let valorDigitado = txtValor.value;
                                 valorDigitado = valorDigitado.replace(',', '.');
                                 valorDigitado = Number(valorDigitado);
+
+                                console.log(valorDigitado)
         
                                 let valorPossui = valorDepositadoReal.textContent;
                                 valorPossui = valorPossui.replace(',', '.');
                                 valorPossui = Number(valorPossui);
+
+                                console.log(valorPossui)
         
                                 let valorMax = valorLimiteReal.textContent;
                                 valorMax = valorMax = valorMax.replace(',', '.');
@@ -1111,6 +1119,7 @@ function informacoesCofre()
                                 {
                                     console.log('guardou');
                                     valorTotal = valorPossui + valorDigitado;
+                                    console.log(valorTotal)
                                     
                                     if(valorPossui < valorMax && valorTotal > valorMax)
                                     {
@@ -1155,48 +1164,44 @@ function informacoesCofre()
                                             areaAviso.remove();
                                             bloqueio.appendChild(areaConsultarCofre);
                                         })
-
-                                        // fetch("http://localhost/Trit/trit/api/guardarMovimentacao.php", {
-                                        // method: "POST",
-                                        // credentials: "include",
-                                        // headers: {
-                                        //     "Content-Type": "application/json",
-                                        // },
-                                        // body: JSON.stringify(
-                                        //     {
-                                        //         "valor":valorTotal,
-                                        //         "codigo_cofrinho":cofrinho.Codigo
-                                        //     }
-                                        // ),
-                                        // })
-                                        // .then(function (resposta) {
-                                        //     if (!resposta.ok) {
-                                        //     throw new Error("Erro HTTP: " + resposta.status);
-                                        //     }
-                                        //     return resposta.json();
-                                        // })
-                                        // .then(function (dadosJSON) {
-                                        //     if (dadosJSON) {
-                                        //     console.log(dadosJSON);
-                                        //     }
-                                        // })
-                                        // .catch(function (error) {
-                                        //     console.warn(error);
-                                        // });
                                     }
                                     else
                                     {
-                                        console.log('resgatou');
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
                                     }
                                     
-                                    // fetch guardar / resgatar valor:
-                                    // aqui eu já faço a soma / subtração (sim, fiz um eventlistener só), entao acho melhor só substituir o valor atual
-                                    // variavel: valorTotal 
+                                    fetch("http://localhost/Trit/trit/api/guardarMovimentacao.php", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(
+                                        {
+                                            "valor":valorDigitado,
+                                            "codigo_cofrinho":cofrinho.Codigo
+                                        }
+                                    ),
+                                    })
+                                    .then(function (resposta) {
+                                        if (!resposta.ok) {
+                                        throw new Error("Erro HTTP: " + resposta.status);
+                                        }
+                                        return resposta.json();
+                                    })
+                                    .then(function (dadosJSON) {
+                                        if (dadosJSON) {
+                                        console.log(dadosJSON);
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.warn(error);
+                                    });
                                 }
                                 else
                                 {
+                                    console.log('resgatou');
                                     if(valorDigitado > valorPossui)
                                     {
                                         erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
@@ -1205,7 +1210,6 @@ function informacoesCofre()
 
                                     valorTotal = valorPossui - valorDigitado;
                                     valorTotal = valorTotal.toFixed(2);
-                                    valorDepositadoReal.textContent = valorTotal.replace('.',',');
                                     fetch("http://localhost/Trit/trit/api/resgatarMovimentacao.php", {
                                     method: "POST",
                                     credentials: "include",
@@ -1214,7 +1218,7 @@ function informacoesCofre()
                                     },
                                     body: JSON.stringify(
                                         {
-                                            "valor":valorTotal,
+                                            "valor":valorDigitado,
                                             "codigo_cofrinho":cofrinho.Codigo
                                         }   
                                     ),
@@ -1239,6 +1243,8 @@ function informacoesCofre()
                                     
                                     
                                 }
+
+                                valorDepositadoReal.textContent = String(valorTotal).replace('.',',');
         
                                 let percentual = (valorTotal * 100) / valorMax;
                                 let qualImagem = 0;
