@@ -560,7 +560,7 @@ function exibirCofres()
         let nomePlanta = plantinha.querySelector('.plantaImg');
         nomePlanta = String(nomePlanta.src).split('/');
         nomePlanta = nomePlanta[7];
-        ajustaPercentual(null, null, plantinha, nomePlanta, plantinha.querySelector('.plantaImg'));
+        ajustaPercentual(null, null, plantinha, nomePlanta, plantinha.querySelector('.plantaImg'), null);
        }
     });
 
@@ -807,7 +807,7 @@ function informacoesCofre()
         plantaSelecionada.addEventListener('click', function(e){
             e.preventDefault();
 
-            console.log(plantaSelecionada);
+            
             fetch("http://localhost/Trit/trit/api/listarCofrinhos.php", {
             method: "GET",
                 credentials: "include",
@@ -820,7 +820,228 @@ function informacoesCofre()
             })
             .then(function (dadosJSON) {
                 if (dadosJSON) {
+
                     const cofrinho = dadosJSON.cofrinhos[i];
+
+                    areaConsultarCofre = document.createElement('div');
+                    areaConsultarCofre.classList.add('popup');
+                    areaConsultarCofre.classList.add('areaConsultarCofre');
+
+                    const cofreConsultar = document.createElement('div');
+                    cofreConsultar.classList.add('cofreConsultar');
+
+                    const plantaIcon = document.createElement('img');
+                    plantaIcon.src = `img/plantas/icons/${cofrinho.Planta.Nome}-icon.svg`;
+
+                    const nomeCofre = document.createElement('p');
+                    nomeCofre.textContent = cofrinho.Nome.charAt(0).toUpperCase() + cofrinho.Nome.slice(1);
+
+                    cofreConsultar.append(plantaIcon, nomeCofre);
+
+                    const areaInfos = document.createElement('div');
+                    areaInfos.classList.add('infosCofrinho');
+
+                    const areaValorDepositado = document.createElement('div');
+                    areaValorDepositado.classList.add('areaInfos');
+
+                    const tituloValorDepositado = document.createElement('p');
+                    tituloValorDepositado.textContent = 'Valor atual:';
+                    tituloValorDepositado.classList.add('tituloInfos');
+
+                    const valorDepositado = document.createElement('div');
+                    valorDepositado.classList.add('valor');
+                    
+                    const valorDepositadoMoeda = document.createElement('p');
+                    valorDepositadoMoeda.textContent = 'R$';
+
+                    const valorDepositadoReal = document.createElement('p');
+                    valorDepositadoReal.textContent = String(cofrinho.ValorAtual).replaceAll('.',',');
+                
+
+                    valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
+                    areaValorDepositado.append(tituloValorDepositado, valorDepositado);
+
+                    const areaValorLimite = document.createElement('div');
+                    areaValorLimite.classList.add('areaInfos');
+
+                    const tituloValorLimite = document.createElement('p');
+                    tituloValorLimite.textContent = 'Valor limite:';
+                    tituloValorLimite.classList.add('tituloInfos');
+
+                    const valorLimite = document.createElement('div');
+                    valorLimite.classList.add('valor');
+                    
+                    const valorLimiteMoeda = document.createElement('p');
+                    valorLimiteMoeda.textContent = 'R$';
+
+                    const valorLimiteReal = document.createElement('p');
+                    valorLimiteReal.textContent = String(cofrinho.ValorFinal).replaceAll('.',',');
+
+                    valorLimite.append(valorLimiteMoeda, valorLimiteReal);
+                    areaValorLimite.append(tituloValorLimite, valorLimite);
+
+                    const areaDataCriacao = document.createElement('div');
+                    areaDataCriacao.classList.add('areaInfos');
+
+                    const tituloDataCriacao = document.createElement('p');
+                    tituloDataCriacao.textContent = 'Data:';
+                    tituloDataCriacao.classList.add('tituloInfos');
+                    // data 
+                    let dataAtual = cofrinho.Data;
+                    let conjuntoDataAtual = dataAtual.split("-");
+                    
+                    let dataAtualFormatada = `${conjuntoDataAtual[2]}-${conjuntoDataAtual[1]}-${conjuntoDataAtual[0]}`;
+                    let dataPrazoFormatada = 0;
+
+                    if(cofrinho.Prazo){
+
+                        let dataPrazo = cofrinho.Prazo;
+                        let conjuntoDataPrazo = dataPrazo.split("-");
+                        dataPrazoFormatada = `${conjuntoDataPrazo[2]}-${conjuntoDataPrazo[1]}-${conjuntoDataPrazo[0]}`;
+                    }
+
+                    const dataCriacao = document.createElement('p');
+                    dataCriacao.textContent = dataAtualFormatada.replaceAll('-', '/');
+
+                    areaDataCriacao.append(tituloDataCriacao, dataCriacao);
+
+                    const areaPeriodo = document.createElement('div');
+                    areaPeriodo.classList.add('areaInfos');
+
+                    const tituloPeriodo = document.createElement('p');
+                    tituloPeriodo.textContent = 'Período:';
+                    tituloPeriodo.classList.add('tituloInfos');
+
+                    const tipoPeriodo = document.createElement('p');
+                    tipoPeriodo.textContent = cofrinho.Tipo;
+
+                    areaPeriodo.append(tituloPeriodo, tipoPeriodo);
+
+                    let areaDica = '';
+                    let areaDataLimite = '';
+
+                    if(dataPrazoFormatada)
+                    {
+                        let diaAtual = dataAtualFormatada.replaceAll('-','');
+                        diaAtual = diaAtual.slice(0,2);
+                        
+                        let mesAtual = dataAtualFormatada.replaceAll('-','');
+                        mesAtual = mesAtual.slice(2,4);
+
+                        let anoAtual = dataAtualFormatada.replaceAll('-','');
+                        anoAtual = anoAtual.slice(4);
+
+                        let diaLimite = dataPrazoFormatada.replaceAll('-','');
+                        diaLimite = diaLimite.slice(0,2);
+
+                        let mesLimite = dataPrazoFormatada.replaceAll('-','');
+                        mesLimite = mesLimite.slice(2,4);
+
+                        let anoLimite = dataPrazoFormatada.replaceAll('-','');
+                        anoLimite = anoLimite.slice(4);
+
+                        let diferencaAno = anoLimite - anoAtual;
+                        let diferencaMes = mesLimite - mesAtual;
+                        diferencaMes = diferencaMes + (diferencaAno * 12);
+
+                        if(diaAtual > diaLimite)
+                        {
+                            diferencaMes--;
+                        }
+
+                        let valorPorMes = Number(cofrinho.ValorFinal) / diferencaMes;
+                        valorPorMes = Math.ceil(valorPorMes * Math.pow(10,2)) / Math.pow(10,2);
+                        valorPorMes = valorPorMes.toFixed(2).replace('.',',');
+
+                        areaDataLimite = document.createElement('div');
+                        areaDataLimite.classList.add('areaInfos');
+
+                        const tituloDataLimite = document.createElement('p');
+                        tituloDataLimite.textContent = 'Data limite:';
+                        tituloDataLimite.classList.add('tituloInfos');
+
+                        const dataLimite = document.createElement('p');
+                        dataLimite.textContent = dataPrazoFormatada.replaceAll('-', '/');
+                        dataLimite.id = 'dataLimite';
+
+                        areaDataLimite.append(tituloDataLimite, dataLimite);
+                        areaInfos.appendChild(areaDataLimite);
+
+                        areaDica = document.createElement('div');
+                        areaDica.classList.add('areaDica');
+
+                        const fundoDica = document.createElement('img');
+                        fundoDica.src = 'img/fundoDica.svg';
+                        fundoDica.classList.add('fundoDica');
+
+                        const dica = document.createElement('p');
+                        dica.textContent = '*Caso junte R$' + valorPorMes + ' por mês baterá sua meta com tranqulidade!';
+                        dica.classList.add('dica');
+
+                        const avisoIcon = document.createElement('img');
+                        avisoIcon.src = 'img/aviso-icon.svg';
+                        avisoIcon.classList.add('avisoIcon');
+
+                        areaDica.append(fundoDica, dica, avisoIcon);
+                    }
+
+                    areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaDataLimite, areaPeriodo);
+
+                    const areaBotoes = document.createElement('div');
+                    areaBotoes.classList.add('areaBotoes');
+
+                    const btnGuardar = document.createElement('button');
+                    btnGuardar.textContent = 'Guardar';
+                    btnGuardar.classList.add('btnGuardar');
+                    btnGuardar.classList.add('btnAlteraValor');
+
+                    const btnResgatar = document.createElement('button');
+                    btnResgatar.textContent = 'Resgatar';
+                    btnResgatar.classList.add('btnResgatar');
+                    btnResgatar.classList.add('btnAlteraValor');
+
+                    areaBotoes.append(btnGuardar, btnResgatar);
+
+                    const areaConfig = document.createElement('div');
+                    areaConfig.classList.add('areaConfig');
+
+                    const btnEditar = document.createElement('div');
+                    btnEditar.classList.add('btnEditar');
+
+                    const editarIcon = document.createElement('img');
+                    editarIcon.src = 'img/editar.svg';
+
+                    const editar = document.createElement('p');
+                    editar.textContent = 'Editar dados';
+
+                    btnEditar.append(editarIcon, editar);
+
+                    const btnExcluir = document.createElement('div');
+                    btnExcluir.classList.add('btnExcluir');
+
+                    const excluirIcon = document.createElement('img');
+                    excluirIcon.src = 'img/excluir.svg';
+
+                    const excluir = document.createElement('p');
+                    excluir.textContent = 'Excluir';
+
+                    btnExcluir.append(excluirIcon, excluir);
+
+                    areaConfig.append(btnEditar, btnExcluir);
+
+                    btnSair = botaoSair();
+                    btnSair.classList.add('btnSairPosicao');
+
+                    btnSair.addEventListener('click', function(e){
+                        e.preventDefault();
+        
+                        areaConsultarCofre.remove();
+                        bloqueio.remove();
+                    })
+
+                    areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaDica, areaBotoes, areaConfig);
+                    bloqueio.appendChild(areaConsultarCofre);
+
                     if(plantaSelecionada.querySelector('.concluida'))
                     {
                         bloqueio.innerHTML = '';
@@ -847,233 +1068,24 @@ function informacoesCofre()
                             areaAvisoConcluida.remove();
                             bloqueio.appendChild(areaConsultarCofre);
         
-                            document.querySelector('.concluida').remove();
+                            const notificaConcluida = document.querySelectorAll('.concluida');
+                            console.log(notificaConcluida)
+                            for (let index = 0; index < notificaConcluida.length; index++) {
+                                const notificacao = notificaConcluida[index];
+                                console.log(notificacao)
+
+                                if(notificacao.id == i)
+                                {
+                                    notificacao.remove();
+                                }
+                            }
+                            
                         })  
                         
                         return;
                     }
-        
-                    bloqueio.innerHTML = '';
-        
-                    areaConsultarCofre = document.createElement('div');
-                    areaConsultarCofre.classList.add('popup');
-                    areaConsultarCofre.classList.add('areaConsultarCofre');
-        
-                    const cofreConsultar = document.createElement('div');
-                    cofreConsultar.classList.add('cofreConsultar');
-        
-                    const plantaIcon = document.createElement('img');
-                    plantaIcon.src = `img/plantas/icons/${cofrinho.Planta.Nome}-icon.svg`;
-        
-                    const nomeCofre = document.createElement('p');
-                    nomeCofre.textContent = cofrinho.Nome.charAt(0).toUpperCase() + cofrinho.Nome.slice(1);
-        
-                    cofreConsultar.append(plantaIcon, nomeCofre);
-        
-                    const areaInfos = document.createElement('div');
-                    areaInfos.classList.add('infosCofrinho');
-        
-                    const areaValorDepositado = document.createElement('div');
-                    areaValorDepositado.classList.add('areaInfos');
-        
-                    const tituloValorDepositado = document.createElement('p');
-                    tituloValorDepositado.textContent = 'Valor atual:';
-                    tituloValorDepositado.classList.add('tituloInfos');
-        
-                    const valorDepositado = document.createElement('div');
-                    valorDepositado.classList.add('valor');
-                    
-                    const valorDepositadoMoeda = document.createElement('p');
-                    valorDepositadoMoeda.textContent = 'R$';
-        
-                    const valorDepositadoReal = document.createElement('p');
-                    valorDepositadoReal.textContent = String(cofrinho.ValorAtual).replaceAll('.',',');
                 
-        
-                    valorDepositado.append(valorDepositadoMoeda, valorDepositadoReal);
-                    areaValorDepositado.append(tituloValorDepositado, valorDepositado);
-        
-                    const areaValorLimite = document.createElement('div');
-                    areaValorLimite.classList.add('areaInfos');
-        
-                    const tituloValorLimite = document.createElement('p');
-                    tituloValorLimite.textContent = 'Valor limite:';
-                    tituloValorLimite.classList.add('tituloInfos');
-        
-                    const valorLimite = document.createElement('div');
-                    valorLimite.classList.add('valor');
-                    
-                    const valorLimiteMoeda = document.createElement('p');
-                    valorLimiteMoeda.textContent = 'R$';
-        
-                    const valorLimiteReal = document.createElement('p');
-                    valorLimiteReal.textContent = String(cofrinho.ValorFinal).replaceAll('.',',');
-        
-                    valorLimite.append(valorLimiteMoeda, valorLimiteReal);
-                    areaValorLimite.append(tituloValorLimite, valorLimite);
-        
-                    const areaDataCriacao = document.createElement('div');
-                    areaDataCriacao.classList.add('areaInfos');
-        
-                    const tituloDataCriacao = document.createElement('p');
-                    tituloDataCriacao.textContent = 'Data:';
-                    tituloDataCriacao.classList.add('tituloInfos');
-                    // data 
-                    let dataAtual = cofrinho.Data;
-                    let conjuntoDataAtual = dataAtual.split("-");
-                    
-                    let dataAtualFormatada = `${conjuntoDataAtual[2]}-${conjuntoDataAtual[1]}-${conjuntoDataAtual[0]}`;
-                    let dataPrazoFormatada = 0;
-
-                    if(cofrinho.Prazo){
-
-                        let dataPrazo = cofrinho.Prazo;
-                        let conjuntoDataPrazo = dataPrazo.split("-");
-                        dataPrazoFormatada = `${conjuntoDataPrazo[2]}-${conjuntoDataPrazo[1]}-${conjuntoDataPrazo[0]}`;
-                    }
-
-                    const dataCriacao = document.createElement('p');
-                    dataCriacao.textContent = dataAtualFormatada.replaceAll('-', '/');
-        
-                    areaDataCriacao.append(tituloDataCriacao, dataCriacao);
-        
-                    const areaPeriodo = document.createElement('div');
-                    areaPeriodo.classList.add('areaInfos');
-        
-                    const tituloPeriodo = document.createElement('p');
-                    tituloPeriodo.textContent = 'Período:';
-                    tituloPeriodo.classList.add('tituloInfos');
-        
-                    const tipoPeriodo = document.createElement('p');
-                    tipoPeriodo.textContent = cofrinho.Tipo;
-        
-                    areaPeriodo.append(tituloPeriodo, tipoPeriodo);
-        
-                    let areaDica = '';
-                    let areaDataLimite = '';
-        
-                    if(dataPrazoFormatada)
-                    {
-                        let diaAtual = dataAtualFormatada.replaceAll('-','');
-                        diaAtual = diaAtual.slice(0,2);
-                        
-                        let mesAtual = dataAtualFormatada.replaceAll('-','');
-                        mesAtual = mesAtual.slice(2,4);
-        
-                        let anoAtual = dataAtualFormatada.replaceAll('-','');
-                        anoAtual = anoAtual.slice(4);
-
-                        let diaLimite = dataPrazoFormatada.replaceAll('-','');
-                        diaLimite = diaLimite.slice(0,2);
-        
-                        let mesLimite = dataPrazoFormatada.replaceAll('-','');
-                        mesLimite = mesLimite.slice(2,4);
-        
-                        let anoLimite = dataPrazoFormatada.replaceAll('-','');
-                        anoLimite = anoLimite.slice(4);
-        
-                        let diferencaAno = anoLimite - anoAtual;
-                        let diferencaMes = mesLimite - mesAtual;
-                        diferencaMes = diferencaMes + (diferencaAno * 12);
-        
-                        if(diaAtual > diaLimite)
-                        {
-                            diferencaMes--;
-                        }
-        
-                        let valorPorMes = Number(cofrinho.ValorFinal) / diferencaMes;
-                        valorPorMes = Math.ceil(valorPorMes * Math.pow(10,2)) / Math.pow(10,2);
-                        valorPorMes = valorPorMes.toFixed(2).replace('.',',');
-        
-                        areaDataLimite = document.createElement('div');
-                        areaDataLimite.classList.add('areaInfos');
-        
-                        const tituloDataLimite = document.createElement('p');
-                        tituloDataLimite.textContent = 'Data limite:';
-                        tituloDataLimite.classList.add('tituloInfos');
-        
-                        const dataLimite = document.createElement('p');
-                        dataLimite.textContent = dataPrazoFormatada.replaceAll('-', '/');
-                        dataLimite.id = 'dataLimite';
-        
-                        areaDataLimite.append(tituloDataLimite, dataLimite);
-                        areaInfos.appendChild(areaDataLimite);
-        
-                        areaDica = document.createElement('div');
-                        areaDica.classList.add('areaDica');
-        
-                        const fundoDica = document.createElement('img');
-                        fundoDica.src = 'img/fundoDica.svg';
-                        fundoDica.classList.add('fundoDica');
-        
-                        const dica = document.createElement('p');
-                        dica.textContent = '*Caso junte R$' + valorPorMes + ' por mês baterá sua meta com tranqulidade!';
-                        dica.classList.add('dica');
-        
-                        const avisoIcon = document.createElement('img');
-                        avisoIcon.src = 'img/aviso-icon.svg';
-                        avisoIcon.classList.add('avisoIcon');
-        
-                        areaDica.append(fundoDica, dica, avisoIcon);
-                    }
-        
-                    areaInfos.append(areaValorDepositado, areaValorLimite, areaDataCriacao, areaDataLimite, areaPeriodo);
-        
-                    const areaBotoes = document.createElement('div');
-                    areaBotoes.classList.add('areaBotoes');
-        
-                    const btnGuardar = document.createElement('button');
-                    btnGuardar.textContent = 'Guardar';
-                    btnGuardar.classList.add('btnGuardar');
-                    btnGuardar.classList.add('btnAlteraValor');
-        
-                    const btnResgatar = document.createElement('button');
-                    btnResgatar.textContent = 'Resgatar';
-                    btnResgatar.classList.add('btnResgatar');
-                    btnResgatar.classList.add('btnAlteraValor');
-        
-                    areaBotoes.append(btnGuardar, btnResgatar);
-        
-                    const areaConfig = document.createElement('div');
-                    areaConfig.classList.add('areaConfig');
-        
-                    const btnEditar = document.createElement('div');
-                    btnEditar.classList.add('btnEditar');
-        
-                    const editarIcon = document.createElement('img');
-                    editarIcon.src = 'img/editar.svg';
-        
-                    const editar = document.createElement('p');
-                    editar.textContent = 'Editar dados';
-        
-                    btnEditar.append(editarIcon, editar);
-        
-                    const btnExcluir = document.createElement('div');
-                    btnExcluir.classList.add('btnExcluir');
-        
-                    const excluirIcon = document.createElement('img');
-                    excluirIcon.src = 'img/excluir.svg';
-        
-                    const excluir = document.createElement('p');
-                    excluir.textContent = 'Excluir';
-        
-                    btnExcluir.append(excluirIcon, excluir);
-        
-                    areaConfig.append(btnEditar, btnExcluir);
-        
-                    btnSair = botaoSair();
-                    btnSair.classList.add('btnSairPosicao');
-        
-                    areaConsultarCofre.append(btnSair, cofreConsultar, areaInfos, areaDica, areaBotoes, areaConfig);
-                    bloqueio.appendChild(areaConsultarCofre);
                     body.appendChild(bloqueio);
-        
-                    btnSair.addEventListener('click', function(e){
-                        e.preventDefault();
-        
-                        areaConsultarCofre.remove();
-                        bloqueio.remove();
-                    })
         
                     const btnAlteraValor = document.querySelectorAll('.btnAlteraValor');
                     
@@ -1300,7 +1312,7 @@ function informacoesCofre()
 
                                 let valorExibir = Number(valorTotal).toFixed(2);
                                 valorDepositadoReal.textContent = String(valorExibir).replace('.',',');
-                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta);
+                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta, i);
                             })
                         })
         
@@ -1569,7 +1581,7 @@ function informacoesCofre()
     }
 }
 
-function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img){
+function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotificacao){
     const porcentagemPlanta = local.querySelector('.porcentagem');
     let porcentagemBruta = String(porcentagemPlanta.textContent).split('%');
     let percentual = Number(porcentagemBruta[0]);
@@ -1585,6 +1597,7 @@ function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img){
         statusConcluida.src = 'img/aviso-icon.svg';
         statusConcluida.classList.add('status');
         statusConcluida.classList.add('concluida');
+        statusConcluida.id = idNotificacao;
 
         local.prepend(statusConcluida);
 
