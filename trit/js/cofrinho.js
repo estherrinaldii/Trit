@@ -803,9 +803,11 @@ function informacoesCofre()
         const tituloCofres = document.querySelectorAll('.tituloCofre');
 
         const imgPlanta = plantaSelecionada.querySelector('.plantaImg');
-        
+
         plantaSelecionada.addEventListener('click', function(e){
             e.preventDefault();
+
+            console.log(plantaSelecionada);
             fetch("http://localhost/Trit/trit/api/listarCofrinhos.php", {
             method: "GET",
                 credentials: "include",
@@ -1429,11 +1431,17 @@ function informacoesCofre()
 
                             let valorEnviar = String(txtValorLimite.value).replaceAll(',','.');
                             valorEnviar = Number(valorEnviar);
+
+                            console.log(txtData);
+                            let dataEnviar = null;
+                            if(txtData){
+                                dataEnviar = FormatarData(txtData);
+                            }
         
                             // fetch editar cofrinho:
                             // valor limite = txtValorLimite.value;
                             // data limite (se determinado) = txtData.value
-                            fetch("http://localhost/trit/api/editarCofrinho.php", {
+                            fetch("http://localhost/Trit/trit/api/editarCofrinho.php", {
                             method: "PUT",
                             credentials: "include",
                             headers: {
@@ -1444,7 +1452,8 @@ function informacoesCofre()
                                     "codigo":cofrinho.Codigo,
                                     "nome":String(txtNome.value),
                                     "valor_final":valorEnviar,
-                                    "prazo":FormatarData(txtData)
+                                    "prazo":dataEnviar,
+                                    "codigo_planta":cofrinho.Planta.Codigo 
                                 }
                             ),
                             })
@@ -1456,13 +1465,23 @@ function informacoesCofre()
                             })
                             .then(function (dadosJSON) {
                                 if (dadosJSON) {
+                                    
+                                    bloqueio.remove()
+                                    areaEditarDados.remove();
+                                    main.querySelector('.cofrinhos').textContent = '';
+                                    exibirCofres();
+                                    // let nameTags = document.querySelectorAll('.tituloCofre');
+                                    // nameTags[i].textContent = txtNome.value;
+                                    // if(plantaSelecionada.querySelector('.determinado')){
+                                    //     plantaSelecionada.querySelector('.determinado p').textContent = txtData.value;
+                                    // }
+                                    // ajustaPercentual(Number(cofrinho.ValorAtual), valorEnviar, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta);
                                 } 
                             })
                             .catch(function (error) {
                                 console.warn(error);
                             });
-                            areaEditarDados.remove();
-                            bloqueio.appendChild(areaConsultarCofre);
+
                         })
         
                     })
@@ -1582,33 +1601,33 @@ function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img){
     if(percentual < 20)
     {
         qualImagem = 1;
-        posicaoStatus = '60px';
+        // posicaoStatus = '60px';
     }
     else
     {
         if(percentual >= 20 && percentual < 40)
         {
             qualImagem = 2;
-            posicaoStatus = '28px';
+            // posicaoStatus = '28px';
         }
         else
         {
             if(percentual >= 40 && percentual < 60)
             {
                 qualImagem = 3;
-                posicaoStatus = '5px';
+                // posicaoStatus = '5px';
             }
             else
             {
                 if(percentual >= 60 && percentual < 80)
                 {
                     qualImagem = 4;
-                    posicaoStatus = '0px';
+                    // posicaoStatus = '0px';
                 }
                 else
                 {
                     qualImagem = 5;
-                    posicaoStatus = '0px';
+                    // posicaoStatus = '0px';
                 }
 
             }
