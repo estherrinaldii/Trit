@@ -42,18 +42,15 @@
 
     <main>
         <div class="menuExtrato">
-            <p class="opcaoSelecionadaMenu">Extrato</p>
-            <p>Gráficos</p>
+            <p class="opcaoSelecionadaMenu" id="btnExtrato">Extrato</p>
+            <p id="btnGraficos">Gráficos</p>
         </div>
 
-        <div>
-            <div>filtro1</div>
-            <div>filtro2</div>
-        </div>
+        <div class="filtros"></div>
 
         <section>
-            <div>
-                <div>
+            <div class="dia">
+                <div class="data">
                     <p>20</p>
                     <p>de</p>
                     <p>outubro</p>
@@ -61,10 +58,10 @@
                     <p>2026</p>
                 </div>
 
-                <div>
+                <div class="areaExtrato">
                     <div>
                         <p>Photocard</p>
-                        <div>
+                        <div class="valor saida">
                             <p>-</p>
                             <p>R$</p>
                             <p>40,00</p>
@@ -73,7 +70,7 @@
 
                     <div>
                         <p>Entrada da moto</p>
-                        <div>
+                        <div class="valor cofrinho">
                             <p>Guardou</p>
                             <p>R$</p>
                             <p>90,00</p>
@@ -82,7 +79,7 @@
 
                     <div>
                         <p>Trufa</p>
-                        <div>
+                        <div class="valor entrada">
                             <p>+</p>
                             <p>R$</p>
                             <p>6,00</p>
@@ -90,18 +87,18 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="saldo">
                     <p>Saldo do dia</p>
-                    <div>
+                    <div class="valor">
                         <p>R$</p>
                         <p>1200,00</p>
                     </div>
                 </div>
-
                 
             </div>
         </section>
     </main>
 
+    <script type="module" src="js/extrato.js"></script>
 </body>
 </html>
