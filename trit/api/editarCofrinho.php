@@ -33,15 +33,19 @@ try {
 	if (!validaCorpoRequisicao($corpo)) {
 		return;
 	}
-	$chaves = ['codigo','nome','valor_final','prazo'];
+	$chaves = ['codigo','nome','valor_final','codigo_planta'];
 	if (!validaChaves($corpo, $chaves)) {
 		return;
 	}
+
+	$prazo = isset($corpo['prazo']) && trim((string)$corpo['prazo']) !== '' ? $corpo['prazo'] : null;
+
+
 	$email = $_SESSION['logado'];
 	$codigo = $corpo['codigo'];
 	$nome = $corpo['nome'];
 	$valorFinal = $corpo['valor_final'];
-	$prazo = $corpo['prazo'];
+	$planta = $corpo['codigo_planta'];
 
 	CofrinhoController::Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta);
 

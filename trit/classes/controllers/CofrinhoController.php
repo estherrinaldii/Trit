@@ -28,6 +28,10 @@ class CofrinhoController {
     }
 
     public static function Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta){
+        if ($prazo === '' || $prazo === null) {
+            $prazo = null;
+        }
+    
         return Cofrinho::Editar($email, $codigo, $nome, $valorFinal, $prazo, $planta);
     }
 
