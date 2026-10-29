@@ -17,18 +17,50 @@ btnGraficos.addEventListener('click', function(e){
 })
 
 const areaFiltros = document.querySelector('.filtros');
-areaFiltros.append(areaSelecaoAno(), areaSelecaoMes())
+areaFiltros.append(areaSelecaoAno(), areaSelecaoMes());
+let anoFiltro = areaFiltros.querySelector('.anoSelecionado').textContent;
+anoFiltro = Number(anoFiltro);
 
-const dias = document.querySelectorAll('.dia');
+let mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
+mesFiltro = qualNumero(mesFiltro);
 
-if(dias.length == 0)
-{
-    const semRegistros = document.createElement('p');
-    semRegistros.textContent = 'Nenhum registro para essa data';
-    semRegistros.classList.add('semRegistros');
-
-    areaDias.appendChild(semRegistros);
+fetch("http://localhost/Trit/trit/api/listarExtrato.php", {
+  method: "GET",
+	 credentials: "include",
+})
+.then(function (resposta) {
+if (!resposta.ok) {
+    throw new Error("Erro HTTP: " + resposta.status);
 }
+return resposta.json();
+})
+.then(function (dadosJSON) {
+if (dadosJSON) {
+    if(dadosJSON.extrato.length > 0){
+        exibirExtrato(dadosJSON.extrato);
+    }else{
+        const semRegistros = document.createElement('p');
+        semRegistros.textContent = 'Nenhum registro para essa data';
+        semRegistros.classList.add('semRegistros');
+
+        areaDias.appendChild(semRegistros);
+    }
+}
+})
+.catch(function (error) {
+    console.warn(error);
+});
+
+// const dias = document.querySelectorAll('.dia');
+// if(dias.length == 0)
+// {
+//     const semRegistros = document.createElement('p');
+//     semRegistros.textContent = 'Nenhum registro para essa data';
+//     semRegistros.classList.add('semRegistros');
+
+//     areaDias.appendChild(semRegistros);
+// }
+
 
 function areaSelecaoMes()
 {
@@ -42,7 +74,7 @@ function areaSelecaoMes()
     mesSelecionado.classList.add('opcao');
     mesSelecionado.classList.add('opcaoSelecionada');
     mesSelecionado.classList.add('mesSelecionado');
-    mesSelecionado.textContent = 'Janeiro';
+    mesSelecionado.textContent = 'Tudo';
 
     const btnMaisOpcoes = document.createElement('button');
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
@@ -57,7 +89,7 @@ function areaSelecaoMes()
     btnMaisOpcoes.appendChild(iconMaisOpcoes);
     areaMesSelecionado.append(mesSelecionado, btnMaisOpcoes);
 
-    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    const meses = ['Tudo', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
     for (let i = 0; i < meses.length; i++) {
         
@@ -71,7 +103,7 @@ function areaSelecaoMes()
             mes.style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
         }
 
-        if(i == 11)
+        if(i == 12)
         {
             mes.style.borderBottom = 'none';
         }
@@ -98,6 +130,45 @@ function areaSelecaoMes()
 
                 mesSelecionado.textContent = txtOpcaoAtual;
                 selecionada();
+                let anoFiltro = areaFiltros.querySelector('.anoSelecionado').textContent;
+                anoFiltro = Number(anoFiltro);
+
+                let mesFiltro = mesSelecionado.textContent;
+                mesFiltro = qualNumero(mesFiltro);
+
+                const parametro = new URLSearchParams({
+                    mes: mesFiltro,
+                    ano: anoFiltro
+                });
+                fetch("http://localhost/Trit/trit/api/listarExtrato.php?"+parametro, {
+                method: "GET",
+                    credentials: "include",
+                })
+                .then(function (resposta) {
+                if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                if (dadosJSON) {
+                    if(dadosJSON.extrato.length > 0){
+                        document.querySelector('section').textContent = '';
+                        exibirExtrato(dadosJSON.extrato);
+                    }else{
+                        document.querySelector('section').textContent = '';
+                        const semRegistros = document.createElement('p');
+                        semRegistros.textContent = 'Nenhum registro para essa data';
+                        semRegistros.classList.add('semRegistros');
+
+                        areaDias.appendChild(semRegistros);
+                    }
+                }
+                })
+                .catch(function (error) {
+                    console.warn(error);
+                });
+
 
                 abaAberta = true;
                 abaOpcoes();
@@ -197,6 +268,45 @@ function areaSelecaoAno()
                 anoSelecionado.textContent = txtOpcaoAtual;
                 selecionada();
 
+                let anoFiltro = anoSelecionado.textContent;
+                anoFiltro = Number(anoFiltro);
+
+                let mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
+                mesFiltro = qualNumero(mesFiltro);
+
+                const parametro = new URLSearchParams({
+                    mes: mesFiltro,
+                    ano: anoFiltro
+                });
+                fetch("http://localhost/Trit/trit/api/listarExtrato.php?"+parametro, {
+                method: "GET",
+                    credentials: "include",
+                })
+                .then(function (resposta) {
+                if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+                })
+                .then(function (dadosJSON) {
+                if (dadosJSON) {
+                    if(dadosJSON.extrato.length > 0){
+                        document.querySelector('section').textContent = '';
+                        exibirExtrato(dadosJSON.extrato);
+                    }else{
+                        document.querySelector('section').textContent = '';
+                        const semRegistros = document.createElement('p');
+                        semRegistros.textContent = 'Nenhum registro para essa data';
+                        semRegistros.classList.add('semRegistros');
+
+                        areaDias.appendChild(semRegistros);
+                    }
+                }
+                })
+                .catch(function (error) {
+                    console.warn(error);
+                });
+
                 abaAberta = true;
                 abaOpcoes();
             })
@@ -231,7 +341,7 @@ function areaSelecaoAno()
 
             opcoesEscolher[i].style.backgroundColor = 'transparent';
             
-            if(opcoesEscolher[i].textContent == AnoSelecionado.textContent)
+            if(opcoesEscolher[i].textContent == anoSelecionado.textContent)
             {
                 opcoesEscolher[i].style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
             }
@@ -239,4 +349,213 @@ function areaSelecaoAno()
     }
 
     return selecionarAno;
+}
+
+function exibirExtrato(dados){
+    const datasAgrupadas = Object.groupBy(dados, (item) => item.Data);
+    for (const [data, diaEspecifico] of Object.entries(datasAgrupadas)){
+        let dataTotal = data;
+        dataTotal = String(dataTotal).split('-');
+        let dia = dataTotal[2];
+        let mes = dataTotal[1];
+        let ano = dataTotal[0];
+        
+        const areaDia = document.createElement('div');
+        areaDia.classList.add('dia');
+
+            const conjuntoData = document.createElement('div');
+                conjuntoData.classList.add('data');
+                    const txtDia = document.createElement('p');
+                    txtDia.id = 'txtDia';
+                    txtDia.textContent = dia;
+                conjuntoData.appendChild(txtDia);
+
+                    let texto = document.createElement('p');
+                    texto.textContent = 'de';
+                conjuntoData.appendChild(texto);
+
+                    const txtMes = document.createElement('p');
+                    txtMes.id = 'txtMes';
+                    txtMes.textContent = qualMes(mes);
+                conjuntoData.appendChild(txtMes);
+
+                    texto = document.createElement('p');
+                    texto.textContent = 'de';
+                conjuntoData.appendChild(texto);
+
+                    const txtAno = document.createElement('p');
+                    txtAno.id = 'txtAno';
+                    txtAno.textContent = ano;
+                conjuntoData.appendChild(txtAno);
+            areaDia.appendChild(conjuntoData);
+
+            const areaExtrato = document.createElement('div');
+            areaExtrato.classList.add('areaExtrato');
+            criarMovimentacao(areaExtrato, diaEspecifico);
+
+            let saldoTotal = 0;
+            const areaSaldo = document.createElement('div');
+            areaSaldo.classList.add('saldo');
+                const tituloSaldo = document.createElement('p');
+                tituloSaldo.textContent = 'Saldo do dia';
+
+                const localValor = document.createElement('div');
+                localValor.classList.add('valor');
+                    const moeda = document.createElement('p');
+                    moeda.textContent = 'R$';
+                localValor.appendChild(moeda);
+
+                    const txtSaldo = document.createElement('p');
+                    txtSaldo.textContent = saldoTotal;
+                localValor.appendChild(txtSaldo);
+            areaSaldo.appendChild(tituloSaldo);
+            areaSaldo.appendChild(localValor);    
+        
+        areaDia.appendChild(conjuntoData);
+        areaDia.appendChild(areaExtrato);
+        areaDia.appendChild(areaSaldo);
+        document.querySelector('section').appendChild(areaDia);
+    }
+}
+
+function criarMovimentacao(local, movimentacoes){
+    for (let i = 0; i < movimentacoes.length; i++) {
+        const movimentacao = document.createElement('div');
+            const nomeMovimentacao = document.createElement('p');
+            nomeMovimentacao.textContent = movimentacoes[i].Nome;
+
+            const localValor = document.createElement('div');
+            localValor.classList.add('valor');
+            
+                let txtOrigem = document.createElement('p');
+                if(movimentacoes[i].Origem == 'saida'){
+                    txtOrigem.textContent = '-';
+                    localValor.classList.add('saida');
+                }else{
+                    if(movimentacoes[i].Origem == 'entrada'){
+                        txtOrigem.textContent = '+';
+                        localValor.classList.add('entrada');
+                    }else{
+                        if(movimentacoes[i].Origem == 'guardar'){
+                            txtOrigem.textContent = 'Guardou';
+                            localValor.classList.add('cofrinho');
+                        }else{
+                            if(movimentacoes[i].Origem == 'resgatar'){
+                                txtOrigem.textContent = 'Resgatou';
+                                localValor.classList.add('resgate');
+                            }
+                        }
+                    }
+                }
+                localValor.appendChild(txtOrigem);
+
+                let moeda = document.createElement('p');
+                moeda.textContent = 'R$';
+                localValor.appendChild(moeda);
+
+                let txtValor = document.createElement('p');
+                let valorFormatado = String(movimentacoes[i].Valor).replaceAll('.',',');
+                txtValor.textContent = valorFormatado;
+                localValor.appendChild(txtValor);
+
+        movimentacao.appendChild(nomeMovimentacao);
+        movimentacao.appendChild(localValor);
+        local.appendChild(movimentacao);
+    }
+
+}
+
+function qualMes(mes){
+    let verificaMes = Number(mes);
+    let nomeMes = '';
+
+    switch(verificaMes){
+        case 1:
+            nomeMes = 'Janeiro';
+            break;
+        case 2:
+            nomeMes = 'Fevereiro';
+            break;
+        case 3:
+            nomeMes = 'Março';
+            break;
+        case 4:
+            nomeMes = 'Abril';
+            break;
+        case 5:
+            nomeMes = 'Maio';
+            break;
+        case 6:
+            nomeMes = 'Junho';
+            break;
+        case 7:
+            nomeMes = 'Julho';
+            break;
+        case 8:
+            nomeMes = 'Agosto';
+            break;
+        case 9:
+            nomeMes = 'Setembro';
+            break;
+        case 10:
+            nomeMes = 'Outubro';
+            break;
+        case 11:
+            nomeMes = 'Novembro';
+            break;
+        case 12:
+            nomeMes = 'Dezembro';
+            break;
+    }
+
+    return nomeMes;
+}
+
+function qualNumero(mes){
+    let verificaMes = String(mes);
+    let numeroMes = '';
+
+    switch(verificaMes){
+        case 'Tudo':
+            numeroMes = -1;
+            break;
+        case 'Janeiro':
+            numeroMes = 1;
+            break;
+        case 'Fevereiro':
+            numeroMes = 2;
+            break;
+        case 'Março':
+            numeroMes = 3;
+            break;
+        case 'Abril':
+            numeroMes = 4;
+            break;
+        case 'Maio':
+            numeroMes = 5;
+            break;
+        case 'Junho':
+            numeroMes = 6;
+            break;
+        case 'Julho':
+            numeroMes = 7;
+            break;
+        case 'Agosto':
+            numeroMes = 8;
+            break;
+        case 'Setembro':
+            numeroMes = 9;
+            break;
+        case 'Outubro':
+            numeroMes = 10;
+            break;
+        case 'Novembro':
+            numeroMes = 11;
+            break;
+        case 'Dezembro':
+            numeroMes = 12;
+            break;
+    }
+
+    return numeroMes;
 }

@@ -24,22 +24,22 @@ if(!isset($_SESSION['logado'])){
 }
 
 try {
-	$corpo = json_decode(file_get_contents("php://input"), true);
-	if (!validaCorpoRequisicao($corpo)) {
-		return;
+	
+	$ano = -1;
+	if (isset($_GET['ano']) && $_GET['ano'] != '') {
+		$ano = $_GET['ano'];
 	}
-	$chaves = ['ano','mes'];
-	if (!validaChaves($corpo, $chaves)) {
-		return;
+
+	$mes = -1;
+	if (isset($_GET['mes']) && $_GET['mes'] != '') {
+		$mes = $_GET['mes'];
 	}
 	$email = $_SESSION['logado'];
-	$ano = $corpo['ano'];
-	$mes = $corpo['mes'];
 
-	ExtratoController::Listar($email, $ano, $mes);
+	$extrato = ExtratoController::Listar($email, $ano, $mes);
 
 	http_response_code(200);
-	echo json_encode(['status' => 'true']);
+	echo json_encode(['status' => 'true', 'extrato'=>$extrato]);
 } catch (Exception $erro) {
 	$mensagemCompleta = $erro->getMessage();
 	if (strpos($mensagemCompleta, 'SQLSTATE') !== false && strpos($mensagemCompleta, '1644') !== false) {
