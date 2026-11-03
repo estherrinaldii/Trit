@@ -179,6 +179,7 @@ btnNovaEntrada.addEventListener('click', function(e){
         e.preventDefault();
 
         areaNovaEntrada.remove();
+        bloqueio.innerHTML = '';
         avisoSair(bloqueio);
     })
 
@@ -191,7 +192,7 @@ btnNovaEntrada.addEventListener('click', function(e){
             return;
         }
 
-        if(txtDataEntrada.value == '')
+        if(txtDataEntrada.value == '' ||  txtDataEntrada.value == 'dd/mm/aaaa')
         {
             erro(msgErro, txtDataEntrada, 'Data não foi informada!', areaInfos);
             return;
@@ -230,8 +231,9 @@ btnNovaEntrada.addEventListener('click', function(e){
         })
         .then(function (dadosJSON) {
             if (dadosJSON) {
-                areaNovaEntrada.remove();
                 bloqueio.remove();
+                areaNovaEntrada.remove();
+                bloqueio.innerHTML = '';
 
                 let carteira = document.getElementById('valorAtual').textContent.replace(',','.');
                 let carteiraTotal = document.getElementById('valorTotal').textContent.replace(',','.');
@@ -240,17 +242,7 @@ btnNovaEntrada.addEventListener('click', function(e){
 
                 carteira = carteira + valor;
                 mudaFaseArvore(carteira, carteiraTotal);
-
-                if(!String(carteira).includes('.'))
-                {
-                    carteira = carteira + ',00';
-                }
-
-                if(!String(carteiraTotal).includes('.'))
-                {
-                    carteiraTotal = carteiraTotal + ',00';
-                }
-
+                carteira = Number(carteira).toFixed(2)
                 document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
             }
         })
@@ -413,11 +405,7 @@ function alterarCarteira(txtValor){
     carteiraTotal = Number(carteiraTotal);
     carteira = carteira - Number(txtValor);
     mudaFaseArvore(carteira, carteiraTotal);
-
-    if(!String(carteira).includes('.'))
-    {
-        carteira = carteira + ',00';
-    }
+    carteira = Number(carteira).toFixed(2);
     document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
 }
 
@@ -546,6 +534,7 @@ function areaSelecao(local, areaNovaSaida)
         e.preventDefault();
 
         areaNovaSaida.remove();
+        bloqueio.innerHTML = '';
 
         naoSelecionado.style.display = 'none';
         iconMaisOpcoes.style.transform = 'rotate(90deg)';
@@ -620,6 +609,7 @@ function areaSelecao(local, areaNovaSaida)
             e.preventDefault();
 
             areaNovaCategoria.remove();
+            bloqueio.innerHTML = '';
             bloqueio.appendChild(areaNovaSaida);
         })
 
@@ -857,6 +847,7 @@ function criarAreaSaida(txtTipo){
         e.preventDefault();
 
         areaNovaSaida.remove();
+        bloqueio.innerHTML = '';
         avisoSair(bloqueio);
     })
 
@@ -915,6 +906,9 @@ function criarAreaSaida(txtTipo){
     const txtDataLimite = document.createElement('input');
     txtDataLimite.type = 'text';
     txtDataLimite.classList.add('recuoPopup');
+    txtDataLimite.inputMode = 'numeric';
+    txtDataLimite.value = 'dd/mm/aaaa';
+    formataInputData(txtDataLimite, null);
     areaRight = obrigatorioIcon(txtDataLimite);
     areaDataLimite.append(labelDataLimite, areaRight);
 
@@ -1035,9 +1029,10 @@ function criarAreaSaida(txtTipo){
             return;
         }
 
-        if(txtDataSaida.value == '')
+        if(txtDataSaida)
         {
-            erroEncontrado = validaData(txtDataSaida, areaInfos);
+            let erroEncontrado = '';
+            erroEncontrado = validaData(msgErro, txtDataSaida, areaInfos);
             if(erroEncontrado){
                 return;
             }
@@ -1046,10 +1041,13 @@ function criarAreaSaida(txtTipo){
         if(txtTipoSaida.value == 'Parcelada')
         {
 
-            if(txtDataLimite.value == '')
+            if(txtDataLimite)
             {
-                erro(msgErro, txtDataLimite, 'Data limite não foi informada!', areaInfos);
-                return; 
+                let erroEncontrado = '';
+                erroEncontrado = validaData(msgErro, txtDataLimite, areaInfos);
+                if(erroEncontrado){
+                    return;
+                }
             }
 
             if(txtParcelas.value == '')
@@ -1067,30 +1065,36 @@ function criarAreaSaida(txtTipo){
 
         const selecionado = document.querySelector('.areaOpcaoSelecionada p');
         if(txtTipoSaida.value == 'Categorizada'){
-            areaNovaSaida.remove();
             let categoria = selecionado.getAttribute('codigo');
             let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
             criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, null, null, null, categoria, selecionado);
+            areaNovaSaida.remove();
+            bloqueio.remove();
+            bloqueio.innerHTML = '';
         }
 
 
         if(txtTipoSaida.value == 'Fixa'){
-            areaNovaSaida.remove();
             let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
             criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null, selecionado);
+            areaNovaSaida.remove();
+            bloqueio.remove();
+            bloqueio.innerHTML = '';
         }
 
         if(txtTipoSaida.value == 'Parcelada'){
-            areaNovaSaida.remove();
             let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
             criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null, selecionado);
+            areaNovaSaida.remove();
+            bloqueio.remove();
+            bloqueio.innerHTML = '';
         }
     })
 }
@@ -1123,8 +1127,6 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
     })
     .then(function (dadosJSON) {
         if (dadosJSON) {
-        bloqueio.remove();
-        bloqueio.innerHTML = '';
             if(txtTipo === 'Categorizada'){
                 let nomeCategoria = selecionado.textContent;
                 let categorias = document.querySelectorAll('.controlado');
@@ -1175,6 +1177,7 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                     e.preventDefault();
             
                     popup.remove();
+                    bloqueio.innerHTML = '';
                     avisoSair(bloqueio);
                 })
             areaTitulo.appendChild(tituloPopup);
@@ -1297,6 +1300,7 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                     .then(function (dadosJSON) {
                         if (dadosJSON) {
                             bloqueio.remove();
+                            bloqueio.innerHTML = '';
                             if(categoria.querySelector('.tituloControlado p').textContent != nomeEnviar){
                                 categoria.querySelector('.tituloControlado p').textContent = nomeEnviar;
                             }
@@ -1338,8 +1342,9 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                     })
                     .then(function (dadosJSON) {
                         if (dadosJSON) {
-                            document.getElementById(codigo).remove();
                             bloqueio.remove();
+                            document.getElementById(codigo).remove();
+                            bloqueio.innerHTML = '';
                         } 
                     })
                     .catch(function (error) {

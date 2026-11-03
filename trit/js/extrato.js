@@ -245,9 +245,15 @@ function areaSelecaoAno()
     ano.style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
     ano.style.borderBottom = 'none';
 
+    const ano2 = document.createElement('p');
+    ano2.classList.add('opcao');
+    ano2.classList.add('anoEscolher');
+    ano2.textContent = '2025';
+    ano2.style.borderBottom = 'none';
+
     btnMaisOpcoes.appendChild(iconMaisOpcoes);
     areaAnoSelecionado.append(anoSelecionado, btnMaisOpcoes);
-    naoSelecionado.appendChild(ano);
+    naoSelecionado.append(ano, ano2);
     selecionarAno.append(areaAnoSelecionado, naoSelecionado);
 
     let abaAberta = false;
@@ -393,27 +399,8 @@ function exibirExtrato(dados){
             areaExtrato.classList.add('areaExtrato');
             criarMovimentacao(areaExtrato, diaEspecifico);
 
-            let saldoTotal = 0;
-            const areaSaldo = document.createElement('div');
-            areaSaldo.classList.add('saldo');
-                const tituloSaldo = document.createElement('p');
-                tituloSaldo.textContent = 'Saldo do dia';
-
-                const localValor = document.createElement('div');
-                localValor.classList.add('valor');
-                    const moeda = document.createElement('p');
-                    moeda.textContent = 'R$';
-                localValor.appendChild(moeda);
-
-                    const txtSaldo = document.createElement('p');
-                    txtSaldo.textContent = saldoTotal;
-                localValor.appendChild(txtSaldo);
-            areaSaldo.appendChild(tituloSaldo);
-            areaSaldo.appendChild(localValor);    
-        
         areaDia.appendChild(conjuntoData);
         areaDia.appendChild(areaExtrato);
-        areaDia.appendChild(areaSaldo);
         document.querySelector('section').appendChild(areaDia);
     }
 }
