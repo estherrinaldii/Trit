@@ -225,6 +225,10 @@ INSERT INTO Planta (cd_planta, nm_planta) VALUES (4, 'peonia');
 
 -- MASSA DE TESTE
 
+INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) VALUES(22, 'Shopping', 300, 'sabrina.carpinteira@gmail.com', 'personalizada'); 
+INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) VALUES(23, 'Viagens', 500, 'sabrina.carpinteira@gmail.com', 'personalizada');    
+INSERT INTO categoria_gasto (cd_categoria_gasto, nm_categoria_gasto, vl_limite, FK_nm_email, ic_tipo_categoria) VALUES(24, 'Streaming', 100, 'sabrina.carpinteira@gmail.com', 'personalizada');       
+
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (1, 'Aluguel Agosto', 1500.00, '2026-08-05', '2026-08-10', 'fixa', 'finalizada', NULL, 1, null);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (2, 'Supermercado semanal', 320.75, '2026-08-08', NULL, 'categorizada', 'finalizada', NULL, 1, 16);
 INSERT INTO Saida (cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, qt_parcelas, FK_cd_carteira, FK_cd_categoria_gasto) VALUES (3, 'Parcela notebook 3/10', 250.00, '2026-08-01', '2026-08-15', 'parcelada', 'pendente', 10, 2, null);
