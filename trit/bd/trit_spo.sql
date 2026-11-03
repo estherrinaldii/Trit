@@ -723,7 +723,7 @@ delimiter $$
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
 		END IF;
 
-		SELECT du.FK_cd_desafio, du.FK_nm_email, du.ic_concluido, d.nm_desafio
+		SELECT du.cd_desafio_usuario, du.FK_cd_desafio, du.FK_nm_email, du.ic_concluido, d.nm_desafio
 		FROM Desafio_Usuario du
 		JOIN Desafio d ON d.cd_desafio = du.FK_cd_desafio
 		WHERE du.FK_nm_email = pEmail
