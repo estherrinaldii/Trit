@@ -397,7 +397,8 @@ function criarCategorias(local, txtTitulo, txtValorAtual, txtValorLimite, codigo
         infosControlado.appendChild(barraProgresso);
 
         const icone = document.createElement('img');
-        icone.src = "img/seta.svg";
+        icone.classList.add('icone');
+        icone.src = "img/seta-azul.svg";
 
     cardControlado.appendChild(infosControlado);
     cardControlado.appendChild(icone);

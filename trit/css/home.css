@@ -328,3 +328,7 @@ progress::-webkit-progress-value {
     display: flex;
     gap: 4px;
 }
+
+.icone{
+    transform: rotate(180deg);
+}

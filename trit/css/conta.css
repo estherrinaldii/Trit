@@ -85,6 +85,7 @@ progress::-webkit-progress-value {
     font-size: 24px;
     font-weight: 650;
     text-align: center;
+    font-family: "Bricolage Grotesque", sans-serif !important;
 }
 
 .tituloPagina{
@@ -94,6 +95,7 @@ progress::-webkit-progress-value {
 .tituloMenor{
     font-size: 20px;
     font-weight: 550;
+    font-family: "Bricolage Grotesque", sans-serif !important;
 }
 
 .tituloPopup{
