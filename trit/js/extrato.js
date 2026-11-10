@@ -1,3 +1,7 @@
+if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
+    window.location.href = "http://localhost/Trit/trit/login.html";
+}
+
 const btnExtrato = document.querySelector('#btnExtrato');
 const btnGraficos = document.querySelector('#btnGraficos');
 const areaDias = document.querySelector('section');

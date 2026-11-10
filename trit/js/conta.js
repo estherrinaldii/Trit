@@ -1,3 +1,7 @@
+if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
+    window.location.href = "http://localhost/Trit/trit/login.html";
+}
+
 import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha } from "./funcoes.js";
 
 const body = document.querySelector('body');
@@ -7,14 +11,44 @@ bloqueio.classList.add('bloqueio');
 const nomeUsuario = document.querySelector('.nome');
 const nivelAtual = document.querySelector('#nivelAtual');
 const proximoNivel = document.querySelector('#proximoNivel');
-const tarefasConcluidas = document.querySelector('.taferasConcluidas');
+const tarefasConcluidas = document.querySelector('.tarefasConcluidas');
+const progressoConcluidas = document.querySelector('.barraProgresso progress');
 const todasInsignias = document.querySelectorAll('.insignia');
 
+fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
+  method: "GET",
+	 credentials: "include",
+})
+  .then(function (resposta) {
+    if (!resposta.ok) {
+      throw new Error("Erro HTTP: " + resposta.status);
+    }
+    return resposta.json();
+  })
+  .then(function (dadosJSON) {
+    if (dadosJSON) {
+        let pontos = Number(dadosJSON.usuario[0].Pontos);
+        let nivel = pontos / 15;
+        nomeUsuario.textContent = dadosJSON.usuario[0].Nome;
+        nivelAtual.textContent = 'Nivel ' + nivel;
+        proximoNivel.textContent = 'Nivel ' + (nivel + 1);
+        
+        let restante = pontos;
+        while(restante >= 15){
+            restante -= 15;
+        }
+        tarefasConcluidas.textContent = restante + '/15';
+        progressoConcluidas.setAttribute('value', 0);
+        progressoConcluidas.setAttribute('max', 15);
+    }
+  })
+  .catch(function (error) {
+    console.warn(error);
+  });
 // fetch exibicao
 // nomeUsuario.textContent = nome do usuario
 // nivelAtual.textContent = 'Nivel ' + nivel em que o usuario está
 // proximoNivel.textContent = 'Nivel ' + nivel em que o usuario está +1
-// tarefasConcluidas.textContent = pontos q o usuario fez no seu nivel atual + '/15'
 // for que compara cada item de (todasInsignias) com as insignias que o usuario possui e se ele possuir remove a class (naoPossui)
 
 
