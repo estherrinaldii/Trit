@@ -11,6 +11,7 @@ btnExtrato.addEventListener('click', function(e){
 
     btnExtrato.classList.add('opcaoSelecionadaMenu');
     btnGraficos.classList.remove('opcaoSelecionadaMenu');
+    areaExtrato();
 })
 
 btnGraficos.addEventListener('click', function(e){
@@ -18,6 +19,11 @@ btnGraficos.addEventListener('click', function(e){
 
     btnGraficos.classList.add('opcaoSelecionadaMenu');
     btnExtrato.classList.remove('opcaoSelecionadaMenu');
+    if(document.querySelector('canvas')){
+        document.querySelector('canvas').remove();
+    }
+    areaDias.innerHTML = '';
+    areaGrafico();
 })
 
 const areaFiltros = document.querySelector('.filtros');
@@ -28,32 +34,7 @@ anoFiltro = Number(anoFiltro);
 let mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
 mesFiltro = qualNumero(mesFiltro);
 
-fetch("http://localhost/Trit/trit/api/listarExtrato.php", {
-  method: "GET",
-	 credentials: "include",
-})
-.then(function (resposta) {
-if (!resposta.ok) {
-    throw new Error("Erro HTTP: " + resposta.status);
-}
-return resposta.json();
-})
-.then(function (dadosJSON) {
-if (dadosJSON) {
-    if(dadosJSON.extrato.length > 0){
-        exibirExtrato(dadosJSON.extrato);
-    }else{
-        const semRegistros = document.createElement('p');
-        semRegistros.textContent = 'Nenhum registro para essa data';
-        semRegistros.classList.add('semRegistros');
-
-        areaDias.appendChild(semRegistros);
-    }
-}
-})
-.catch(function (error) {
-    console.warn(error);
-});
+areaExtrato();
 
 // const dias = document.querySelectorAll('.dia');
 // if(dias.length == 0)
@@ -64,6 +45,127 @@ if (dadosJSON) {
 
 //     areaDias.appendChild(semRegistros);
 // }
+function areaGrafico(){
+    let conjuntoNome = [];
+    let conjuntoValorCategoria = [];
+    fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+    if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+    }
+    return resposta.json();
+    })
+    .then(function (dadosJSON) {
+    if (dadosJSON) {
+        for (let i = 0; i < dadosJSON.categorias.length; i++) {
+            const categoria = dadosJSON.categorias[i];
+            fetch("http://localhost/Trit/trit/api/calcularValorGastoCategoria.php", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    "categoria":categoria.Codigo
+                }
+                ),
+            })
+            .then(function (resposta) {
+                if (!resposta.ok) {
+                    throw new Error("Erro HTTP: " + resposta.status);
+                }
+                return resposta.json();
+            })
+            .then(function (dadosJSON) {
+                if (dadosJSON) {
+                    conjuntoNome.push(String(categoria.Nome));
+                    conjuntoValorCategoria.push(Number(dadosJSON.Valor).toFixed(2));
+                }
+                
+            })
+            .catch(function (error) {
+                console.warn(error);
+            })
+            .finally(function () {
+            });         
+        }
+    }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    })
+    .finally(function () {
+        console.log(conjuntoNome);
+        console.log(conjuntoValorCategoria);
+        const grafico = document.createElement('canvas');
+        areaDias.appendChild(grafico);
+
+        const ctx = grafico.getContext('2d');
+        new Chart(ctx, {
+            type: 'pie', // Tipo do gráfico: 'bar', 'line', 'pie', etc.
+            data: {
+                labels: conjuntoNome,
+                datasets: [{
+                    label: 'Gastos por categoria',
+                    data: conjuntoValorCategoria,
+                    backgroundColor: [
+                        'rgba(9, 95, 184, 0.7)',
+                        'rgba(63, 81, 196, 0.7)',
+                        'rgba(118, 66, 207, 0.7)',
+                        'rgba(150, 52, 208, 0.7)',
+                        'rgba(183, 38, 209, 0.7)',
+                        'rgba(195, 36, 158, 0.7)',
+                        'rgba(207, 35, 107, 0.7)',
+                        'rgba(231, 60, 96, 0.7)',
+                        'rgba(255, 85, 85, 0.7)',
+                        'rgba(255, 120, 100, 0.7)'
+                    ],
+                }]
+            },
+            options: {
+                responsive: true        
+            },
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        });
+    });
+}
+
+function areaExtrato(){
+    areaDias.innerHTML = '';
+    fetch("http://localhost/Trit/trit/api/listarExtrato.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+    if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+    }
+    return resposta.json();
+    })
+    .then(function (dadosJSON) {
+    if (dadosJSON) {
+        if(dadosJSON.extrato.length > 0){
+            exibirExtrato(dadosJSON.extrato);
+        }else{
+            const semRegistros = document.createElement('p');
+            semRegistros.textContent = 'Nenhum registro para essa data';
+            semRegistros.classList.add('semRegistros');
+
+            areaDias.appendChild(semRegistros);
+        }
+    }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    });
+}
 
 
 function areaSelecaoMes()

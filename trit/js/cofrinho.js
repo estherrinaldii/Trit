@@ -1306,8 +1306,6 @@ function informacoesCofre()
 
                                     areaAlterarValor.remove();
                                     bloqueio.appendChild(areaConsultarCofre);
-                                    
-                                    
                                 }
 
                                 let valorExibir = Number(valorTotal).toFixed(2);

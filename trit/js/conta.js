@@ -45,10 +45,6 @@ fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
   .catch(function (error) {
     console.warn(error);
   });
-// fetch exibicao
-// nomeUsuario.textContent = nome do usuario
-// nivelAtual.textContent = 'Nivel ' + nivel em que o usuario está
-// proximoNivel.textContent = 'Nivel ' + nivel em que o usuario está +1
 // for que compara cada item de (todasInsignias) com as insignias que o usuario possui e se ele possuir remove a class (naoPossui)
 
 
