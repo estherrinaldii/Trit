@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha } from "./funcoes.js";
+import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha, verificarInsignias } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const bloqueio = document.createElement('div');
@@ -537,3 +537,6 @@ if(tituloExibir)
         //     imgInsignia.classList.remove('naoPossui'); 
     }
 }
+
+let insignias = verificarInsignias();
+console(insignias[0].Codigo);

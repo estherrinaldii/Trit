@@ -325,3 +325,24 @@ export function FormatarData(txtData){
     let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
     return dataFormatada;
 }
+
+export function verificarInsignias(){
+    let conjuntoInsignias = [];
+    fetch("http://localhost/Trit/trit/api/listarInsignias.php", {
+    method: "GET",
+        credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        conjuntoInsignias.push(...dadosJSON.insignias);                                                            
+    })
+    .catch(function (error) {
+        console.warn(error);
+    });
+    return conjuntoInsignias;
+}

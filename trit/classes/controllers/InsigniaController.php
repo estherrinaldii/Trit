@@ -6,7 +6,7 @@ class InsigniaController {
 
         foreach ($resposta as $linha){
            
-            $insignia = new Insignia($linha['cd_insignia'], $linha['nm_insignia'], $linha['nm_tipo_insignia']);
+            $insignia = new Insignia($linha['FK_cd_insignia'], $linha['nm_insignia'], $linha['nm_tipo_insignia']);
             array_push($insignias, $insignia);
         }
         return $insignias;
