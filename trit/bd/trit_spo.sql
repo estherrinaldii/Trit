@@ -697,6 +697,9 @@ delimiter $$
 	BEGIN
 		DECLARE qtdUsuario INT DEFAULT 0;
         
+        CALL `trit`.`verificar_insignias_cofrinho`(pEmail);
+
+        
         SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
 			IF qtdUsuario = 0 THEN
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
