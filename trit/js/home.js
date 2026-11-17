@@ -1345,6 +1345,9 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                             bloqueio.remove();
                             document.getElementById(codigo).remove();
                             bloqueio.innerHTML = '';
+                            if(document.querySelectorAll('.card').length < 5 && document.querySelector('.verMais')){
+                                document.querySelector('.verMais').remove();
+                            }
                         } 
                     })
                     .catch(function (error) {
