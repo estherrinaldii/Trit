@@ -15,6 +15,17 @@ const tarefasConcluidas = document.querySelector('.tarefasConcluidas');
 const progressoConcluidas = document.querySelector('.barraProgresso progress');
 const todasInsignias = document.querySelectorAll('.insignia');
 
+verificarInsignias().then(function(insignias) {
+    console.log(insignias);
+    for (let i = 0; i < insignias.length; i++) {
+        for (let j = 0; j < todasInsignias.length; j++) {
+            if(insignias[i].Codigo == todasInsignias[j].id){
+                todasInsignias[j].classList.remove('naoPossui');
+            }
+        }
+    }
+});
+
 fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
   method: "GET",
 	 credentials: "include",
@@ -514,13 +525,50 @@ if(tituloExibir)
     });
 }
 
-    verificarInsignias().then(function(insignias) {
-        console.log(insignias);
-        for (let i = 0; i < insignias.length; i++) {
-            for (let j = 0; j < todasInsignias.length; j++) {
-                if(insignias[i].Codigo == todasInsignias[j].id){
-                    todasInsignias[j].classList.remove('naoPossui');
-                }
-            }
+gerarDesafios();
+
+function gerarDesafios(){
+    const areaDesafios = document.querySelector('.areaDesafios');
+
+    fetch("http://localhost/Trit/trit/api/listarDesafios.php", {
+        method: "GET",
+	    credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
         }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+           for (let i = 0; i < dadosJSON.desafios.length; i++) {
+            const desafio = dadosJSON.desafios[i];
+            console.log(desafio);
+                const cardDesafio = document.createElement('div');
+                cardDesafio.classList.add('desafio');
+
+                const iconeDesafio = document.createElement('img');
+
+                if(desafio.Status == 1){
+                    cardDesafio.classList.add('concluido');
+                    iconeDesafio.src = `img/estrela_verde.svg`;
+                }else{
+                    cardDesafio.classList.remove('concluido');
+                    iconeDesafio.src = `img/estrela_cinza.svg`;
+                }
+
+                const tituloDesafio = document.createElement('p');
+                tituloDesafio.textContent = desafio.Nome;
+                
+                cardDesafio.appendChild(iconeDesafio);
+                cardDesafio.appendChild(tituloDesafio);
+
+                areaDesafios.appendChild(cardDesafio);
+           }
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
     });
+}
