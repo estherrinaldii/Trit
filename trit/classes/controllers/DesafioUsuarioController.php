@@ -12,5 +12,7 @@ class DesafioUsuarioController {
 
         return $desafios;
     }
+	
+	/*vou arrumar*/
 }
 ?>

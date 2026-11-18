@@ -2,14 +2,16 @@
 class DesafioUsuario extends Banco {
 	public $Codigo;
 	public $CodigoDesafio;
+	public $Nome;
 	public $Email;
 	public $Status;
 	public $Data;
 
 	
-	public function __construct($codigo = null, $codigoDesafio = null, $email = null, $status = null, $data = null) {
+	public function __construct($codigo = null, $codigoDesafio = null, $nome = null, $email = null, $status = null, $data = null) {
 		$this->Codigo = $codigo;
 		$this->CodigoDesafio = $codigoDesafio;
+		$this->Nome = $nome;
 		$this->Email = $email;
 		$this->Status = $status;
 		$this->Data = $data;
@@ -22,5 +24,7 @@ class DesafioUsuario extends Banco {
 
 		return self::Consultar('listar_desafios_usuario', $parametros);
 	}
+	
+	/*vou arrumar*/
 }
 ?>
