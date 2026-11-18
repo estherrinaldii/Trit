@@ -560,7 +560,7 @@ function exibirCofres()
         let nomePlanta = plantinha.querySelector('.plantaImg');
         nomePlanta = String(nomePlanta.src).split('/');
         nomePlanta = nomePlanta[7];
-        ajustaPercentual(null, null, plantinha, nomePlanta, plantinha.querySelector('.plantaImg'), null);
+        ajustaPercentual(null, null, plantinha, nomePlanta, plantinha.querySelector('.plantaImg'), null, plantinha.id);
        }
     });
 
@@ -1044,45 +1044,52 @@ function informacoesCofre()
 
                     if(plantaSelecionada.querySelector('.concluida'))
                     {
-                        bloqueio.innerHTML = '';
-        
-                        const areaAvisoConcluida = document.createElement('div');
-                        areaAvisoConcluida.classList.add('popup');
-                        areaAvisoConcluida.classList.add('areaAviso');
-                        areaAvisoConcluida.classList.add('comemorativo');
-        
-                        const aviso = document.createElement('p');
-                        aviso.textContent = 'Parabéns! Essa meta foi concluída.'
-        
-                        const btnOk = document.createElement('button');
-                        btnOk.classList.add('btnOk');
-                        btnOk.textContent = 'Ok';
-        
-                        areaAvisoConcluida.append(aviso, btnOk);
-                        bloqueio.appendChild(areaAvisoConcluida);
-                        body.appendChild(bloqueio);
-        
-                        btnOk.addEventListener('click', function(e){
-                            e.preventDefault();
-        
-                            areaAvisoConcluida.remove();
-                            bloqueio.appendChild(areaConsultarCofre);
-        
-                            const notificaConcluida = document.querySelectorAll('.concluida');
-                            console.log(notificaConcluida)
-                            for (let index = 0; index < notificaConcluida.length; index++) {
-                                const notificacao = notificaConcluida[index];
-                                console.log(notificacao)
+                        if(sessionStorage.getItem(cofrinho.Codigo) != 'confirmada'){
 
-                                if(notificacao.id == i)
-                                {
-                                    notificacao.remove();
+                            bloqueio.innerHTML = '';
+            
+                            const areaAvisoConcluida = document.createElement('div');
+                            areaAvisoConcluida.classList.add('popup');
+                            areaAvisoConcluida.classList.add('areaAviso');
+                            areaAvisoConcluida.classList.add('comemorativo');
+            
+                            const aviso = document.createElement('p');
+                            aviso.textContent = 'Parabéns! Essa meta foi concluída.'
+            
+                            const btnOk = document.createElement('button');
+                            btnOk.classList.add('btnOk');
+                            btnOk.textContent = 'Ok';
+            
+                            areaAvisoConcluida.append(aviso, btnOk);
+                            bloqueio.appendChild(areaAvisoConcluida);
+                            body.appendChild(bloqueio);
+            
+                            btnOk.addEventListener('click', function(e){
+                                e.preventDefault();
+            
+                                areaAvisoConcluida.remove();
+                                bloqueio.remove();
+                                
+                                const notificaConcluida = document.querySelectorAll('.concluida');
+                                plantaSelecionada.setAttribute('status', 'confirmada');
+                                sessionStorage.setItem(cofrinho.Codigo, plantaSelecionada.getAttribute('status'));
+                                plantaSelecionada.querySelector('.concluida').classList.remove('.concluida');
+                                plantaSelecionada.querySelector('.concluida').remove();
+    
+                                for (let index = 0; index < notificaConcluida.length; index++) {
+                                    const notificacao = notificaConcluida[index];
+                                    console.log(notificacao);
+    
+                                    if(notificacao.id == i)
+                                    {
+                                        notificacao.remove();
+                                    }
                                 }
-                            }
+                                
+                            })  
                             
-                        })  
-                        
-                        return;
+                            return;
+                        }
                     }
                 
                     body.appendChild(bloqueio);
@@ -1310,7 +1317,7 @@ function informacoesCofre()
 
                                 let valorExibir = Number(valorTotal).toFixed(2);
                                 valorDepositadoReal.textContent = String(valorExibir).replace('.',',');
-                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta, i);
+                                ajustaPercentual(valorTotal, valorMax, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta, i, cofrinho.Codigo);
                             })
                         })
         
@@ -1442,15 +1449,11 @@ function informacoesCofre()
                             let valorEnviar = String(txtValorLimite.value).replaceAll(',','.');
                             valorEnviar = Number(valorEnviar);
 
-                            console.log(txtData);
                             let dataEnviar = null;
                             if(txtData){
                                 dataEnviar = FormatarData(txtData);
                             }
         
-                            // fetch editar cofrinho:
-                            // valor limite = txtValorLimite.value;
-                            // data limite (se determinado) = txtData.value
                             fetch("http://localhost/Trit/trit/api/editarCofrinho.php", {
                             method: "PUT",
                             credentials: "include",
@@ -1480,12 +1483,7 @@ function informacoesCofre()
                                     areaEditarDados.remove();
                                     main.querySelector('.cofrinhos').textContent = '';
                                     exibirCofres();
-                                    // let nameTags = document.querySelectorAll('.tituloCofre');
-                                    // nameTags[i].textContent = txtNome.value;
-                                    // if(plantaSelecionada.querySelector('.determinado')){
-                                    //     plantaSelecionada.querySelector('.determinado p').textContent = txtData.value;
-                                    // }
-                                    // ajustaPercentual(Number(cofrinho.ValorAtual), valorEnviar, plantaSelecionada, cofrinho.Planta.Nome, imgPlanta);
+                                    prateleiraItens = 2;
                                 } 
                             })
                             .catch(function (error) {
@@ -1559,6 +1557,7 @@ function informacoesCofre()
                             .then(function (dadosJSON) {
                                 if (dadosJSON) {
                                     main.querySelector('.cofrinhos').textContent = '';
+                                    prateleiraItens = 2;
                                     exibirCofres();
                                 }
                             })
@@ -1579,7 +1578,7 @@ function informacoesCofre()
     }
 }
 
-function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotificacao){
+function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotificacao, codigo){
     const porcentagemPlanta = local.querySelector('.porcentagem');
     let porcentagemBruta = String(porcentagemPlanta.textContent).split('%');
     let percentual = Number(porcentagemBruta[0]);
@@ -1591,16 +1590,18 @@ function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotifi
 
     if(percentual >= 100)
     {
-        const statusConcluida = document.createElement('img');
-        statusConcluida.src = 'img/aviso-icon.svg';
-        statusConcluida.classList.add('status');
-        statusConcluida.classList.add('concluida');
-        statusConcluida.id = idNotificacao;
-
-        local.prepend(statusConcluida);
-
-        porcentagemPlanta.textContent = '100%';
-        porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+        if(sessionStorage.getItem(codigo) != 'confirmada'){
+            const statusConcluida = document.createElement('img');
+            statusConcluida.src = 'img/aviso-icon.svg';
+            statusConcluida.classList.add('status');
+            statusConcluida.classList.add('concluida');
+            statusConcluida.id = idNotificacao;
+    
+            local.prepend(statusConcluida);
+    
+            porcentagemPlanta.textContent = '100%';
+            porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+        }
 
         // fetch para somar um ao total de metas concluidas pelo user
     }
