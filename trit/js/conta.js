@@ -481,40 +481,46 @@ if(tituloExibir)
 
     const exibirInsignias = document.querySelector('section');
 
-    let qtdRepeticao = 0;
     let tipoInsignias = '';
 
     if(tituloExibir.textContent == 'Metas alcançadas')
     {
-        qtdRepeticao = 5;
-        tipoInsignias = 'metas';
+        tipoInsignias = 'cofrinho';
     }
     else
     {
-        qtdRepeticao = 4;
         tipoInsignias = 'nivel';
     }
-    
-    for (let i = 0; i < qtdRepeticao; i++) {
-        
-        const insigniaExibir = document.createElement('div');
-        insigniaExibir.classList.add('insigniaExibir');
 
-        const imgInsignia = document.createElement('img');
-        imgInsignia.src = 'img/insignias/' + tipoInsignias + '-' + i + '.svg';
-        imgInsignia.classList.add('naoPossui');
+    verificarInsignias().then(function(insignias) {
+        for (let i = 0; i < insignias.length; i++) {
+            if(insignias[i].Tipo == tipoInsignias){
+                const insigniaExibir = document.createElement('div');
+                insigniaExibir.classList.add('insigniaExibir');
+                insigniaExibir.id = insignias[i].Codigo;
 
-        const nomeInsignia = document.createElement('p');
+                const imgInsignia = document.createElement('img');
+                imgInsignia.src = 'img/insignias/' + tipoInsignias + '-' + insignias[i].Codigo + '.svg';
+                imgInsignia.classList.add('naoPossui');
 
-        insigniaExibir.append(imgInsignia, nomeInsignia);
-        exibirInsignias.appendChild(insigniaExibir);
-        
-        // fetch exibir insignias
-        // definir o nome correto dessa insignia (nomeInsignia.textContent)
-        // ver se o usuario possui ela, se sim:
-        //     imgInsignia.classList.remove('naoPossui'); 
-    }
+                const nomeInsignia = document.createElement('p');
+                nomeInsignia.textContent = insignias[i].Nome;
+
+                insigniaExibir.append(imgInsignia, nomeInsignia);
+                exibirInsignias.appendChild(insigniaExibir);
+                imgInsignia.classList.remove('naoPossui'); 
+            }
+        }
+    });
 }
 
-let insignias = verificarInsignias();
-console(insignias[0].Codigo);
+    verificarInsignias().then(function(insignias) {
+        console.log(insignias);
+        for (let i = 0; i < insignias.length; i++) {
+            for (let j = 0; j < todasInsignias.length; j++) {
+                if(insignias[i].Codigo == todasInsignias[j].id){
+                    todasInsignias[j].classList.remove('naoPossui');
+                }
+            }
+        }
+    });

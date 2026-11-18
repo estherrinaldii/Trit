@@ -327,8 +327,7 @@ export function FormatarData(txtData){
 }
 
 export function verificarInsignias(){
-    let conjuntoInsignias = [];
-    fetch("http://localhost/Trit/trit/api/listarInsignias.php", {
+    return fetch("http://localhost/Trit/trit/api/listarInsignias.php", {
     method: "GET",
         credentials: "include",
     })
@@ -339,10 +338,10 @@ export function verificarInsignias(){
         return resposta.json();
     })
     .then(function (dadosJSON) {
-        conjuntoInsignias.push(...dadosJSON.insignias);                                                            
+        return dadosJSON.insignias;
     })
     .catch(function (error) {
         console.warn(error);
+        return [];
     });
-    return conjuntoInsignias;
 }
