@@ -11,6 +11,9 @@ btnExtrato.addEventListener('click', function(e){
 
     btnExtrato.classList.add('opcaoSelecionadaMenu');
     btnGraficos.classList.remove('opcaoSelecionadaMenu');
+
+    document.querySelector('.guiaAtual').textContent = 'extrato';
+
     areaExtrato();
 })
 
@@ -19,11 +22,10 @@ btnGraficos.addEventListener('click', function(e){
 
     btnGraficos.classList.add('opcaoSelecionadaMenu');
     btnExtrato.classList.remove('opcaoSelecionadaMenu');
-    if(document.querySelector('canvas')){
-        document.querySelector('canvas').remove();
-    }
+    document.querySelector('.guiaAtual').textContent = 'graficos';
     areaDias.innerHTML = '';
-    areaGrafico();
+
+    graficosEstatico();
 })
 
 const areaFiltros = document.querySelector('.filtros');
@@ -45,6 +47,81 @@ areaExtrato();
 
 //     areaDias.appendChild(semRegistros);
 // }
+
+function graficosEstatico(){
+    const g1 = document.createElement('div');
+    g1.classList.add('areaGrafico');
+
+    const g1Img = document.createElement('img');
+    g1Img.src = 'img/graficos/g1.svg';
+
+    const gastos = document.createElement('div');
+
+    const arrayGastos = [
+        {
+            nome: 'Streaming',
+            cor: 'rgb(255, 85, 85)'
+        },
+        {
+            nome: 'Viagens',
+            cor: 'rgb(255, 128, 99)'
+        },
+        {
+            nome: 'Alimentação',
+            cor: 'rgb(255, 236, 158)'
+        },
+        {
+            nome: 'Shopping',
+            cor: 'rgb(212, 63, 175)'
+        },
+        {
+            nome: 'Moradia',
+            cor: 'rgb(159, 8, 183)'
+        },
+        {
+            nome: 'Pets',
+            cor: 'rgb(131, 9, 184)'
+        },
+        {
+            nome: 'Hobbies',
+            cor: 'rgb(46, 97, 176)'
+        }
+    ]
+
+    for (let i = 0; i < arrayGastos.length; i++) {
+        
+        const criarGasto = arrayGastos[i];
+
+        const gasto = document.createElement('div');
+        gasto.classList.add('gasto');
+
+        const corGasto = document.createElement('div');
+        corGasto.classList.add('corGasto');
+        corGasto.style.backgroundColor = criarGasto.cor;
+
+        const tituloGasto = document.createElement('p');
+        tituloGasto.textContent = criarGasto.nome;
+
+        gasto.append(corGasto, tituloGasto);
+        gastos.appendChild(gasto);
+        
+    }
+
+    const areaSaldo = document.createElement('div');
+
+    const tituloSaldo = document.createElement('div');
+
+    const gastoTotal = document.createElement('p');
+    gastoTotal.textContent = 'Gasto Total';
+
+    const saldo = document.createElement('p');
+    saldo.textContent = 'Saldo';
+
+    g1.append(g1Img, gastos);
+
+    areaDias.append(g1);
+}
+
 function areaGrafico(){
     let conjuntoNome = [];
     let conjuntoValorCategoria = [];
@@ -180,7 +257,7 @@ function areaSelecaoMes()
     mesSelecionado.classList.add('opcao');
     mesSelecionado.classList.add('opcaoSelecionada');
     mesSelecionado.classList.add('mesSelecionado');
-    mesSelecionado.textContent = 'Tudo';
+    mesSelecionado.textContent = 'Mês';
 
     const btnMaisOpcoes = document.createElement('button');
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
@@ -203,11 +280,6 @@ function areaSelecaoMes()
         mes.classList.add('opcao');
         mes.classList.add('mesEscolher');
         mes.textContent = meses[i];
-
-        if(i == 0)
-        {
-            mes.style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
-        }
 
         if(i == 12)
         {
@@ -332,7 +404,7 @@ function areaSelecaoAno()
     anoSelecionado.classList.add('opcao');
     anoSelecionado.classList.add('opcaoSelecionada');
     anoSelecionado.classList.add('anoSelecionado');
-    anoSelecionado.textContent = '2026';
+    anoSelecionado.textContent = 'Ano';
 
     const btnMaisOpcoes = document.createElement('button');
     btnMaisOpcoes.classList.add('btnMaisOpcoes');
@@ -344,12 +416,15 @@ function areaSelecaoAno()
     const naoSelecionado = document.createElement('div');
     naoSelecionado.classList.add('naoSelecionado');
 
+    const todos = document.createElement('p');
+    todos.classList.add('opcao');
+    todos.classList.add('anoEscolher');
+    todos.textContent = 'Tudo';
+
     const ano = document.createElement('p');
     ano.classList.add('opcao');
     ano.classList.add('anoEscolher');
     ano.textContent = '2026';
-    ano.style.backgroundColor = 'rgba(9, 95, 184, 0.21)';
-    ano.style.borderBottom = 'none';
 
     const ano2 = document.createElement('p');
     ano2.classList.add('opcao');
@@ -359,7 +434,7 @@ function areaSelecaoAno()
 
     btnMaisOpcoes.appendChild(iconMaisOpcoes);
     areaAnoSelecionado.append(anoSelecionado, btnMaisOpcoes);
-    naoSelecionado.append(ano, ano2);
+    naoSelecionado.append(todos, ano, ano2);
     selecionarAno.append(areaAnoSelecionado, naoSelecionado);
 
     let abaAberta = false;
