@@ -117,31 +117,9 @@ progress::-webkit-progress-value {
     align-items: center
 }
 
-.checkbox{
-    background-color: rgb(29, 59, 90, 0.46);
-    height: 24px;
-    width: 24px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.checkbox > img{
-    width: 90%;
-    display: none;
-}
-
 .concluido > p{
     color: rgb(29, 59, 90, 0.57);
-}
-
-.concluido > div{
-    background-color: rgb(157, 235, 125) !important;
-}
-
-.concluido > div > img{
-    display: block !important;
+    text-decoration: line-through;
 }
 
 .areaInsignias{

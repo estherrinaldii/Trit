@@ -440,28 +440,6 @@ if(btnEditar)
     })
 }
 
-const desafios = document.querySelectorAll('.desafio');
-
-if(desafios)
-{
-    for (let i = 0; i < desafios.length; i++) {
-        const checkbox = desafios[i];
-
-        checkbox.addEventListener('click', function(e){
-            e.preventDefault();
-
-            if(!checkbox.classList.contains('concluido'))
-            {
-                checkbox.classList.add('concluido');
-            }
-            else
-            {
-                checkbox.classList.remove('concluido');
-            }
-        })
-    }
-}
-
 const abrirInsignias = document.querySelectorAll('.tituloInsignias');
 
 if(abrirInsignias)
