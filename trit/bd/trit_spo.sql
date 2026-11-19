@@ -751,7 +751,7 @@ END$$
 		SELECT COUNT(*) INTO vPendentes
 			FROM Desafio_Usuario
 			WHERE FK_nm_email = pEmail AND ic_concluido = 0;
-		SET vFaltam = GREATEST(2 - vPendentes, 0);
+		SET vFaltam = GREATEST(3 - vPendentes, 0);
 
 		INSERT IGNORE INTO Desafio_Usuario (FK_cd_desafio, FK_nm_email, ic_concluido)
 		SELECT cd_desafio, pEmail, 0
