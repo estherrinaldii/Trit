@@ -751,7 +751,7 @@ END$$
 		SELECT COUNT(*) INTO vPendentes
 			FROM Desafio_Usuario
 			WHERE FK_nm_email = pEmail AND ic_concluido = 0;
-		SET vFaltam = GREATEST(2 - vPendentes, 0);
+		SET vFaltam = GREATEST(3 - vPendentes, 0);
 
 		INSERT IGNORE INTO Desafio_Usuario (FK_cd_desafio, FK_nm_email, ic_concluido)
 		SELECT cd_desafio, pEmail, 0
@@ -802,5 +802,15 @@ END$$
 		SELECT cd_insignia, nm_insignia, nm_tipo_insignia FROM trit.insignia;
 	END$$
     
-    
+    DROP PROCEDURE IF EXISTS listar_saidas_pendentes$$
+    CREATE PROCEDURE listar_saidas_pendentes(pEmail VARCHAR(200))
+	BEGIN
+	SELECT s.cd_saida, s.nm_saida, s.vl_saida, s.dt_saida, s.dt_prazo_saida, s.ic_tipo_saida, s.ic_status_saida, s.qt_parcelas,
+	c.FK_nm_email
+	FROM trit.saida s
+	JOIN trit.carteira c
+	ON s.FK_cd_carteira = c.`cd_carteira`
+	WHERE ic_status_saida = 'pendente'
+	AND FK_nm_email = pEmail; 
+	END$$
 delimiter ;
