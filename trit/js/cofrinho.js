@@ -298,6 +298,8 @@ function botaoAdicionar()
     btnAdicionar.addEventListener('click', function(e){
         e.preventDefault();
 
+        bloqueio.innerHTML = '';
+
         const areaCriarCofre = document.createElement('div');
         areaCriarCofre.classList.add('popup');
 
@@ -821,6 +823,8 @@ function informacoesCofre()
             .then(function (dadosJSON) {
                 if (dadosJSON) {
 
+                    bloqueio.innerHTML = '';
+
                     const cofrinho = dadosJSON.cofrinhos[i];
 
                     areaConsultarCofre = document.createElement('div');
@@ -913,7 +917,9 @@ function informacoesCofre()
                     tituloPeriodo.classList.add('tituloInfos');
 
                     const tipoPeriodo = document.createElement('p');
-                    tipoPeriodo.textContent = cofrinho.Tipo;
+                    tipoPeriodo.textContent = cofrinho.tipo;
+
+                    // cofrinho.tipo.charAt(0).toUpperCase() + cofrinho.tipo.slice(1);
 
                     areaPeriodo.append(tituloPeriodo, tipoPeriodo);
 
@@ -1102,6 +1108,7 @@ function informacoesCofre()
                             e.preventDefault();
         
                             areaConsultarCofre.remove();
+                            bloqueio.innerHTML = '';
         
                             const areaAlterarValor = document.createElement('div');
                             areaAlterarValor.classList.add('popup');
@@ -1198,6 +1205,7 @@ function informacoesCofre()
                                     
                                     if(valorPossui < valorMax && valorTotal > valorMax)
                                     {
+                                        bloqueio.innerHTML = '';
                                         areaAlterarValor.remove();
         
                                         const areaAviso = document.createElement('div');
@@ -1242,6 +1250,7 @@ function informacoesCofre()
                                     }
                                     else
                                     {
+                                        bloqueio.innerHTML = '';
                                         areaAlterarValor.remove();
                                         bloqueio.appendChild(areaConsultarCofre);
                                     }
@@ -1280,6 +1289,7 @@ function informacoesCofre()
                                 }
                                 else
                                 {
+                                    bloqueio.innerHTML = '';
                                     if(valorDigitado > valorPossui)
                                     {
                                         erro(msgErro, txtValor, 'Saldo insuficiente!', areaInfos);
@@ -1335,6 +1345,7 @@ function informacoesCofre()
                     btnEditar.addEventListener('click', function(e){
                         e.preventDefault();
         
+                        bloqueio.innerHTML = '';
                         areaConsultarCofre.remove();
         
                         const areaEditarDados = document.createElement('div');
@@ -1505,6 +1516,7 @@ function informacoesCofre()
                     btnExcluir.addEventListener('click',function(e){
                         e.preventDefault();
         
+                        bloqueio.innerHTML = '';
                         areaConsultarCofre.remove();
         
                         const areaAviso = document.createElement('div');
