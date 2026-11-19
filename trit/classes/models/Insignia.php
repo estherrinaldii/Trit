@@ -18,5 +18,8 @@ class Insignia extends Banco {
 
 		return self::Consultar('listar_insignias', $parametros);
 	}
-}
-?>
+
+	public static function ListarTodas(){
+		return self::Consultar('listar_todas_insignias');
+	}
+}?>
