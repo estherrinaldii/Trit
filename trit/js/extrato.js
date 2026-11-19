@@ -38,16 +38,6 @@ mesFiltro = qualNumero(mesFiltro);
 
 areaExtrato();
 
-// const dias = document.querySelectorAll('.dia');
-// if(dias.length == 0)
-// {
-//     const semRegistros = document.createElement('p');
-//     semRegistros.textContent = 'Nenhum registro para essa data';
-//     semRegistros.classList.add('semRegistros');
-
-//     areaDias.appendChild(semRegistros);
-// }
-
 function graficosEstatico(){
     const g1 = document.createElement('div');
     g1.classList.add('areaGrafico');
