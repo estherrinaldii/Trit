@@ -52,39 +52,40 @@ function graficosEstatico(){
     const g1 = document.createElement('div');
     g1.classList.add('areaGrafico');
 
-    const g1Img = document.createElement('img');
-    g1Img.src = 'img/graficos/g1.svg';
+    const graficoImg = document.createElement('img');
+    graficoImg.src = 'img/graficos/g1.png';
+    graficoImg.classList.add('graficoImg');
 
     const gastos = document.createElement('div');
 
     const arrayGastos = [
         {
             nome: 'Streaming',
-            cor: 'rgb(255, 85, 85)'
+            cor: '#095FB8'
         },
         {
             nome: 'Viagens',
-            cor: 'rgb(255, 128, 99)'
+            cor: '#4C2CA3'
         },
         {
             nome: 'Alimentação',
-            cor: 'rgb(255, 236, 158)'
+            cor: '#8312B8'
         },
         {
             nome: 'Shopping',
-            cor: 'rgb(212, 63, 175)'
+            cor: '#A62189'
         },
         {
             nome: 'Moradia',
-            cor: 'rgb(159, 8, 183)'
+            cor: '#C4336B'
         },
         {
             nome: 'Pets',
-            cor: 'rgb(131, 9, 184)'
+            cor: '#FF5555'
         },
         {
             nome: 'Hobbies',
-            cor: 'rgb(46, 97, 176)'
+            cor: '#C7371E'
         }
     ]
 
@@ -117,7 +118,7 @@ function graficosEstatico(){
     const saldo = document.createElement('p');
     saldo.textContent = 'Saldo';
 
-    g1.append(g1Img, gastos);
+    g1.append(graficoImg, gastos);
 
     areaDias.append(g1);
 }

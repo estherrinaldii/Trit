@@ -188,6 +188,9 @@ section{
     color: rgb(29, 59, 90);
 }
 
+.graficoImg{
+    width: 300px;
+}
 .gasto{
     display: flex;
     gap: 8px;
