@@ -39,171 +39,350 @@ mesFiltro = qualNumero(mesFiltro);
 areaExtrato();
 
 function graficosEstatico(){
-    const g1 = document.createElement('div');
-    g1.classList.add('areaGrafico');
-
-    const graficoImg = document.createElement('img');
-    graficoImg.src = 'img/graficos/g1.png';
-    graficoImg.classList.add('graficoImg');
-
-    const gastos = document.createElement('div');
 
     const arrayGastos = [
-        {
-            nome: 'Streaming',
-            cor: '#095FB8'
-        },
-        {
-            nome: 'Viagens',
-            cor: '#4C2CA3'
-        },
-        {
-            nome: 'Alimentação',
-            cor: '#8312B8'
-        },
-        {
-            nome: 'Shopping',
-            cor: '#A62189'
-        },
-        {
-            nome: 'Moradia',
-            cor: '#C4336B'
-        },
-        {
-            nome: 'Pets',
-            cor: '#FF5555'
-        },
-        {
-            nome: 'Hobbies',
-            cor: '#C7371E'
-        }
+        [
+            {
+                nome: 'Streaming',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Viagens',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'Alimentação',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Shopping',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Moradia',
+                cor: '#C4336B'
+            },
+            {
+                nome: 'Pets',
+                cor: '#FF5555'
+            },
+            {
+                nome: 'Hobbies',
+                cor: '#C7371E'
+            }
+        ],
+        [
+            {
+                nome: 'Aluguel',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Luz',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'IPTU',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Água',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Internet',
+                cor: '#C4336B'
+            },
+            {
+                nome: 'Spotify',
+                cor: '#FF5555'
+            }
+        ],
+        [
+            {
+                nome: 'TV',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Celular novo',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'Roupas da shein',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Conserto do carro',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Guitarra',
+                cor: '#C4336B'
+            },
+            {
+                nome: 'Bolo de aniversário',
+                cor: '#FF5555'
+            }
+        ],
+        [
+            {
+                nome: 'Streaming',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Coleção de photocard',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'Alimentação',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Shopping',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Moradia',
+                cor: '#C4336B'
+            },
+        ],
+        [
+            {
+                nome: 'Aluguel',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Luz',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'IPTU',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Água',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Internet',
+                cor: '#C4336B'
+            },
+            {
+                nome: 'Spotify',
+                cor: '#FF5555'
+            },
+            {
+                nome: 'Disney+',
+                cor: '#C7371E'
+            }
+        ],
+        [
+            {
+                nome: 'TV',
+                cor: '#095FB8'
+            },
+            {
+                nome: 'Celular novo',
+                cor: '#4C2CA3'
+            },
+            {
+                nome: 'Roupas da shein',
+                cor: '#8312B8'
+            },
+            {
+                nome: 'Conserto do carro',
+                cor: '#A62189'
+            },
+            {
+                nome: 'Gaiola do papagaio',
+                cor: '#C4336B'
+            },
+            {
+                nome: 'Bolo de aniversário',
+                cor: '#FF5555'
+            }
+        ],
     ]
 
-    for (let i = 0; i < arrayGastos.length; i++) {
-        
-        const criarGasto = arrayGastos[i];
+    const valorTotal = ['1208,00', '1012,00', '862,00', '1116,00', '931,00', '1008,00'];
 
-        const gasto = document.createElement('div');
-        gasto.classList.add('gasto');
+    let imgGraficos = 6;
 
-        const corGasto = document.createElement('div');
-        corGasto.classList.add('corGasto');
-        corGasto.style.backgroundColor = criarGasto.cor;
+    const dataNovembro = document.createElement('p');
+    dataNovembro.textContent = 'Novembro de 2026';
+    dataNovembro.classList.add('tituloGeral');
 
-        const tituloGasto = document.createElement('p');
-        tituloGasto.textContent = criarGasto.nome;
+    for (let index = 0; index < imgGraficos; index++) {
 
-        gasto.append(corGasto, tituloGasto);
-        gastos.appendChild(gasto);
-        
-    }
+        if(index == 3)
+        {
+            const dataOutubro = document.createElement('p');
+            dataOutubro.textContent = 'Outubro de 2026';
+            dataOutubro.classList.add('tituloGeral');
+            dataOutubro.style.marginTop = '16px'
 
-    const areaSaldo = document.createElement('div');
-
-    const tituloSaldo = document.createElement('div');
-
-    const gastoTotal = document.createElement('p');
-    gastoTotal.textContent = 'Gasto Total';
-
-    const saldo = document.createElement('p');
-    saldo.textContent = 'Saldo';
-
-    g1.append(graficoImg, gastos);
-
-    areaDias.append(g1);
-}
-
-function areaGrafico(){
-    let conjuntoNome = [];
-    let conjuntoValorCategoria = [];
-    fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
-    method: "GET",
-        credentials: "include",
-    })
-    .then(function (resposta) {
-    if (!resposta.ok) {
-        throw new Error("Erro HTTP: " + resposta.status);
-    }
-    return resposta.json();
-    })
-    .then(function (dadosJSON) {
-    if (dadosJSON) {
-        for (let i = 0; i < dadosJSON.categorias.length; i++) {
-            const categoria = dadosJSON.categorias[i];
-            fetch("http://localhost/Trit/trit/api/calcularValorGastoCategoria.php", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-                {
-                    "categoria":categoria.Codigo
-                }
-                ),
-            })
-            .then(function (resposta) {
-                if (!resposta.ok) {
-                    throw new Error("Erro HTTP: " + resposta.status);
-                }
-                return resposta.json();
-            })
-            .then(function (dadosJSON) {
-                if (dadosJSON) {
-                    conjuntoNome.push(String(categoria.Nome));
-                    conjuntoValorCategoria.push(Number(dadosJSON.Valor).toFixed(2));
-                }
-                
-            })
-            .catch(function (error) {
-                console.warn(error);
-            })
-            .finally(function () {
-            });         
+            areaDias.appendChild(dataOutubro);
         }
-    }
-    })
-    .catch(function (error) {
-        console.warn(error);
-    })
-    .finally(function () {
-        console.log(conjuntoNome);
-        console.log(conjuntoValorCategoria);
-        const grafico = document.createElement('canvas');
-        areaDias.appendChild(grafico);
+        
+        const areaGrafico = document.createElement('div');
+        areaGrafico.classList.add('areaGrafico');
 
-        const ctx = grafico.getContext('2d');
-        new Chart(ctx, {
-            type: 'pie', // Tipo do gráfico: 'bar', 'line', 'pie', etc.
-            data: {
-                labels: conjuntoNome,
-                datasets: [{
-                    label: 'Gastos por categoria',
-                    data: conjuntoValorCategoria,
-                    backgroundColor: [
-                        'rgba(9, 95, 184, 0.7)',
-                        'rgba(63, 81, 196, 0.7)',
-                        'rgba(118, 66, 207, 0.7)',
-                        'rgba(150, 52, 208, 0.7)',
-                        'rgba(183, 38, 209, 0.7)',
-                        'rgba(195, 36, 158, 0.7)',
-                        'rgba(207, 35, 107, 0.7)',
-                        'rgba(231, 60, 96, 0.7)',
-                        'rgba(255, 85, 85, 0.7)',
-                        'rgba(255, 120, 100, 0.7)'
-                    ],
-                }]
-            },
-            options: {
-                responsive: true        
-            },
-            legend: {
-                display: true,
-                position: 'bottom'
+        const tipoGrafico = document.createElement('p');
+        tipoGrafico.classList.add('tituloMenor');
+
+        if(index == 0 || index == 3)
+        {
+            tipoGrafico.textContent = 'Gastos categorizados';
+        }
+        else
+        {
+            if(index == 1 || index == 4)
+            {
+                tipoGrafico.textContent = 'Gastos Fixos';
             }
-        });
-    });
+            else
+            {
+                tipoGrafico.textContent = 'Gastos Parcelados';
+            }
+        }
+
+        const graficoImg = document.createElement('img');
+        graficoImg.src = 'img/graficos/g' + index + '.png';
+        graficoImg.classList.add('graficoImg');
+
+        const gastos = document.createElement('div');
+        gastos.classList.add('gastos');
+
+        for (let i = 0; i < arrayGastos[index].length; i++) {
+
+            const criarGasto = arrayGastos[index][i];
+    
+            const gasto = document.createElement('div');
+            gasto.classList.add('gasto');
+    
+            const corGasto = document.createElement('div');
+            corGasto.classList.add('corGasto');
+            corGasto.style.backgroundColor = criarGasto.cor;
+    
+            const tituloGasto = document.createElement('p');
+            tituloGasto.textContent = criarGasto.nome;
+    
+            gasto.append(corGasto, tituloGasto);
+            gastos.appendChild(gasto);
+            
+        }
+
+        const areaSaldo = document.createElement('div');
+        areaSaldo.classList.add('areaSaldo');
+    
+        const tituloSaldo = document.createElement('p');
+        tituloSaldo.textContent = 'Gasto total';
+        tituloSaldo.classList.add('tituloSaldo');
+
+        const saldo = document.createElement('p');
+        saldo.textContent = 'R$' + valorTotal[index];
+
+        areaSaldo.append(tituloSaldo, saldo);
+
+        areaGrafico.append(tipoGrafico, graficoImg, gastos, areaSaldo);
+
+        areaDias.appendChild(areaGrafico);
+    }
+
+    const areaGrafico = document.querySelectorAll('.areaGrafico');
+    areaDias.prepend(dataNovembro);
 }
+
+// function areaGrafico(){
+//     let conjuntoNome = [];
+//     let conjuntoValorCategoria = [];
+//     fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
+//     method: "GET",
+//         credentials: "include",
+//     })
+//     .then(function (resposta) {
+//     if (!resposta.ok) {
+//         throw new Error("Erro HTTP: " + resposta.status);
+//     }
+//     return resposta.json();
+//     })
+//     .then(function (dadosJSON) {
+//     if (dadosJSON) {
+//         for (let i = 0; i < dadosJSON.categorias.length; i++) {
+//             const categoria = dadosJSON.categorias[i];
+//             fetch("http://localhost/Trit/trit/api/calcularValorGastoCategoria.php", {
+//             method: "POST",
+//             credentials: "include",
+//             headers: {
+//             "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify(
+//                 {
+//                     "categoria":categoria.Codigo
+//                 }
+//                 ),
+//             })
+//             .then(function (resposta) {
+//                 if (!resposta.ok) {
+//                     throw new Error("Erro HTTP: " + resposta.status);
+//                 }
+//                 return resposta.json();
+//             })
+//             .then(function (dadosJSON) {
+//                 if (dadosJSON) {
+//                     conjuntoNome.push(String(categoria.Nome));
+//                     conjuntoValorCategoria.push(Number(dadosJSON.Valor).toFixed(2));
+//                 }
+                
+//             })
+//             .catch(function (error) {
+//                 console.warn(error);
+//             })
+//             .finally(function () {
+//             });         
+//         }
+//     }
+//     })
+//     .catch(function (error) {
+//         console.warn(error);
+//     })
+//     .finally(function () {
+//         console.log(conjuntoNome);
+//         console.log(conjuntoValorCategoria);
+//         const grafico = document.createElement('canvas');
+//         areaDias.appendChild(grafico);
+
+//         const ctx = grafico.getContext('2d');
+//         new Chart(ctx, {
+//             type: 'pie', // Tipo do gráfico: 'bar', 'line', 'pie', etc.
+//             data: {
+//                 labels: conjuntoNome,
+//                 datasets: [{
+//                     label: 'Gastos por categoria',
+//                     data: conjuntoValorCategoria,
+//                     backgroundColor: [
+//                         'rgba(9, 95, 184, 0.7)',
+//                         'rgba(63, 81, 196, 0.7)',
+//                         'rgba(118, 66, 207, 0.7)',
+//                         'rgba(150, 52, 208, 0.7)',
+//                         'rgba(183, 38, 209, 0.7)',
+//                         'rgba(195, 36, 158, 0.7)',
+//                         'rgba(207, 35, 107, 0.7)',
+//                         'rgba(231, 60, 96, 0.7)',
+//                         'rgba(255, 85, 85, 0.7)',
+//                         'rgba(255, 120, 100, 0.7)'
+//                     ],
+//                 }]
+//             },
+//             options: {
+//                 responsive: true        
+//             },
+//             legend: {
+//                 display: true,
+//                 position: 'bottom'
+//             }
+//         });
+//     });
+// }
 
 function areaExtrato(){
     areaDias.innerHTML = '';
