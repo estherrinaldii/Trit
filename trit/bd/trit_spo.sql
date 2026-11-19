@@ -802,5 +802,15 @@ END$$
 		SELECT cd_insignia, nm_insignia, nm_tipo_insignia FROM trit.insignia;
 	END$$
     
-    
+    DROP PROCEDURE IF EXISTS listar_saidas_pendentes$$
+    CREATE PROCEDURE listar_saidas_pendentes(pEmail VARCHAR(200))
+	BEGIN
+	SELECT s.cd_saida, s.nm_saida, s.vl_saida, s.dt_saida, s.dt_prazo_saida, s.ic_tipo_saida, s.ic_status_saida, s.qt_parcelas,
+	c.FK_nm_email
+	FROM trit.saida s
+	JOIN trit.carteira c
+	ON s.FK_cd_carteira = c.`cd_carteira`
+	WHERE ic_status_saida = 'pendente'
+	AND FK_nm_email = pEmail; 
+	END$$
 delimiter ;
