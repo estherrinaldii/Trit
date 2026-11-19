@@ -503,25 +503,47 @@ if(tituloExibir)
         tipoInsignias = 'nivel';
     }
 
-    verificarInsignias().then(function(insignias) {
-        for (let i = 0; i < insignias.length; i++) {
-            if(insignias[i].Tipo == tipoInsignias){
-                const insigniaExibir = document.createElement('div');
-                insigniaExibir.classList.add('insigniaExibir');
-                insigniaExibir.id = insignias[i].Codigo;
-
-                const imgInsignia = document.createElement('img');
-                imgInsignia.src = 'img/insignias/' + tipoInsignias + '-' + insignias[i].Codigo + '.svg';
-                imgInsignia.classList.add('naoPossui');
-
-                const nomeInsignia = document.createElement('p');
-                nomeInsignia.textContent = insignias[i].Nome;
-
-                insigniaExibir.append(imgInsignia, nomeInsignia);
-                exibirInsignias.appendChild(insigniaExibir);
-                imgInsignia.classList.remove('naoPossui'); 
+    fetch("http://localhost/Trit/trit/api/listarTodasInsignias.php", {
+        method: "GET",
+	    credentials: "include",
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+            console.log(dadosJSON);
+            for (let i = 0; i < dadosJSON.insignias.length; i++) {
+                if(dadosJSON.insignias[i].Tipo == tipoInsignias){
+                    const insigniaExibir = document.createElement('div');
+                    insigniaExibir.classList.add('insigniaExibir');
+                    insigniaExibir.id = dadosJSON.insignias[i].Codigo;
+    
+                    const imgInsignia = document.createElement('img');
+                    imgInsignia.src = 'img/insignias/' + tipoInsignias + '-' + dadosJSON.insignias[i].Codigo + '.svg';
+                    imgInsignia.classList.add('naoPossui');
+                    verificarInsignias().then(function(insignias) {
+                        for (let j = 0; j < insignias.length; j++) {
+                            if(insignias[j].Codigo == dadosJSON.insignias[i].Codigo){
+                                imgInsignia.classList.remove('naoPossui'); 
+                            }
+                        }
+                    });
+    
+                    const nomeInsignia = document.createElement('p');
+                    nomeInsignia.textContent = dadosJSON.insignias[i].Nome;
+    
+                    insigniaExibir.append(imgInsignia, nomeInsignia);
+                    exibirInsignias.appendChild(insigniaExibir);
+                }
             }
         }
+    })
+    .catch(function (error) {
+        console.warn(error);
     });
 }
 

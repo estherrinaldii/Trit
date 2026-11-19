@@ -139,3 +139,7 @@ section{
     transform: rotate(180deg);
     height: 20px;
 }
+
+#calendario{
+    height: fit-content;
+}

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "chart.js": "^4.6.1"
+    "fullcalendar": "^7.1.5",
+    "temporal-polyfill": "^1.0.8"
   }
 }

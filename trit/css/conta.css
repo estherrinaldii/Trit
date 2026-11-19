@@ -4,7 +4,7 @@ main{
     gap: 20px;
     align-items: center;
     margin-top: 24px;
-    color: rgb(145, 198, 252);
+    color: rgb(29, 59, 90);
     font-size: 16px;
 }
 
@@ -175,7 +175,7 @@ progress::-webkit-progress-value {
     gap: 4px;
     width: 100%;
     text-align: center;
-    font-size: 14px;
+    font-size: 12.5px;
 }
 
 button{

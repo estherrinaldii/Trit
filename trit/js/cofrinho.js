@@ -1073,7 +1073,6 @@ function informacoesCofre()
                                 const notificaConcluida = document.querySelectorAll('.concluida');
                                 plantaSelecionada.setAttribute('status', 'confirmada');
                                 sessionStorage.setItem(cofrinho.Codigo, plantaSelecionada.getAttribute('status'));
-                                plantaSelecionada.querySelector('.concluida').classList.remove('.concluida');
                                 plantaSelecionada.querySelector('.concluida').remove();
     
                                 for (let index = 0; index < notificaConcluida.length; index++) {
@@ -1268,6 +1267,11 @@ function informacoesCofre()
                                     })
                                     .then(function (dadosJSON) {
                                         if (dadosJSON) {
+                                            areaAlterarValor.remove();
+                                            bloqueio.appendChild(areaConsultarCofre);
+                                            main.querySelector('.cofrinhos').textContent = '';
+                                            prateleiraItens = 2;
+                                            exibirCofres();
                                         }
                                     })
                                     .catch(function (error) {
@@ -1305,6 +1309,11 @@ function informacoesCofre()
                                     })
                                     .then(function (dadosJSON) {
                                         if (dadosJSON) {
+                                            areaAlterarValor.remove();
+                                            bloqueio.appendChild(areaConsultarCofre);
+                                            main.querySelector('.cofrinhos').textContent = '';
+                                            prateleiraItens = 2;
+                                            exibirCofres();
                                         }
                                     })
                                     .catch(function (error) {
@@ -1477,21 +1486,20 @@ function informacoesCofre()
                                 return resposta.json();
                             })
                             .then(function (dadosJSON) {
-                                if (dadosJSON) {
-                                    
+                                if (dadosJSON) { 
                                     bloqueio.remove()
                                     areaEditarDados.remove();
                                     main.querySelector('.cofrinhos').textContent = '';
-                                    exibirCofres();
                                     prateleiraItens = 2;
+                                    exibirCofres();
                                 } 
                             })
                             .catch(function (error) {
                                 console.warn(error);
-                            });
+                            })
 
                         })
-        
+                        
                     })
         
                     btnExcluir.addEventListener('click',function(e){
@@ -1590,17 +1598,17 @@ function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotifi
 
     if(percentual >= 100)
     {
+        porcentagemPlanta.textContent = '100%';
+        porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
+
         if(sessionStorage.getItem(codigo) != 'confirmada'){
             const statusConcluida = document.createElement('img');
+            statusConcluida.classList.add('concluida');
             statusConcluida.src = 'img/aviso-icon.svg';
             statusConcluida.classList.add('status');
-            statusConcluida.classList.add('concluida');
             statusConcluida.id = idNotificacao;
     
             local.prepend(statusConcluida);
-    
-            porcentagemPlanta.textContent = '100%';
-            porcentagemPlanta.style.color = 'rgb(157, 235, 125)';
         }
 
         // fetch para somar um ao total de metas concluidas pelo user

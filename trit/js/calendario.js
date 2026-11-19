@@ -1,40 +1,6 @@
-const pendencias = document.querySelectorAll('.pendencia');
-
-for (let i = 0; i < pendencias.length; i++) {
-    const checkbox = pendencias[i];
-
-    checkbox.addEventListener('click', function(e){
-        e.preventDefault();
-
-        if(!checkbox.classList.contains('concluido'))
-        {
-            checkbox.classList.add('concluido');
-        }
-        else
-        {
-            checkbox.classList.remove('concluido');
-        }
-    })
+if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
+    window.location.href = "http://localhost/Trit/trit/login.html";
 }
-
-fetch("http://localhost/Trit/trit/api/listarCategorias.php", {
-method: "GET",
-    credentials: "include",
-})
-.then(function (resposta) {
-if (!resposta.ok) {
-    throw new Error("Erro HTTP: " + resposta.status);
-}
-return resposta.json();
-})
-.then(function (dadosJSON) {
-if (dadosJSON) {
-    console.log(dadosJSON)
-}
-})
-.catch(function (error) {
-    console.warn(error);
-});
 
 function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtual, txtParcelaTotal){
     const areaMensal = document.querySelector('.gastosMensais');
@@ -113,4 +79,40 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
     gasto.appendChild(icone);
 
     areaMensal.appendChild(gasto);
+}
+
+function criarPendencia(txtNome){
+    const areaPendencia = document.querySelector('areaPendencia');
+
+    const card = document.createElement('div');
+    card.classList.add('pendencia');
+
+        const areaConfirmacao = document.createElement('div');
+        areaConfirmacao.classList.add('checkbox');
+            
+            const iconeConfirmar = document.createElement('img');
+            iconeConfirmar.src = 'img/check-icon.svg';
+
+            areaConfirmacao.addEventListener('click', function(e){
+                e.preventDefault();
+        
+                if(!checkbox.classList.contains('concluido'))
+                {
+                    checkbox.classList.add('concluido');
+                }
+                else
+                {
+                    checkbox.classList.remove('concluido');
+                }
+            });
+
+        areaConfirmacao.appendChild(iconeConfirmar);
+
+            const titulo = document.createElement('p');
+            titulo.textContent = txtNome;
+
+    card.appendChild(areaConfirmacao);
+    card.appendChild(titulo);
+
+    areaPendencia.appendChild(card);
 }
