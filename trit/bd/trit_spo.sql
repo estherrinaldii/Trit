@@ -796,5 +796,11 @@ END$$
 		CALL calcular_desafios_cofrinhos_concluidos(pEmail);
 	END$$
     
+    DROP PROCEDURE IF EXISTS listar_todas_insignias$$
+	CREATE PROCEDURE `listar_todas_insignias`()
+	BEGIN
+		SELECT cd_insignia, nm_insignia, nm_tipo_insignia FROM trit.insignia;
+	END$$
+    
     
 delimiter ;
