@@ -57,5 +57,14 @@ class Saida extends Banco {
 
 		return self::Consultar('listar_saidas_pendentes', $parametros);
 	}
+
+	public static function ListarTipos($email, $tipo){
+		$parametros = [
+			'pEmail' => $email,
+			'pTipo' => $tipo
+		];
+
+		return self::Consultar('listar_saidas_por_tipo', $parametros);
+	}
 }
 ?>
