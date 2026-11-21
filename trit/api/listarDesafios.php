@@ -14,6 +14,15 @@ if ($metodo != 'GET')
 	return;
 }
 
+if(!isset($_SESSION['logado'])){
+	http_response_code(401);
+    echo json_encode([
+        'status' => 'error',
+        'mensagem' => 'Sessão inválida ou não encontrada.'
+    ]);
+    exit;
+}
+
 try {
 	$email = $_SESSION['logado'];
 
