@@ -30,7 +30,7 @@ class DesafioUsuario extends Banco {
 			'pEmail' => $email
 		];
 
-		return self::Consultar('verificar_desafios', $parametros);
+		return self::Executar('verificar_desafios', $parametros);
 	}
 }
 ?>
