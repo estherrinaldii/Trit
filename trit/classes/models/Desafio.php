@@ -16,9 +16,5 @@ class Desafio extends Banco {
 		$this->Pontos = $pontos;
 		$this->Meta = $meta;
 	}
-
-	/*fazer funcao aqui*/
-
-	/*vou arrumar*/
 }
 ?>

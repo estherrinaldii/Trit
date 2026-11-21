@@ -25,6 +25,12 @@ class DesafioUsuario extends Banco {
 		return self::Consultar('listar_desafios_usuario', $parametros);
 	}
 	
-	/*vou arrumar*/
+	public static function Verificar($email){
+		$parametros = [
+			'pEmail' => $email
+		];
+
+		return self::Consultar('verificar_desafios', $parametros);
+	}
 }
 ?>

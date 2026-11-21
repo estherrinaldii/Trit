@@ -5,7 +5,7 @@ class DesafioUsuarioController {
         $desafios = [];
 
         foreach($resposta as $linha){
-            $desafioUsuario = new DesafioUsuario($linha['cd_desafio_usuario'], $linha['FK_cd_desafio'], $linha['FK_nm_email'], $linha['ic_concluido']);
+            $desafioUsuario = new DesafioUsuario($linha['cd_desafio_usuario'], $linha['FK_cd_desafio'], $linha['nm_desafio'], $linha['FK_nm_email'], $linha['ic_concluido']);
 
             array_push($desafios, $desafioUsuario);
         }
@@ -13,6 +13,8 @@ class DesafioUsuarioController {
         return $desafios;
     }
 	
-	/*vou arrumar*/
+	public static function Verificar($email){
+        return DesafioUsuario::Verificar($email);
+    }
 }
 ?>
