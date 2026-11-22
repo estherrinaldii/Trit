@@ -10,25 +10,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hepta+Slab:wght@1..900&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/all/global.js"></script>
-
-    <!-- THEME JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/themes/monarch/global.js"></script>
-
-    <!-- STYLESHEETS -->
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/skeleton.css' rel='stylesheet' />
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/themes/monarch/theme.css' rel='stylesheet' />
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/themes/monarch/palettes/blue.css' rel='stylesheet' />
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const calendarEl = document.getElementById("calendario");
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: "dayGridMonth",
-        });
-        calendar.render();
-      });
-    </script>
 </head>
 <body>
     <div class="menu">
@@ -64,7 +45,68 @@
         
         <section>
             <div id="calendario">
-                <p class="tituloPagina tituloMenor"></p>
+                <div class="cabecalho">
+                    <button class="btnCalendario">
+                        <img src="img/seta-calendario-esquerda.svg" alt="">
+                    </button>
+                    <div>
+                        <p>mes</p>
+                        <p>ano</p>
+                    </div>
+                    <button class="btnCalendario">
+                        <img src="img/seta-calendario-direita.svg" alt="">
+                    </button>
+                </div>
+
+                <div class="areaDias">
+                    <div class="semana">
+                        <p>Dom</p>
+                        <p>Seg</p>
+                        <p>Ter</p>
+                        <p>Qua</p>
+                        <p>Qui</p>
+                        <p>Sex</p>
+                        <p>Sab</p>
+                    </div>
+                    <div class="dias">
+                        <div class="separaDia">
+                            <p>1</p>
+                            <p>2</p>
+                            <p>3</p>
+                            <p>4</p>
+                            <p>5</p>
+                            <p>6</p>
+                            <p>7</p>
+                        </div>
+                        <div class="separaDia">
+                            <p>1</p>
+                            <p>2</p>
+                            <p>3</p>
+                            <p>4</p>
+                            <p>5</p>
+                            <p>6</p>
+                            <p>7</p>
+                        </div>
+                        <div class="separaDia">
+                            <p>1</p>
+                            <p>2</p>
+                            <p>3</p>
+                            <p>4</p>
+                            <p>5</p>
+                            <p>6</p>
+                            <p>7</p>
+                        </div>
+                        <div class="separaDia">
+                            <p>1</p>
+                            <p>2</p>
+                            <p>3</p>
+                            <p>4</p>
+                            <p>5</p>
+                            <p>6</p>
+                            <p>7</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
