@@ -3,29 +3,6 @@ import { FormatarData } from "./funcoes.js";
 if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
-
-fetch("http://localhost/Trit/trit/api/listarSaidasPendentes.php", {
-  method: "GET",
-	 credentials: "include",
-})
-  .then(function (resposta) {
-    if (!resposta.ok) {
-      throw new Error("Erro HTTP: " + resposta.status);
-    }
-    return resposta.json();
-  })
-  .then(function (dadosJSON) {
-    if (dadosJSON) {
-        for (let i = 0; i < dadosJSON.pendentes.length; i++) {
-            const pendencia = dadosJSON.pendentes[i];
-            criarPendencia(pendencia.Nome, pendencia.Codigo);
-        }
-    }
-  })
-  .catch(function (error) {
-    console.warn(error);
-  });
-
   // fixo
   fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=fixa', {
     method: "GET",
@@ -52,6 +29,7 @@ fetch("http://localhost/Trit/trit/api/listarSaidasPendentes.php", {
             let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
 
             criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, null, null, saida.Codigo);
+            criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
           }
       }
     })
@@ -86,6 +64,7 @@ fetch("http://localhost/Trit/trit/api/listarSaidasPendentes.php", {
             let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
             
             criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, 0, saida.Parcelas, saida.Codigo);
+            criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
           }
       }
     })
@@ -177,11 +156,12 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
 
 
 
-function criarPendencia(txtNome){
+function criarPendencia(txtNome, txtData, codigo){
     const areaPendencia = document.querySelector('.areaPendencias');
 
     const card = document.createElement('div');
     card.classList.add('pendencia');
+    card.id = codigo;
 
         const areaConfirmacao = document.createElement('div');
         areaConfirmacao.classList.add('checkbox');
