@@ -442,14 +442,6 @@ function botaoAdicionar()
 
             const plantaEnviada = document.querySelector('.plantaSelecionada').getAttribute('planta');
 
-            // fetch criar cofre:
-            // nome = txtNomeCofre.value
-            // periodo = document.querySelector('.periodoSelecionado').textContent (envia em texto com primeira letra maiuscula, formata do jeito q o banco espera receber)
-            // data = txtDataCofre.value >> se for indeterminado é null 
-            // valor limite = txtValorCofre.value
-            // planta = plantaEnviada
-            // progresso/porcentagem é zero, já que está sendo criada uma planta nova
-            // valor atual tambem é 0,00 pela mesma lógica do anterior
             let valorLimiteEnviar = txtValorCofre.value;
             valorLimiteEnviar = String(valorLimiteEnviar).replaceAll(',','.');
             valorLimiteEnviar = Number(valorLimiteEnviar);

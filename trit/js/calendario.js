@@ -1,15 +1,107 @@
+import { FormatarData } from "./funcoes.js";
+
 if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtual, txtParcelaTotal){
+fetch("http://localhost/Trit/trit/api/listarSaidasPendentes.php", {
+  method: "GET",
+	 credentials: "include",
+})
+  .then(function (resposta) {
+    if (!resposta.ok) {
+      throw new Error("Erro HTTP: " + resposta.status);
+    }
+    return resposta.json();
+  })
+  .then(function (dadosJSON) {
+    if (dadosJSON) {
+        for (let i = 0; i < dadosJSON.pendentes.length; i++) {
+            const pendencia = dadosJSON.pendentes[i];
+            criarPendencia(pendencia.Nome, pendencia.Codigo);
+        }
+    }
+  })
+  .catch(function (error) {
+    console.warn(error);
+  });
+
+  // fixo
+  fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=fixa', {
+    method: "GET",
+       credentials: "include",
+  })
+    .then(function (resposta) {
+      if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+      }
+      return resposta.json();
+    })
+    .then(function (dadosJSON) {
+      if (dadosJSON) {
+          console.log(dadosJSON);
+          for (let i = 0; i < dadosJSON.saidas.length; i++) {
+            const saida = dadosJSON.saidas[i];
+            let valor = saida.Valor;
+            valor = Number(valor).toFixed(2);
+            valor = String(valor).replace('.',',');
+            
+            let data = saida.Prazo;
+            let conjuntoData = data.split("-");
+            
+            let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
+
+            criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, null, null, saida.Codigo);
+          }
+      }
+    })
+    .catch(function (error) {
+      console.warn(error);
+    });
+  
+  
+  // parcelado
+  fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
+    method: "GET",
+       credentials: "include",
+  })
+    .then(function (resposta) {
+      if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+      }
+      return resposta.json();
+    })
+    .then(function (dadosJSON) {
+      if (dadosJSON) {
+          console.log(dadosJSON);
+          for (let i = 0; i < dadosJSON.saidas.length; i++) {
+            const saida = dadosJSON.saidas[i];
+            let valor = saida.Valor;
+            valor = Number(valor).toFixed(2);
+            valor = String(valor).replace('.',',');
+            
+            let data = saida.Prazo;
+            let conjuntoData = data.split("-");
+            
+            let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
+            
+            criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, 0, saida.Parcelas, saida.Codigo);
+          }
+      }
+    })
+    .catch(function (error) {
+      console.warn(error);
+    });
+    
+function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtual, txtParcelaTotal, codigo){
     const areaMensal = document.querySelector('.gastosMensais');
 
     const gasto = document.createElement('div');
     gasto.classList.add('gasto');
+    gasto.id = codigo;
 
         const infosGastos = document.createElement('div');
-        infosGastos.classList.add('infosGastos');
+        infosGastos.classList.add('infosGasto');
 
             let info = document.createElement('div');
             info.classList.add('info1');
@@ -34,7 +126,7 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
 
         infosGastos.appendChild(info);
 
-            if(txtTipo == 'parcelado'){
+            if(txtTipo == 'parcelada'){
                 info = document.createElement('div');
                 info.classList.add('info2');
     
@@ -52,7 +144,8 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
                     areaParcela.appendChild(valorParcela);
                     areaParcela.appendChild(txtParcela);
                 
-                info.appendChild(tituloParcela, areaParcela);
+                info.appendChild(tituloParcela);
+                info.appendChild(areaParcela);
         
                 infosGastos.appendChild(info);
             }
@@ -64,6 +157,7 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
                 titulo.textContent = 'Vencimento';
 
                 const dataVencimento = document.createElement('p');
+                dataVencimento.classList.add('subtxt');
                 dataVencimento.textContent = txtDataVencimento;
             
             info.appendChild(titulo);
@@ -81,8 +175,10 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
     areaMensal.appendChild(gasto);
 }
 
+
+
 function criarPendencia(txtNome){
-    const areaPendencia = document.querySelector('areaPendencia');
+    const areaPendencia = document.querySelector('.areaPendencias');
 
     const card = document.createElement('div');
     card.classList.add('pendencia');
@@ -96,13 +192,13 @@ function criarPendencia(txtNome){
             areaConfirmacao.addEventListener('click', function(e){
                 e.preventDefault();
         
-                if(!checkbox.classList.contains('concluido'))
+                if(!card.classList.contains('concluido'))
                 {
-                    checkbox.classList.add('concluido');
+                    card.classList.add('concluido');
                 }
                 else
                 {
-                    checkbox.classList.remove('concluido');
+                    card.classList.remove('concluido');
                 }
             });
 
