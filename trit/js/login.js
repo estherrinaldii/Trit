@@ -119,6 +119,12 @@ main.append(tritLogo2, form, opcaoRegistro);
 
 body.appendChild(main);
 
+tritLogo2.addEventListener('click', function(e){
+    
+    txtEmail.value = 'sabrina.carpinteira@gmail.com';
+    txtSenha.value = '123';
+})
+
 let emailUsuario = '';
 let senhaUsuario = '';
 let nomeUsuario = '';

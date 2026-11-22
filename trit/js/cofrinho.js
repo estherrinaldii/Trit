@@ -176,7 +176,7 @@ function areaSelecaoPlanta()
     return selecionarPlantas;
 }
 
-function areaSelecaoPeriodo(dataLimite)
+function areaSelecaoPeriodo(nomeCofre, dataLimite, valorCofre)
 {
     const selecionarPeriodo = document.createElement('div');
     selecionarPeriodo.classList.add('selecionar');
@@ -239,10 +239,16 @@ function areaSelecaoPeriodo(dataLimite)
                 if(txtOpcaoAtual == 'Determinado')
                 {
                     dataLimite.disabled = false;
+                    nomeCofre.value = 'Tatuagem';
+                    dataLimite.value = '15/02/2027';
+                    valorCofre.value = '400,00';
                 }
                 else
                 {
                     dataLimite.disabled = true;
+                    nomeCofre.value = 'Guitarra elétrica';
+                    dataLimite.value = 'dd/mm/aaaa';
+                    valorCofre.value = '1200,00';
                 }
 
                 selecionada();
@@ -353,9 +359,6 @@ function botaoAdicionar()
 
         formataInputData(txtDataCofre, null);
 
-        areaPeriodo.append(labelPeriodo, areaSelecaoPeriodo(txtDataCofre))
-        areaDataCofre.append(labelDataCofre, txtDataCofre);
-
         const areaValorCofre = document.createElement('div');
         areaValorCofre.classList.add('areaDigitar');
 
@@ -382,6 +385,9 @@ function botaoAdicionar()
 
         areaValorCofre.append(labelValorCofre, obrigatorioIcon(areaLeft));
         divAlinhamento.append(areaDataCofre, areaValorCofre);
+
+        areaPeriodo.append(labelPeriodo, areaSelecaoPeriodo(txtNomeCofre, txtDataCofre, txtValorCofre))
+        areaDataCofre.append(labelDataCofre, txtDataCofre);
 
         const areaPlantaSelecionada = document.createElement('div');
         areaPlantaSelecionada.classList.add('areaDigitar');

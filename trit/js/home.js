@@ -175,6 +175,14 @@ btnNovaEntrada.addEventListener('click', function(e){
     bloqueio.appendChild(areaNovaEntrada);
     body.appendChild(bloqueio);
 
+    tituloNovaEntrada.addEventListener('click', function(e){
+        e.preventDefault();
+
+        txtNomeEntrada.value = 'Venda de cookie';
+        txtDataEntrada.value = '22/11/2026';
+        txtValorEntrada.value = '9,99';
+    })
+
     btnSair.addEventListener('click', function(e){
         e.preventDefault();
 
@@ -886,7 +894,6 @@ function criarAreaSaida(txtTipo){
     areaDataSaida.classList.add('areaDigitar');
 
     const labelDataSaida = document.createElement('label');
-    labelDataSaida.textContent = 'Data:'
 
     const txtDataSaida = document.createElement('input');
     txtDataSaida.type = 'text';
@@ -916,7 +923,6 @@ function criarAreaSaida(txtTipo){
     areaValorSaida.classList.add('areaDigitar');
 
     const labelValorSaida = document.createElement('label');
-    labelValorSaida.textContent = 'Valor:'
 
     const areaLeft = document.createElement('div');
     areaLeft.classList.add('areaLeft');
@@ -960,12 +966,22 @@ function criarAreaSaida(txtTipo){
             divAlinhamento.innerHTML = '';
             areaInfos.innerHTML = '';
             txtTipoSaida.value = 'Categorizada';
+            labelDataSaida.textContent = 'Data:';
+            labelValorSaida.textContent = 'Valor:';
             
             divAlinhamento.append(areaTipoSaida, areaDataSaida);
             
             areaSelecao(areaInfos, areaNovaSaida);
             areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
             areaNovaSaida.append(areaInfos, btnSalvar);
+
+            tituloNovaSaida.addEventListener('click', function(e){
+                e.preventDefault();
+
+                txtNomeSaida.value = 'Lanche cantina';
+                txtDataSaida.value = '03/12/2026';
+                txtValorSaida.value = '12,50';
+            })
         })
 
         btnFixo.addEventListener('click', function(e){
@@ -975,11 +991,21 @@ function criarAreaSaida(txtTipo){
             divAlinhamento.innerHTML = '';
             areaInfos.innerHTML = '';
             txtTipoSaida.value = 'Fixa';
+            labelDataSaida.textContent = 'Vencimento:';
+            labelValorSaida.textContent = 'Valor:';
 
             divAlinhamento.append(areaTipoSaida, areaDataSaida);
 
             areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
             areaNovaSaida.append(areaInfos, btnSalvar);
+
+            tituloNovaSaida.addEventListener('click', function(e){
+                e.preventDefault();
+
+                txtNomeSaida.value = 'Spotify premium';
+                txtDataSaida.value = '20/12/2026';
+                txtValorSaida.value = '11,40';
+            })
         })
 
         btnParcelado.addEventListener('click', function(e){
@@ -989,11 +1015,24 @@ function criarAreaSaida(txtTipo){
             divAlinhamento.innerHTML = '';
             areaInfos.innerHTML = '';
             txtTipoSaida.value = 'Parcelada';
+            labelDataSaida.textContent = 'Data:';
+            labelDataLimite.textContent = 'Vencimento:';
+            labelValorSaida.textContent = 'Valor da parcela:';
 
             divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
 
             areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
             areaNovaSaida.append(areaInfos, btnSalvar);
+
+            tituloNovaSaida.addEventListener('click', function(e){
+                e.preventDefault();
+
+                txtNomeSaida.value = 'Moto G7';
+                txtDataSaida.value = '03/12/2026';
+                txtDataLimite.value = '25/12/2026';
+                txtParcelas.value = '10';
+                txtValorSaida.value = '99,90';
+            })
         })
     }else{
         if(txtTipo == 'Categorizada'){
