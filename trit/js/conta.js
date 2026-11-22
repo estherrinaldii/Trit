@@ -62,7 +62,6 @@ const progressoConcluidas = document.querySelector('.barraProgresso progress');
 const todasInsignias = document.querySelectorAll('.insignia');
 
 verificarInsignias().then(function(insignias) {
-    console.log(insignias);
     for (let i = 0; i < insignias.length; i++) {
         for (let j = 0; j < todasInsignias.length; j++) {
             if(insignias[i].Codigo == todasInsignias[j].id){
@@ -85,7 +84,10 @@ fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
   .then(function (dadosJSON) {
     if (dadosJSON) {
         let pontos = Number(dadosJSON.usuario[0].Pontos);
+        pontos = pontos.toFixed(0);
         let nivel = pontos / 15;
+        nivel = nivel.toFixed(0);
+        nivel = Number(nivel);
         nomeUsuario.textContent = dadosJSON.usuario[0].Nome;
         nivelAtual.textContent = 'Nivel ' + nivel;
         proximoNivel.textContent = 'Nivel ' + (nivel + 1);
@@ -95,7 +97,7 @@ fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
             restante -= 15;
         }
         tarefasConcluidas.textContent = restante + '/15';
-        progressoConcluidas.setAttribute('value', 0);
+        progressoConcluidas.setAttribute('value', restante);
         progressoConcluidas.setAttribute('max', 15);
     }
   })
@@ -118,382 +120,403 @@ if(btnEditar)
     btnEditar.addEventListener('click', function(e){
         e.preventDefault();
 
-        bloqueio.innerHTML = '';
-
-        const areaEditarConta = document.createElement('div');
-        areaEditarConta.classList.add('popup');
-
-        const areaTitulo = document.createElement('div');
-        areaTitulo.classList.add('areaTitulo');
-
-        const tituloEditar = document.createElement('p');
-        tituloEditar.textContent = 'Editar perfil';
-        tituloEditar.classList.add('tituloMenor');
-        tituloEditar.classList.add('tituloPopup');
-
-        btnSair = botaoSair();
-
-        areaTitulo.append(tituloEditar, btnSair);
-
-        const areaInfos = document.createElement('div')
-        areaInfos.classList.add('infos');
-
-        const areaNome = document.createElement('div');
-        areaNome.classList.add('areaDigitar');
-
-        const labelNome = document.createElement('label');
-        labelNome.textContent = 'Nome:';
-
-        const txtNome = document.createElement('input');
-        txtNome.type = 'text';
-        txtNome.value = nomeUsuario.textContent;        
-
-        areaNome.append(labelNome, txtNome);
-
-        const areaRenda = document.createElement('div');
-        areaRenda.classList.add('areaDigitar');
-
-        const labelRenda = document.createElement('label');
-        labelRenda.textContent = 'Renda mensal:';
-
-        const areaLeft = document.createElement('div');
-        areaLeft.classList.add('areaLeft');
-
-        const txtRenda = document.createElement('input');
-        txtRenda.type = 'text';
-        txtRenda.inputMode = 'numeric';
-        txtRenda.value = '0,00';
-        txtRenda.classList.add('inputMoeda');
-
-        const moeda = document.createElement('p');
-        moeda.textContent = 'R$';
-        moeda.classList.add('moeda');
-
-        formataInputValor(txtRenda, null);
-
-        areaLeft.append(txtRenda, moeda)
-        areaRenda.append(labelRenda, areaLeft);
-
-        areaInfos.append(areaNome, areaRenda);
-
-        const areaEmail = document.createElement('div');
-        areaEmail.classList.add('areaInfos');
-
-        const tituloEmail = document.createElement('p');
-        tituloEmail.classList.add('tituloInfos');
-        tituloEmail.textContent = 'Email:';
-
-        const email = document.createElement('p');
-        email.textContent = 'xovilsonkays@gmail.com';
-
-        areaEmail.append(tituloEmail, email);
-
-        const areaOpcoes = document.createElement('div');
-        areaOpcoes.classList.add('areaOpcoes');
-
-        const btnAlterarSenha = document.createElement('p');
-        btnAlterarSenha.textContent = 'Alterar senha';
-        btnAlterarSenha.classList.add('btnAlterarSenha')
-
-        const btnExcluirConta = document.createElement('p');
-        btnExcluirConta.textContent = 'Excluir conta';
-        btnExcluirConta.classList.add('btnExcluir');
-
-        areaOpcoes.append(btnAlterarSenha, btnExcluirConta);
-
-        const btnSalvar = document.createElement('button');
-        btnSalvar.textContent = 'Salvar';
-        btnSalvar.classList.add('btnSalvar');
-
-        areaEditarConta.append(areaTitulo, areaInfos, areaEmail, areaOpcoes, btnSalvar);
-        bloqueio.appendChild(areaEditarConta);
-        body.appendChild(bloqueio);
-
-        btnSair.addEventListener('click', function(e){
-            e.preventDefault();
-
-            areaEditarConta.remove();
-            avisoSair(bloqueio);
+        fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
+        method: "GET",
+            credentials: "include",
         })
-
-        btnSalvar.addEventListener('click', function(e){
-            e.preventDefault();
-
-            if(txtNome.value == '')
-            {
-                erro(msgErro, txtNome, 'Nome não foi informado!', areaInfos);
-                return;
+        .then(function (resposta) {
+            if (!resposta.ok) {
+            throw new Error("Erro HTTP: " + resposta.status);
             }
-
-            if(txtRenda.value == '' || txtRenda.value == '0,00')
-            {
-                erro(msgErro, txtRenda, 'Renda não foi informada!', areaInfos);
-                return;
-            }
-
-            nomeUsuario.textContent = txtNome.value.charAt(0).toUpperCase() + txtNome.value.slice(1);
-
-            // fetch editar nome/renda
-            // variaveis:
-            // txtNome.value
-            // txtRenda.value
-
-            areaEditarConta.remove();
-            bloqueio.remove();
+            return resposta.json();
         })
+        .then(function (dadosJSON) {
+            if (dadosJSON) {
+            bloqueio.innerHTML = '';
 
-        btnAlterarSenha.addEventListener('click', function(e){
-
-            areaEditarConta.remove();
-
-            const areaAlterarSenha = document.createElement('div');
-            areaAlterarSenha.classList.add('popup');
+            const areaEditarConta = document.createElement('div');
+            areaEditarConta.classList.add('popup');
 
             const areaTitulo = document.createElement('div');
             areaTitulo.classList.add('areaTitulo');
 
-            const tituloAlterarSenha = document.createElement('p');
-            tituloAlterarSenha.textContent = 'Alterar senha';
-            tituloAlterarSenha.classList.add('tituloMenor');
-            tituloAlterarSenha.classList.add('tituloPopup');
+            const tituloEditar = document.createElement('p');
+            tituloEditar.textContent = 'Editar perfil';
+            tituloEditar.classList.add('tituloMenor');
+            tituloEditar.classList.add('tituloPopup');
 
             btnSair = botaoSair();
 
-            areaTitulo.append(tituloAlterarSenha, btnSair);
+            areaTitulo.append(tituloEditar, btnSair);
 
             const areaInfos = document.createElement('div')
             areaInfos.classList.add('infos');
 
-            const areaSenhaAnterior = document.createElement('div');
-            areaSenhaAnterior.classList.add('areaDigitar');
+            const areaNome = document.createElement('div');
+            areaNome.classList.add('areaDigitar');
 
-            const labelSenhaAnterior = document.createElement('label');
-            labelSenhaAnterior.textContent = 'Senha anterior:';
+            const labelNome = document.createElement('label');
+            labelNome.textContent = 'Nome:';
 
-            const txtSenhaAnterior = document.createElement('input');
-            txtSenhaAnterior.type = 'password';
-            txtSenhaAnterior.classList.add('inputSenha');
-            txtSenhaAnterior.classList.add('recuoPopup');
-            
-            areaRight = obrigatorioIcon(txtSenhaAnterior);
-            areaRight.prepend(exibirSenha(txtSenhaAnterior));
+            const txtNome = document.createElement('input');
+            txtNome.type = 'text';
+            txtNome.value = dadosJSON.usuario[0].Nome;        
 
-            areaSenhaAnterior.append(labelSenhaAnterior, areaRight);
+            areaNome.append(labelNome, txtNome);
 
-            const areaNovaSenha = document.createElement('div');
-            areaNovaSenha.classList.add('areaDigitar');
+            const areaRenda = document.createElement('div');
+            areaRenda.classList.add('areaDigitar');
 
-            const labelNovaSenha = document.createElement('label');
-            labelNovaSenha.textContent = 'Nova senha:';
+            const labelRenda = document.createElement('label');
+            labelRenda.textContent = 'Renda mensal:';
 
-            const txtNovaSenha = document.createElement('input');
-            txtNovaSenha.type = 'password';
-            txtNovaSenha.classList.add('inputSenha');
-            txtNovaSenha.classList.add('recuoPopup');
-            
-            areaRight = obrigatorioIcon(txtNovaSenha);
-            areaRight.prepend(exibirSenha(txtNovaSenha));
+            const areaLeft = document.createElement('div');
+            areaLeft.classList.add('areaLeft');
 
-            areaNovaSenha.append(labelNovaSenha, areaRight);
+            const txtRenda = document.createElement('input');
+            txtRenda.type = 'text';
+            txtRenda.inputMode = 'numeric';
+            let valor = dadosJSON.usuario[0].Renda;
+            valor = Number(valor).toFixed(2);
+            valor = String(valor).replace('.',',');
+            txtRenda.value = valor;
+            txtRenda.classList.add('inputMoeda');
 
-            const areaConfirmaSenha = document.createElement('div');
-            areaConfirmaSenha.classList.add('areaDigitar');
+            const moeda = document.createElement('p');
+            moeda.textContent = 'R$';
+            moeda.classList.add('moeda');
 
-            const labelConfirmaSenha = document.createElement('label');
-            labelConfirmaSenha.textContent = 'Confirme a senha:';
+            formataInputValor(txtRenda, null);
 
-            const txtConfirmaSenha = document.createElement('input');
-            txtConfirmaSenha.type = 'password';
-            txtConfirmaSenha.classList.add('inputSenha');
-            txtConfirmaSenha.classList.add('recuoPopup');
-            
-            areaRight = obrigatorioIcon(txtConfirmaSenha);
-            areaRight.prepend(exibirSenha(txtConfirmaSenha));
+            areaLeft.append(txtRenda, moeda)
+            areaRenda.append(labelRenda, areaLeft);
 
-            areaConfirmaSenha.append(labelConfirmaSenha, areaRight);
+            areaInfos.append(areaNome, areaRenda);
 
-            const requisitos = document.createElement('div');
-            requisitos.classList.add('requisitos');
+            const areaEmail = document.createElement('div');
+            areaEmail.classList.add('areaInfos');
 
-            const requisito1 = document.createElement('p');
-            requisito1.id = 'requisito1'
-            requisito1.textContent = 'Mínimo de 8 caracteres';
+            const tituloEmail = document.createElement('p');
+            tituloEmail.classList.add('tituloInfos');
+            tituloEmail.textContent = 'Email:';
 
-            const requisito2 = document.createElement('p');
-            requisito2.id = 'requisito2'
-            requisito2.textContent = 'Requer letra maiúscula';
+            const email = document.createElement('p');
+            email.textContent = dadosJSON.usuario[0].Email;
 
-            const requisito3 = document.createElement('p');
-            requisito3.id = 'requisito3'
-            requisito3.textContent = 'Requer letra minúscula';
+            areaEmail.append(tituloEmail, email);
 
-            const requisito4 = document.createElement('p');
-            requisito4.id = 'requisito4'
-            requisito4.textContent = 'Requer número';
+            const areaOpcoes = document.createElement('div');
+            areaOpcoes.classList.add('areaOpcoes');
 
-            const requisito5 = document.createElement('p');
-            requisito5.id = 'requisito5'
-            requisito5.textContent = 'Requer caractér especial';
-            
-            requisitos.append(requisito1, requisito2, requisito3, requisito4, requisito5);
+            const btnAlterarSenha = document.createElement('p');
+            btnAlterarSenha.textContent = 'Alterar senha';
+            btnAlterarSenha.classList.add('btnAlterarSenha')
 
-            txtNovaSenha.addEventListener('input', function(e){
-                requisitosSenha(txtNovaSenha.value.trim());
-            })
+            const btnExcluirConta = document.createElement('p');
+            btnExcluirConta.textContent = 'Excluir conta';
+            btnExcluirConta.classList.add('btnExcluir');
+
+            areaOpcoes.append(btnAlterarSenha, btnExcluirConta);
 
             const btnSalvar = document.createElement('button');
             btnSalvar.textContent = 'Salvar';
             btnSalvar.classList.add('btnSalvar');
 
-            areaInfos.append(areaSenhaAnterior, areaNovaSenha, areaConfirmaSenha, requisitos);
-
-            areaAlterarSenha.append(areaTitulo, areaInfos, btnSalvar);
-            bloqueio.appendChild(areaAlterarSenha);
+            areaEditarConta.append(areaTitulo, areaInfos, areaEmail, areaOpcoes, btnSalvar);
+            bloqueio.appendChild(areaEditarConta);
+            body.appendChild(bloqueio);
 
             btnSair.addEventListener('click', function(e){
                 e.preventDefault();
 
-                areaAlterarSenha.remove();
-                bloqueio.appendChild(areaEditarConta);
+                areaEditarConta.remove();
+                avisoSair(bloqueio);
             })
 
             btnSalvar.addEventListener('click', function(e){
                 e.preventDefault();
 
-                if(txtSenhaAnterior.value == '')
+                if(txtNome.value == '')
                 {
-                    erro(msgErro, txtSenhaAnterior, 'Senha anterior não foi informada!', areaInfos);
+                    erro(msgErro, txtNome, 'Nome não foi informado!', areaInfos);
                     return;
                 }
 
-                if(txtNovaSenha.value == '')
+                if(txtRenda.value == '' || txtRenda.value == '0,00')
                 {
-                    erro(msgErro, txtNovaSenha, 'Nova senha não foi informada!', areaInfos);
+                    erro(msgErro, txtRenda, 'Renda não foi informada!', areaInfos);
                     return;
                 }
 
-                if(txtConfirmaSenha.value == '')
-                {
-                    erro(msgErro, txtConfirmaSenha, 'Confirme a senha!', areaInfos);
-                    return;
-                }
+                nomeUsuario.textContent = txtNome.value.charAt(0).toUpperCase() + txtNome.value.slice(1);
 
-                if(txtSenhaAnterior.value == txtNovaSenha.value)
-                {
-                    erro(msgErro, txtNovaSenha, 'A senha nova deve ser diferente da anterior!', areaInfos);
-                    return;
-                }
+                // fetch editar nome/renda
+                // variaveis:
+                // txtNome.value
+                // txtRenda.value
 
-                if(!requisito1.classList.contains('requisitoAtendido') || !requisito2.classList.contains('requisitoAtendido') || !requisito3.classList.contains('requisitoAtendido') || !requisito4.classList.contains('requisitoAtendido') || !requisito5.classList.contains('requisitoAtendido'))
-                {
-                    erro(msgErro, txtNovaSenha, null, null);
-                    return;
-                }
-
-                if(txtNovaSenha.value != txtConfirmaSenha.value)
-                {
-                    erro(msgErro, txtConfirmaSenha, 'Confirmação de senha incompatível!', areaInfos);
-                    return;
-                }
-
-                // fetch alterar senha
-                // 1. conferir se a senha anterior está certa
-                //     variavel: txtSenhaAnterior.value
-                //     se nao estiver, da erro: erro(msgErro, txtSenhaAnterior, 'Senha incorreta!', areaInfos);
-
-                // 2. registrar senha nova
-                //     variavel: txtNovaSenha.value
-
-                areaAlterarSenha.remove();
+                areaEditarConta.remove();
                 bloqueio.remove();
             })
-        })
 
-        btnExcluirConta.addEventListener('click', function(e){
+            btnAlterarSenha.addEventListener('click', function(e){
 
-            areaEditarConta.remove();
+                areaEditarConta.remove();
 
-            const areaAviso = document.createElement('div');
-            areaAviso.classList.add('popup');
-            areaAviso.classList.add('areaAviso');
+                const areaAlterarSenha = document.createElement('div');
+                areaAlterarSenha.classList.add('popup');
 
-            const aviso = document.createElement('p');
-            aviso.textContent = 'Gostaria de excluir sua conta?'
+                const areaTitulo = document.createElement('div');
+                areaTitulo.classList.add('areaTitulo');
 
-            const areaBotoesExcluir = document.createElement('div');
-            areaBotoesExcluir.classList.add('areaBotoesExcluir');
+                const tituloAlterarSenha = document.createElement('p');
+                tituloAlterarSenha.textContent = 'Alterar senha';
+                tituloAlterarSenha.classList.add('tituloMenor');
+                tituloAlterarSenha.classList.add('tituloPopup');
 
-            const btnCancelar = document.createElement('button');
-            btnCancelar.classList.add('btnCancelar');
-            btnCancelar.textContent = 'Cancelar';
-            btnCancelar.classList.add('btnCancelar');
+                btnSair = botaoSair();
 
-            const btnExcluirConfirma = document.createElement('button');
-            btnExcluirConfirma.classList.add('btnExcluirConfirma');
-            btnExcluirConfirma.textContent = 'Excluir';
+                areaTitulo.append(tituloAlterarSenha, btnSair);
 
-            areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
-            areaAviso.append(aviso, areaBotoesExcluir);
-            bloqueio.appendChild(areaAviso);
+                const areaInfos = document.createElement('div')
+                areaInfos.classList.add('infos');
 
-            let paginaExcluir = 0;
+                const areaSenhaAnterior = document.createElement('div');
+                areaSenhaAnterior.classList.add('areaDigitar');
 
-            btnExcluirConfirma.addEventListener('click', function(e){
-                e.preventDefault();
+                const labelSenhaAnterior = document.createElement('label');
+                labelSenhaAnterior.textContent = 'Senha anterior:';
 
-                if(paginaExcluir == 0)
-                {
-                    aviso.remove();
+                const txtSenhaAnterior = document.createElement('input');
+                txtSenhaAnterior.type = 'password';
+                txtSenhaAnterior.classList.add('inputSenha');
+                txtSenhaAnterior.classList.add('recuoPopup');
+                
+                areaRight = obrigatorioIcon(txtSenhaAnterior);
+                areaRight.prepend(exibirSenha(txtSenhaAnterior));
 
-                    const areaInfos = document.createElement('div');
-                    areaInfos.classList.add('areaInfos');
+                areaSenhaAnterior.append(labelSenhaAnterior, areaRight);
 
-                    const areaVerificacao = document.createElement('div');
+                const areaNovaSenha = document.createElement('div');
+                areaNovaSenha.classList.add('areaDigitar');
 
-                    const tituloVerificacao = document.createElement('p');
-                    tituloVerificacao.textContent = 'Verificação da senha';
-                    tituloVerificacao.classList.add('tituloVerificacao');
+                const labelNovaSenha = document.createElement('label');
+                labelNovaSenha.textContent = 'Nova senha:';
 
-                    const dsVerificacao = document.createElement('p');
-                    dsVerificacao.textContent = 'Insira sua senha para continuar';
-                    dsVerificacao.classList.add('dsVerificacao');
+                const txtNovaSenha = document.createElement('input');
+                txtNovaSenha.type = 'password';
+                txtNovaSenha.classList.add('inputSenha');
+                txtNovaSenha.classList.add('recuoPopup');
+                
+                areaRight = obrigatorioIcon(txtNovaSenha);
+                areaRight.prepend(exibirSenha(txtNovaSenha));
 
-                    areaVerificacao.append(tituloVerificacao, dsVerificacao);
+                areaNovaSenha.append(labelNovaSenha, areaRight);
 
-                    const txtSenha = document.createElement('input');
-                    txtSenha.type = 'password';
-                    txtSenha.classList.add('inputSenha');
-                    txtSenha.classList.add('recuoPopup');
-                    
-                    areaRight = obrigatorioIcon(txtSenha);
-                    areaRight.prepend(exibirSenha(txtSenha));
+                const areaConfirmaSenha = document.createElement('div');
+                areaConfirmaSenha.classList.add('areaDigitar');
 
-                    areaInfos.append(areaVerificacao, areaRight);
-                    areaAviso.prepend(areaInfos);
+                const labelConfirmaSenha = document.createElement('label');
+                labelConfirmaSenha.textContent = 'Confirme a senha:';
 
-                    paginaExcluir = 1;
-                }
-                else
-                {
-                    // fetch excluir conta
-                    // conferir se a senha está certa
-                    //     variavel: txtSenha.value
-                    //     se nao estiver, da erro: erro(msgErro, txtSenha, 'Senha incorreta!', areaInfos);
-                    //     se estiver, exclui a conta
+                const txtConfirmaSenha = document.createElement('input');
+                txtConfirmaSenha.type = 'password';
+                txtConfirmaSenha.classList.add('inputSenha');
+                txtConfirmaSenha.classList.add('recuoPopup');
+                
+                areaRight = obrigatorioIcon(txtConfirmaSenha);
+                areaRight.prepend(exibirSenha(txtConfirmaSenha));
 
+                areaConfirmaSenha.append(labelConfirmaSenha, areaRight);
+
+                const requisitos = document.createElement('div');
+                requisitos.classList.add('requisitos');
+
+                const requisito1 = document.createElement('p');
+                requisito1.id = 'requisito1'
+                requisito1.textContent = 'Mínimo de 8 caracteres';
+
+                const requisito2 = document.createElement('p');
+                requisito2.id = 'requisito2'
+                requisito2.textContent = 'Requer letra maiúscula';
+
+                const requisito3 = document.createElement('p');
+                requisito3.id = 'requisito3'
+                requisito3.textContent = 'Requer letra minúscula';
+
+                const requisito4 = document.createElement('p');
+                requisito4.id = 'requisito4'
+                requisito4.textContent = 'Requer número';
+
+                const requisito5 = document.createElement('p');
+                requisito5.id = 'requisito5'
+                requisito5.textContent = 'Requer caractér especial';
+                
+                requisitos.append(requisito1, requisito2, requisito3, requisito4, requisito5);
+
+                txtNovaSenha.addEventListener('input', function(e){
+                    requisitosSenha(txtNovaSenha.value.trim());
+                })
+
+                const btnSalvar = document.createElement('button');
+                btnSalvar.textContent = 'Salvar';
+                btnSalvar.classList.add('btnSalvar');
+
+                areaInfos.append(areaSenhaAnterior, areaNovaSenha, areaConfirmaSenha, requisitos);
+
+                areaAlterarSenha.append(areaTitulo, areaInfos, btnSalvar);
+                bloqueio.appendChild(areaAlterarSenha);
+
+                btnSair.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    areaAlterarSenha.remove();
+                    bloqueio.appendChild(areaEditarConta);
+                })
+
+                btnSalvar.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    if(txtSenhaAnterior.value == '')
+                    {
+                        erro(msgErro, txtSenhaAnterior, 'Senha anterior não foi informada!', areaInfos);
+                        return;
+                    }
+
+                    if(txtNovaSenha.value == '')
+                    {
+                        erro(msgErro, txtNovaSenha, 'Nova senha não foi informada!', areaInfos);
+                        return;
+                    }
+
+                    if(txtConfirmaSenha.value == '')
+                    {
+                        erro(msgErro, txtConfirmaSenha, 'Confirme a senha!', areaInfos);
+                        return;
+                    }
+
+                    if(txtSenhaAnterior.value == txtNovaSenha.value)
+                    {
+                        erro(msgErro, txtNovaSenha, 'A senha nova deve ser diferente da anterior!', areaInfos);
+                        return;
+                    }
+
+                    if(!requisito1.classList.contains('requisitoAtendido') || !requisito2.classList.contains('requisitoAtendido') || !requisito3.classList.contains('requisitoAtendido') || !requisito4.classList.contains('requisitoAtendido') || !requisito5.classList.contains('requisitoAtendido'))
+                    {
+                        erro(msgErro, txtNovaSenha, null, null);
+                        return;
+                    }
+
+                    if(txtNovaSenha.value != txtConfirmaSenha.value)
+                    {
+                        erro(msgErro, txtConfirmaSenha, 'Confirmação de senha incompatível!', areaInfos);
+                        return;
+                    }
+
+                    // fetch alterar senha
+                    // 1. conferir se a senha anterior está certa
+                    //     variavel: txtSenhaAnterior.value
+                    //     se nao estiver, da erro: erro(msgErro, txtSenhaAnterior, 'Senha incorreta!', areaInfos);
+
+                    // 2. registrar senha nova
+                    //     variavel: txtNovaSenha.value
+
+                    areaAlterarSenha.remove();
+                    bloqueio.remove();
+                })
+            })
+
+            btnExcluirConta.addEventListener('click', function(e){
+
+                areaEditarConta.remove();
+
+                const areaAviso = document.createElement('div');
+                areaAviso.classList.add('popup');
+                areaAviso.classList.add('areaAviso');
+
+                const aviso = document.createElement('p');
+                aviso.textContent = 'Gostaria de excluir sua conta?'
+
+                const areaBotoesExcluir = document.createElement('div');
+                areaBotoesExcluir.classList.add('areaBotoesExcluir');
+
+                const btnCancelar = document.createElement('button');
+                btnCancelar.classList.add('btnCancelar');
+                btnCancelar.textContent = 'Cancelar';
+                btnCancelar.classList.add('btnCancelar');
+
+                const btnExcluirConfirma = document.createElement('button');
+                btnExcluirConfirma.classList.add('btnExcluirConfirma');
+                btnExcluirConfirma.textContent = 'Excluir';
+
+                areaBotoesExcluir.append(btnCancelar, btnExcluirConfirma);
+                areaAviso.append(aviso, areaBotoesExcluir);
+                bloqueio.appendChild(areaAviso);
+
+                let paginaExcluir = 0;
+
+                btnExcluirConfirma.addEventListener('click', function(e){
+                    e.preventDefault();
+
+                    if(paginaExcluir == 0)
+                    {
+                        aviso.remove();
+
+                        const areaInfos = document.createElement('div');
+                        areaInfos.classList.add('areaInfos');
+
+                        const areaVerificacao = document.createElement('div');
+
+                        const tituloVerificacao = document.createElement('p');
+                        tituloVerificacao.textContent = 'Verificação da senha';
+                        tituloVerificacao.classList.add('tituloVerificacao');
+
+                        const dsVerificacao = document.createElement('p');
+                        dsVerificacao.textContent = 'Insira sua senha para continuar';
+                        dsVerificacao.classList.add('dsVerificacao');
+
+                        areaVerificacao.append(tituloVerificacao, dsVerificacao);
+
+                        const txtSenha = document.createElement('input');
+                        txtSenha.type = 'password';
+                        txtSenha.classList.add('inputSenha');
+                        txtSenha.classList.add('recuoPopup');
+                        
+                        areaRight = obrigatorioIcon(txtSenha);
+                        areaRight.prepend(exibirSenha(txtSenha));
+
+                        areaInfos.append(areaVerificacao, areaRight);
+                        areaAviso.prepend(areaInfos);
+
+                        paginaExcluir = 1;
+                    }
+                    else
+                    {
+                        // fetch excluir conta
+                        // conferir se a senha está certa
+                        //     variavel: txtSenha.value
+                        //     se nao estiver, da erro: erro(msgErro, txtSenha, 'Senha incorreta!', areaInfos);
+                        //     se estiver, exclui a conta
+
+
+                        areaAviso.remove();
+                        bloqueio.remove();
+                    }
+                })
+
+                btnCancelar.addEventListener('click', function(e){
+                    e.preventDefault();
 
                     areaAviso.remove();
-                    bloqueio.remove();
-                }
+                    bloqueio.appendChild(areaEditarConta);
+                })
             })
-
-            btnCancelar.addEventListener('click', function(e){
-                e.preventDefault();
-
-                areaAviso.remove();
-                bloqueio.appendChild(areaEditarConta);
-            })
+        }
         })
+        .catch(function (error) {
+            console.warn(error);
+        });
+
     })
 }
 
@@ -561,7 +584,6 @@ if(tituloExibir)
     })
     .then(function (dadosJSON) {
         if (dadosJSON) {
-            console.log(dadosJSON);
             for (let i = 0; i < dadosJSON.insignias.length; i++) {
                 if(dadosJSON.insignias[i].Tipo == tipoInsignias){
                     const insigniaExibir = document.createElement('div');
@@ -612,7 +634,6 @@ function gerarDesafios(){
         if (dadosJSON) {
            for (let i = 0; i < dadosJSON.desafios.length; i++) {
             const desafio = dadosJSON.desafios[i];
-            console.log(desafio);
                 const cardDesafio = document.createElement('div');
                 cardDesafio.classList.add('desafio');
 
