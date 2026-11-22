@@ -345,3 +345,37 @@ export function verificarInsignias(){
         return [];
     });
 }
+
+export function popupInsigniaCompleta(bloqueio, body){
+    const areaInsigniaCompleta = document.createElement('div');
+    areaInsigniaCompleta.classList.add('areaInsigniaCompleta');
+    areaInsigniaCompleta.classList.add('popup');
+
+    const tituloInsigniaCompleta = document.createElement('p');
+    tituloInsigniaCompleta.classList.add('tituloInsigniaCompleta');
+    tituloInsigniaCompleta.textContent = 'Parabéns! Você adquiriu uma nova insígnia:';
+
+    const imgInsigniaCompleta = document.createElement('img');
+    imgInsigniaCompleta.classList.add('imgInsigniaCompleta');
+    imgInsigniaCompleta.src = 'img/insignias/cofrinho-3.svg';
+
+    const nomeInsigniaCompleta = document.createElement('p');
+    nomeInsigniaCompleta.classList.add('nomeInsigniaCompleta');
+    nomeInsigniaCompleta.textContent = 'Bata 5 metas';
+
+    const btnOk = document.createElement('button');
+    btnOk.classList.add('btnOk');
+    btnOk.classList.add('btnOkInsignia');
+    btnOk.textContent = 'Ok'
+
+    areaInsigniaCompleta.append(tituloInsigniaCompleta, imgInsigniaCompleta, nomeInsigniaCompleta, btnOk);
+    bloqueio.appendChild(areaInsigniaCompleta);
+    body.appendChild(bloqueio);
+
+    btnOk.addEventListener('click', function(e){
+        e.preventDefault();
+
+        areaInsigniaCompleta.remove();
+        bloqueio.remove();
+    })
+}
