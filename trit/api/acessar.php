@@ -75,3 +75,4 @@ function validaChaves($corpo, $campos)
 	}
 	return true;
 }
+?>
