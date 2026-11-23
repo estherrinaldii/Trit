@@ -10,11 +10,28 @@ bloqueio.classList.add('bloqueio');
 deslogar(bloqueio);
 
 const btnExtrato = document.querySelector('#btnExtrato');
+btnExtrato.setAttribute('aba','ativa');
+
 const btnGraficos = document.querySelector('#btnGraficos');
 const areaDias = document.querySelector('section');
 
+const areaFiltros = document.querySelector('.filtros');
+areaFiltros.append(areaSelecaoAno(), areaSelecaoMes());
+let anoFiltro = -1;
+let mesFiltro = -1;
+
+if(btnExtrato.getAttribute('aba') == 'ativa'){
+    anoFiltro = areaFiltros.querySelector('.anoSelecionado').textContent;
+    anoFiltro = Number(anoFiltro);
+    
+    mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
+    mesFiltro = qualNumero(mesFiltro);
+}
+
 btnExtrato.addEventListener('click', function(e){
     e.preventDefault();
+    btnExtrato.setAttribute('aba','ativa');
+    btnGraficos.setAttribute('aba','desativa');
 
     btnExtrato.classList.add('opcaoSelecionadaMenu');
     btnGraficos.classList.remove('opcaoSelecionadaMenu');
@@ -26,6 +43,8 @@ btnExtrato.addEventListener('click', function(e){
 
 btnGraficos.addEventListener('click', function(e){
     e.preventDefault();
+    btnGraficos.setAttribute('aba','ativa');
+    btnExtrato.setAttribute('aba','desativa');
 
     btnGraficos.classList.add('opcaoSelecionadaMenu');
     btnExtrato.classList.remove('opcaoSelecionadaMenu');
@@ -34,14 +53,6 @@ btnGraficos.addEventListener('click', function(e){
 
     graficosEstatico();
 })
-
-const areaFiltros = document.querySelector('.filtros');
-areaFiltros.append(areaSelecaoAno(), areaSelecaoMes());
-let anoFiltro = areaFiltros.querySelector('.anoSelecionado').textContent;
-anoFiltro = Number(anoFiltro);
-
-let mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
-mesFiltro = qualNumero(mesFiltro);
 
 areaExtrato();
 
@@ -396,13 +407,23 @@ function areaSelecaoMes()
                 let anoFiltro = areaFiltros.querySelector('.anoSelecionado').textContent;
                 anoFiltro = Number(anoFiltro);
 
+                if(areaFiltros.querySelector('.anoSelecionado').textContent == 'Tudo' || areaFiltros.querySelector('.anoSelecionado').textContent == 'Ano'){
+                    anoFiltro = -1;
+                }
+                
                 let mesFiltro = mesSelecionado.textContent;
-                mesFiltro = qualNumero(mesFiltro);
+                
+                if(mesSelecionado.textContent == 'Tudo' || mesSelecionado.textContent == 'Mês'){
+                    mesFiltro = -1;
+                }else{
+                    mesFiltro = qualNumero(mesFiltro); 
+                }
 
                 const parametro = new URLSearchParams({
                     mes: mesFiltro,
                     ano: anoFiltro
                 });
+
                 fetch("http://localhost/Trit/trit/api/listarExtrato.php?"+parametro, {
                 method: "GET",
                     credentials: "include",
@@ -415,7 +436,8 @@ function areaSelecaoMes()
                 })
                 .then(function (dadosJSON) {
                 if (dadosJSON) {
-                    if(dadosJSON.extrato.length > 0){
+                    console.log(dadosJSON);
+                     if(dadosJSON.extrato.length > 0){
                         document.querySelector('section').textContent = '';
                         exibirExtrato(dadosJSON.extrato);
                     }else{
@@ -543,8 +565,16 @@ function areaSelecaoAno()
                 let anoFiltro = anoSelecionado.textContent;
                 anoFiltro = Number(anoFiltro);
 
+                if(anoSelecionado.textContent == 'Tudo' || anoSelecionado.textContent == 'Ano'){
+                    anoFiltro = -1;
+                }
+
                 let mesFiltro = areaFiltros.querySelector('.mesSelecionado').textContent;
                 mesFiltro = qualNumero(mesFiltro);
+
+                if(areaFiltros.querySelector('.mesSelecionado').textContent == 'Tudo' || areaFiltros.querySelector('.mesSelecionado').textContent == 'Mês'){
+                    mesFiltro = -1;
+                }
 
                 const parametro = new URLSearchParams({
                     mes: mesFiltro,
