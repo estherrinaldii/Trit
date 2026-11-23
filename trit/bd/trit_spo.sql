@@ -277,6 +277,10 @@ delimiter $$
          UPDATE Carteira
 			SET vl_carteira = vl_carteira + pValor
 			WHERE cd_carteira = pCarteira;
+            
+		UPDATE Usuario
+			SET vl_renda = vl_renda + pValor
+			WHERE nm_email = pEmail;
 	END$$
     
 	DROP PROCEDURE IF EXISTS listar_entradas$$
@@ -497,7 +501,8 @@ delimiter $$
 		
 		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
 		
-		INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'guardar', pEmail, pCodigoCofrinho);
+		INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho)
+        VALUES (pCodigoMovimentacao, pValor, curdate(), 'guardar', pEmail, pCodigoCofrinho);
 					
 		UPDATE carteira
 			SET vl_carteira = vl_carteira - pValor
@@ -516,7 +521,6 @@ delimiter $$
 			
 			CALL verificar_insignias_cofrinho(pEmail);
             CALL `trit`.`verificar_desafios`(pEmail);
-
 	END$$
 		
 	DROP PROCEDURE IF EXISTS resgatar_cofrinho$$
@@ -551,7 +555,8 @@ delimiter $$
 			
 			SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
 			
-			INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho) VALUES (pCodigoMovimentacao, pValor, curdate(), 'resgatar', pEmail, pCodigoCofrinho);
+			INSERT INTO movimentacao_cofrinho (cd_movimentacao, vl_movimentacao, dt_movimentacao, ic_tipo_movimentacao, FK_nm_email, FK_cd_cofrinho)
+				VALUES (pCodigoMovimentacao, pValor, curdate(), 'resgatar', pEmail, pCodigoCofrinho);
 						
 			UPDATE carteira
 				SET vl_carteira = vl_carteira + pValor
@@ -805,12 +810,12 @@ END$$
     DROP PROCEDURE IF EXISTS listar_saidas_pendentes$$
     CREATE PROCEDURE listar_saidas_pendentes(pEmail VARCHAR(200))
 	BEGIN
-	SELECT s.cd_saida, s.nm_saida, s.vl_saida, s.dt_saida, s.dt_prazo_saida, s.ic_tipo_saida, s.ic_status_saida, s.qt_parcelas,
-	c.FK_nm_email
-	FROM trit.saida s
-	JOIN trit.carteira c
-	ON s.FK_cd_carteira = c.`cd_carteira`
-	WHERE ic_status_saida = 'pendente'
-	AND FK_nm_email = pEmail; 
+		SELECT s.cd_saida, s.nm_saida, s.vl_saida, s.dt_saida, s.dt_prazo_saida, s.ic_tipo_saida, s.ic_status_saida, s.qt_parcelas,
+		c.FK_nm_email
+			FROM trit.saida s
+			JOIN trit.carteira c
+			ON s.FK_cd_carteira = c.`cd_carteira`
+			WHERE ic_status_saida = 'pendente'
+			AND FK_nm_email = pEmail; 
 	END$$
 delimiter ;
