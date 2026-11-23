@@ -187,3 +187,8 @@ section{
 .lm-calendar-footer{
     display: none !important;
 }
+
+.temPendencia{
+    border: rgb(9, 95, 184) solid 2px !important;
+    color: rgb(9, 95, 184) !important;
+}
