@@ -438,7 +438,7 @@ function selecionaDia(){
               enviaDia = '0' + txtDia;
             }
         
-            let dataTotal = `${txtAno}-${enviaDia}-${enviaMes}`;
+            let dataTotal = `${txtAno}-${enviaMes}-${enviaDia}`;
           pendenciasPorData(dataTotal);
           titulo.textContent = `${txtDia} de ${txtMes} de ${txtAno}`;
         }else{
@@ -511,9 +511,11 @@ function pendenciasPorData(txtData){
       if (dadosJSON) {
         for (let i = 0; i < dadosJSON.saidas.length; i++) {
           const saida = dadosJSON.saidas[i];
-          if(saida.Data == txtData){
+          console.log(txtData);
+          console.log(saida.Prazo);
+          if(saida.Prazo == txtData){
               areaPendencia.textContent = '';
-              criarPendencia(saida.Nome, saida.Data, saida.Codigo);
+              criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
           }else{
             areaPendencia.textContent = '';
             let vazio = document.createElement('p');
@@ -542,9 +544,9 @@ function pendenciasPorData(txtData){
       if (dadosJSON) {
         for (let i = 0; i < dadosJSON.saidas.length; i++) {
           const saida = dadosJSON.saidas[i];
-          if(saida.Data == txtData){
+          if(saida.Prazo == txtData){
               areaPendencia.textContent = '';
-              criarPendencia(saida.Nome, saida.Data, saida.Codigo);
+              criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
           }else{
             areaPendencia.textContent = '';
             let vazio = document.createElement('p');

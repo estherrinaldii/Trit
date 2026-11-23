@@ -170,7 +170,12 @@ section{
 
 .lm-calendar-navigation button{
     font-weight: 400 !important;
-    background-color: #CCF6A2;
+    background-color: transparent;
+}
+
+.lm-ripple:hover{
+    background: transparent !important;
+    background-color: rgba(80, 190, 67, 0.118) !important;
 }
 
 .lm-calendar-weekdays{
