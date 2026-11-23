@@ -107,6 +107,13 @@ section{
     justify-content: space-between;
 }
 
+.tituloControlado > p{
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .valorControlado{
     display: flex;
     gap: 8px;

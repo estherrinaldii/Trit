@@ -2,57 +2,13 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha, verificarInsignias } from "./funcoes.js";
+import { erro, formataInputValor, botaoSair, avisoSair, obrigatorioIcon, exibirSenha, requisitosSenha, verificarInsignias, deslogar } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 
-const btnDeslogar = document.querySelector('.btnDeslogar');
-
-btnDeslogar.addEventListener('click', function(e){
-    e.preventDefault();
-
-    bloqueio.innerHTML = '';
-
-    const areaDeslogar = document.createElement('div');
-    areaDeslogar.classList.add('popup');
-    areaDeslogar.classList.add('areaAviso');
-
-    const avisoDeslogar = document.createElement('p');
-    avisoDeslogar.textContent = 'Você deseja sair da conta?';
-
-    const areaBotoes = document.createElement('div');
-    areaBotoes.classList.add('areaBotoes');
-
-    const btnCancelar = document.createElement('button');
-    btnCancelar.classList.add('btnCancelar');
-    btnCancelar.textContent = 'Cancelar';
-
-    const btnSairConta = document.createElement('button');
-    btnSairConta.classList.add('btnExcluirConfirma');
-    btnSairConta.textContent = 'Sair';
-
-    areaBotoes.append(btnCancelar, btnSairConta);
-    areaDeslogar.append(avisoDeslogar, areaBotoes);
-
-    bloqueio.appendChild(areaDeslogar);
-    body.appendChild(bloqueio);
-
-    btnCancelar.addEventListener('click', function(e){
-        e.preventDefault();
-
-        areaDeslogar.remove();
-        bloqueio.remove();
-    })
-
-    btnSairConta.addEventListener('click', function(e){
-        e.preventDefault();
-
-        sessionStorage.removeItem('logado');
-        window.location.href = "http://localhost/Trit/trit/login.html";
-    })
-})
+deslogar(bloqueio);
 
 const nomeUsuario = document.querySelector('.nome');
 const nivelAtual = document.querySelector('#nivelAtual');

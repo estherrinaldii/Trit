@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData } from "./funcoes.js";
+import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData, deslogar } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const main = document.querySelector('main');
@@ -17,6 +17,8 @@ msgErro.classList.add('erro');
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 let btnSair = botaoSair();
+
+deslogar(bloqueio);
 
 let prateleiraItens = 2;
 botaoAdicionar();

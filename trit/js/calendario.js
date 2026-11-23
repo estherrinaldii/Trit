@@ -1,8 +1,18 @@
-import { FormatarData } from "./funcoes.js";
+import { FormatarData, botaoSair, deslogar, formataInputData, formataInputValor, erro, avisoSair, validaData } from "./funcoes.js";
 
 if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
+
+const body = document.querySelector('body');
+const bloqueio = document.createElement('div');
+bloqueio.classList.add('bloqueio');
+
+deslogar(bloqueio);
+
+const msgErro = document.createElement('p');
+msgErro.classList.add('erro');
+
   // fixo
   fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=fixa', {
     method: "GET",
@@ -86,48 +96,36 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
             info.classList.add('info1');
 
                 const nome = document.createElement('p');
+                nome.classList.add('nomeGastoMensal');
                 nome.textContent = txtNome;
 
                 const areaValor = document.createElement('div');
                 areaValor.classList.add('subtxt');
 
-                    const moeda = document.createElement('p');
-                    moeda.textContent = 'R$';
+                  const moeda = document.createElement('p');
+                  moeda.textContent = 'R$';
 
-                    const valor = document.createElement('p');
-                    valor.textContent = txtValor;
-                
+                  const valor = document.createElement('p');
+                  valor.textContent = txtValor;
+
                 areaValor.appendChild(moeda);
                 areaValor.appendChild(valor);
+
+                let valorParcela = null;
+                    
+                  if(txtTipo == 'parcelada'){
+
+                    valorParcela = document.createElement('p');
+                    valorParcela.classList.add('valorParcela')
+                    valorParcela.textContent = `(${txtParcelaAtual}/${txtParcelaTotal})`;
+
+                    areaValor.appendChild(valorParcela);
+                  }             
 
             info.appendChild(nome);
             info.appendChild(areaValor);
 
         infosGastos.appendChild(info);
-
-            if(txtTipo == 'parcelada'){
-                info = document.createElement('div');
-                info.classList.add('info2');
-    
-                    const tituloParcela = document.createElement('p');
-                    tituloParcela.textContent = 'Frequência';
-                    
-                    const areaParcela = document.createElement('div');
-    
-                        const valorParcela = document.createElement('p');
-                        valorParcela.textContent = `${txtParcelaAtual}/${txtParcelaTotal}`;
-    
-                        const txtParcela = document.createElement('p');
-                        txtParcela.textContent = 'parcelas';
-                    
-                    areaParcela.appendChild(valorParcela);
-                    areaParcela.appendChild(txtParcela);
-                
-                info.appendChild(tituloParcela);
-                info.appendChild(areaParcela);
-        
-                infosGastos.appendChild(info);
-            }
 
             info = document.createElement('div');
             info.classList.add('info3');
@@ -152,6 +150,192 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
     gasto.appendChild(icone);
 
     areaMensal.appendChild(gasto);
+
+    icone.addEventListener('click', function(e){
+
+      bloqueio.innerHTML = '';
+
+      const areaEditarGasto = document.createElement('div');
+      areaEditarGasto.classList.add('popup');
+
+      const areaTitulo = document.createElement('div');
+      areaTitulo.classList.add('areaTitulo');
+
+      const tituloEditarGasto = document.createElement('p');
+      tituloEditarGasto.classList.add('tituloMenor');
+      tituloEditarGasto.classList.add('tituloPopup');
+      tituloEditarGasto.textContent = 'Editar ' + txtNome.toLowerCase();
+
+      const btnSair = botaoSair();
+
+      areaTitulo.append(tituloEditarGasto, btnSair);
+
+      const areaInfos = document.createElement('div');
+      areaInfos.classList.add('infos');
+
+      const areaNomeGasto = document.createElement('div');
+      areaNomeGasto.classList.add('areaDigitar');
+
+      const labelNomeGasto = document.createElement('label');
+      labelNomeGasto.textContent = 'Nome:';
+
+      const txtNomeGasto = document.createElement('input');
+      txtNomeGasto.type = 'text';
+      txtNomeGasto.value = txtNome;
+
+      areaNomeGasto.append(labelNomeGasto, txtNomeGasto);
+      const areaValorGasto = document.createElement('div');
+      areaValorGasto.classList.add('areaDigitar');
+
+      const labelValorGasto = document.createElement('label');
+
+      const areaLeft = document.createElement('div');
+      areaLeft.classList.add('areaLeft');
+
+      const txtValorGasto = document.createElement('input');
+      txtValorGasto.type = 'text';
+      txtValorGasto.value = txtValor;
+      txtValorGasto.inputMode = 'numeric';
+      txtValorGasto.value = txtValor;
+      txtValorGasto.classList.add('recuoPopup');
+      txtValorGasto.classList.add('inputMoeda');
+
+      const moeda = document.createElement('p');
+      moeda.textContent = 'R$';
+      moeda.classList.add('moeda');
+
+      areaLeft.append(txtValorGasto, moeda);
+
+      formataInputValor(txtValorGasto, txtValor);
+
+      areaValorGasto.append(labelValorGasto, areaLeft);
+
+      const areaVencimentoGasto = document.createElement('div');
+      areaVencimentoGasto.classList.add('areaDigitar');
+
+      const labelVencimentoGasto = document.createElement('label');
+      labelVencimentoGasto.textContent = 'Vencimento:';
+
+      const txtVencimentoGasto = document.createElement('input');
+      txtVencimentoGasto.type = 'text';
+      txtVencimentoGasto.value = txtDataVencimento;
+      txtVencimentoGasto.inputMode = 'numeric';
+
+      formataInputData(txtVencimentoGasto, txtDataVencimento.replaceAll('/',''));
+
+      areaVencimentoGasto.append(labelVencimentoGasto, txtVencimentoGasto);
+
+      let txtParcelasGasto = null;
+
+      if(txtTipo == 'parcelada')
+      {
+        const divAlinhamento = document.createElement('div');
+        divAlinhamento.classList.add('divAlinhamento');
+
+        const areaParcelasGasto = document.createElement('div');
+        areaParcelasGasto.classList.add('areaDigitar');
+
+        const labelParcelasGasto = document.createElement('label');
+        labelParcelasGasto.textContent = 'Nº de parcelas:';
+
+        txtParcelasGasto = document.createElement('input');
+        txtParcelasGasto.type = 'text';
+        txtParcelasGasto.value = txtParcelaTotal;
+        txtParcelasGasto.id = 'txtParcelas';
+
+        areaParcelasGasto.append(labelParcelasGasto, txtParcelasGasto);
+
+        labelValorGasto.textContent = 'Valor da parcela:';
+
+        divAlinhamento.append(areaVencimentoGasto, areaParcelasGasto)
+        areaInfos.append(areaNomeGasto, divAlinhamento, areaValorGasto);
+      }
+      else
+      {
+        labelValorGasto.textContent = 'Valor:';
+        areaInfos.append(areaNomeGasto, areaVencimentoGasto, areaValorGasto);
+      }
+
+      const divAlinhamento = document.createElement('div');
+      divAlinhamento.classList.add('divAlinhamento');
+
+      const btnSalvar = document.createElement('button');
+      btnSalvar.textContent = 'Salvar';
+      btnSalvar.classList.add('btnSalvar');
+
+      const btnExcluir = document.createElement('button');
+      btnExcluir.textContent = 'Excluir';
+      btnExcluir.classList.add('btnExcluirElemento');
+
+      divAlinhamento.append(btnSalvar, btnExcluir);
+
+      areaEditarGasto.append(areaTitulo, areaInfos, divAlinhamento);
+
+      bloqueio.appendChild(areaEditarGasto);
+      body.appendChild(bloqueio);
+
+      btnSair.addEventListener('click', function(e){
+        e.preventDefault();
+
+        areaEditarGasto.remove();
+        avisoSair(bloqueio);
+      })
+
+      btnSalvar.addEventListener('click', function(e){
+        e.preventDefault();
+
+        if(txtNomeGasto.value == '')
+        {
+          erro(msgErro, txtNomeGasto, 'Nome não foi informado!', areaInfos);
+          return;
+        }
+
+        let erroEncontrado = '';
+        erroEncontrado = validaData(msgErro, txtVencimentoGasto, areaInfos);
+
+        if(erroEncontrado)
+        {
+          return;
+        }
+
+        if(document.querySelector('#txtParcelas'))
+        {
+          if(txtParcelasGasto.value == '')
+          {
+            erro(msgErro, txtParcelasGasto, 'Número de parcelas não foi informado!', areaInfos);
+            return;
+          }
+        }
+
+        if(txtValorGasto.value == '' || txtValorGasto.value == '0,00')
+        {
+          erro(msgErro, txtValorGasto, 'Valor não foi informado!', areaInfos);
+          return;
+        }
+
+        areaEditarGasto.remove();
+        bloqueio.remove();
+
+        nome.textContent = txtNomeGasto.value;
+
+        dataVencimento.textContent = txtVencimentoGasto.value;
+
+        if(txtTipo == 'parcelada'){
+          valorParcela.textContent = '(' + txtParcelaAtual + '/' + txtParcelasGasto.value + ')';
+        }
+
+        valor.textContent = txtValorGasto.value;
+        
+      })
+
+      btnExcluir.addEventListener('click', function(e){
+        e.preventDefault();
+
+        gasto.remove()
+        areaEditarGasto.remove();
+        bloqueio.remove();
+      })
+    })
 }
 
 

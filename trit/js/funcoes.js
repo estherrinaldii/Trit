@@ -379,3 +379,53 @@ export function popupInsigniaCompleta(bloqueio, body){
         bloqueio.remove();
     })
 }
+
+export function deslogar(bloqueio){
+    const btnDeslogar = document.querySelector('.btnDeslogar');
+
+    btnDeslogar.addEventListener('click', function(e){
+        e.preventDefault();
+
+        bloqueio.innerHTML = '';
+
+        const areaDeslogar = document.createElement('div');
+        areaDeslogar.classList.add('popup');
+        areaDeslogar.classList.add('areaAviso');
+
+        const avisoDeslogar = document.createElement('p');
+        avisoDeslogar.textContent = 'Você deseja sair da conta?';
+
+        const areaBotoes = document.createElement('div');
+        areaBotoes.classList.add('areaBotoesDeslogar');
+
+        const btnCancelar = document.createElement('button');
+        btnCancelar.classList.add('btnCancelar');
+        btnCancelar.textContent = 'Cancelar';
+
+        const btnSairConta = document.createElement('button');
+        btnSairConta.classList.add('btnExcluirConfirma');
+        btnSairConta.textContent = 'Sair';
+
+        areaBotoes.append(btnCancelar, btnSairConta);
+        areaDeslogar.append(avisoDeslogar, areaBotoes);
+
+        bloqueio.appendChild(areaDeslogar);
+
+        const body = document.querySelector('body');
+        body.appendChild(bloqueio);
+
+        btnCancelar.addEventListener('click', function(e){
+            e.preventDefault();
+
+            areaDeslogar.remove();
+            bloqueio.remove();
+        })
+
+        btnSairConta.addEventListener('click', function(e){
+            e.preventDefault();
+
+            sessionStorage.removeItem('logado');
+            window.location.href = "http://localhost/Trit/trit/login.html";
+        })
+    })
+}

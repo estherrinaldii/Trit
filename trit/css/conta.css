@@ -1,17 +1,3 @@
-header{
-    display: flex;
-    justify-content: space-between;
-}
-
-.btnDeslogar{
-    height: 34px;
-}
-
-.areaBotoes{
-    display: flex;
-    gap: 8px;
-}
-
 main{
     display: flex;
     flex-direction: column;

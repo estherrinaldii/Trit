@@ -2,13 +2,14 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, FormatarData, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor } from "./funcoes.js";
+import { erro, FormatarData, botaoSair, avisoSair, obrigatorioIcon, formataInputData, validaData, formataInputValor, deslogar } from "./funcoes.js";
 
 const bloqueio = document.createElement('div');
 bloqueio.classList.add('bloqueio');
 let btnSair = botaoSair();
 let areaRight = 0;
 
+deslogar(bloqueio);
 
 const galho = document.querySelector('#galho');
 function mudaFaseArvore(valorAtual, valorTotal){
@@ -64,6 +65,15 @@ method: "GET",
 
             valorAtual = dadosJSON.usuario[1].Valor;
             valorTotal = dadosJSON.usuario[0].Renda;
+
+            if(valorAtual <= 0)
+            {
+                document.querySelector('.valor').style.color = 'rgb(255, 85, 85)'
+            }
+            else
+            {
+                document.querySelector('.valor').style.color = 'rgb(9, 95, 184)'
+            }
 
             mudaFaseArvore(valorAtual, valorTotal);
     } else {
@@ -252,6 +262,15 @@ btnNovaEntrada.addEventListener('click', function(e){
                 mudaFaseArvore(carteira, carteiraTotal);
                 carteira = Number(carteira).toFixed(2)
                 document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
+
+                if(Number(document.querySelector('#valorAtual').textContent.replace(',','.')) <= 0)
+                {
+                    document.querySelector('.valor').style.color = 'rgb(255, 85, 85)';
+                }
+                else
+                {
+                    document.querySelector('.valor').style.color = 'rgb(9, 95, 184)';
+                }
             }
         })
         .catch(function (error) {
@@ -630,7 +649,7 @@ function areaSelecao(local, areaNovaSaida)
                 return;
             }
 
-            if(txtValorLimite.value == '')
+            if(txtValorLimite.value == '' || txtValorLimite.value == '0,00')
             {
                 erro(msgErro, txtValorLimite, 'Valor não foi informado!', areaInfos);
                 return;
@@ -1040,6 +1059,8 @@ function criarAreaSaida(txtTipo){
             divAlinhamento.innerHTML = '';
             areaInfos.innerHTML = '';
             txtTipoSaida.value = 'Categorizada';
+            labelDataSaida.textContent = 'Data:';
+            labelValorSaida.textContent = 'Valor:';
             
             divAlinhamento.append(areaTipoSaida, areaDataSaida);
             
@@ -1091,7 +1112,7 @@ function criarAreaSaida(txtTipo){
 
             if(txtParcelas.value == '')
             {
-                erro(msgErro, txtParcelas, 'Número de parcelas não informado!', areaInfos);
+                erro(msgErro, txtParcelas, 'Número de parcelas não foi informado!', areaInfos);
                 return;
             }
         }
@@ -1186,6 +1207,15 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
             if(txtTipo === 'Parcelada'){
                 alterarCarteira(txtValor);
             }
+
+            if(Number(document.querySelector('#valorAtual').textContent.replace(',','.')) <= 0)
+            {
+             document.querySelector('.valor').style.color = 'rgb(255, 85, 85)';
+            }
+            else
+            {
+                document.querySelector('.valor').style.color = 'rgb(9, 95, 184)';
+            }
         }
     })
     .catch(function (error) {
@@ -1210,7 +1240,7 @@ function areaPopupEditar(local, txtNome, predValorAtual, predValorLimite, codigo
                 const tituloPopup = document.createElement('h1');
                 tituloPopup.classList.add('titulo');
                 tituloPopup.classList.add('tituloPopup');
-                tituloPopup.textContent = txtNome;
+                tituloPopup.textContent = 'Editar ' + txtNome.toLowerCase();
     
                 btnSair.addEventListener('click', function(e){
                     e.preventDefault();

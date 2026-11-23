@@ -11,7 +11,7 @@
 
 main{
     overflow: auto;
-    margin-bottom: 67px;
+    margin-bottom: 75px;
 }
 
 body{
@@ -57,6 +57,26 @@ a img{
 header{
     width: 100%;
     padding: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btnDeslogar{
+    height: 34px;
+}
+
+.areaBotoesDeslogar{
+    display: flex;
+    gap: 8px;
+}
+
+.areaBotoesDeslogar > button{
+    height: 40px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: solid rgb(9, 95, 184) 2px;
+    font-weight: 450;
+    width: 100%;
 }
 
 .areaAviso{
@@ -72,6 +92,13 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.areaTitulo > p{
+    max-width: 230px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .btnOk, .btnSalvar, .btnGuardar, .btnCancelar, .btnDepositar{
@@ -237,8 +264,9 @@ input:disabled{
 }
 
 .btnExcluirConfirma{
-    border: solid, rgb(255, 85, 85), 2px;
+    border: solid, rgb(255, 85, 85), 2px !important;
     color: rgb(255, 85, 85);
+    background-color: white;
 }
 
 .btnExcluirConfirma:active{
@@ -262,6 +290,10 @@ input:disabled{
     background-color: rgb(225, 85, 85);
     border: solid transparent 2px;
     color: white;
+}
+
+.btnExcluirElemento:active{
+    background-color: rgb(199, 22, 22);
 }
 
 .areaInfos, .areaOpcoes{
