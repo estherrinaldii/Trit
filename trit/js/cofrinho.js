@@ -915,9 +915,7 @@ function informacoesCofre()
                     tituloPeriodo.classList.add('tituloInfos');
 
                     const tipoPeriodo = document.createElement('p');
-                    tipoPeriodo.textContent = cofrinho.tipo;
-
-                    // cofrinho.tipo.charAt(0).toUpperCase() + cofrinho.tipo.slice(1);
+                    tipoPeriodo.textContent = cofrinho.Tipo.charAt(0).toUpperCase() + cofrinho.Tipo.slice(1);;
 
                     areaPeriodo.append(tituloPeriodo, tipoPeriodo);
 
