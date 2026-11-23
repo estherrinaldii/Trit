@@ -377,123 +377,35 @@ function criarPendencia(txtNome, txtData, codigo){
     areaPendencia.appendChild(card);
 }
 
-exibirCalendario(0, 2026);
-
-function exibirCalendario(mes, ano){
-  const localDia = document.querySelector('.dias');
-  localDia.innerHTML = '';
-
-  let semanas = gerarSemanas(mes, ano);
-  for (let i = 0; i < semanas.length; i++) {
-    const separaDia = document.createElement('div');
-    separaDia.classList.add('separaDia');
-      for (let j = 0; j < semanas[i].length; j++) {
-        const txtDia = document.createElement('p');
-        if(semanas[i][j] == null){
-          txtDia.textContent = 'xx';
-        }else{
-          if(Number(semanas[i][j]) < 10){
-            let arrumaDia = `0${semanas[i][j]}`;
-            txtDia.textContent = arrumaDia;
-          }else{
-            txtDia.textContent = semanas[i][j];
-          }
-        }
-        separaDia.appendChild(txtDia);
-      }
-    
-    localDia.appendChild(separaDia);
-  }
-
-}
+calendarjs.setDictionary({
+    'January': 'Janeiro',
+    'February': 'Fevereiro',
+    'March': 'Março',
+    'April': 'Abril',
+    'May': 'Maio',
+    'June': 'Junho',
+    'July': 'Julho',
+    'August': 'Agosto',
+    'September': 'Setembro',
+    'October': 'Outubro',
+    'November': 'Novembro',
+    'December': 'Dezembro',
+    'Sunday': 'Domingo',
+    'Monday': 'Segunda',
+    'Tuesday': 'Terça',
+    'Wednesday': 'Quarta',
+    'Thursday': 'Quinta',
+    'Friday': 'Sexta',
+    'Saturday': 'Sabado',
+    'Done': 'Domingo',
+    'Reset': 'Resetar'
+});
 
 
-function gerarSemanas(mes, ano) {
-  const primeiroDiaSemana = new Date(ano, mes - 1, 1).getDay();
-  const totalDiasMesAtual = new Date(ano, mes, 0).getDate();
-  const totalDiasMesAnterior = new Date(ano, mes - 1, 0).getDate();
+const { Calendar } = calendarjs;
 
-  const slots = [];
+Calendar(document.getElementById('calendario'), {
+    type: 'inline',
+    value: new Date()
+});
 
-  for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
-    slots.push(totalDiasMesAnterior - i);
-  }
-
-  for (let dia = 1; dia <= totalDiasMesAtual; dia++) {
-    slots.push(dia);
-  }
-
-  let diaProximoMes = 1;
-  while (slots.length % 7 !== 0) {
-    slots.push(diaProximoMes++);
-  }
-
-  const semanas = [];
-  for (let i = 0; i < slots.length; i += 7) {
-    semanas.push(slots.slice(i, i + 7));
-  }
-
-  return semanas;
-}
-
-let mesAtual  = new Date().getMonth();
-const mes = document.getElementById('mes');
-mes.setAttribute('qualMes', mesAtual);
-mes.textContent = qualMes(Number(mes.getAttribute('qualMes')) + 1);
-
-const btnAumentaMes = document.getElementById('aumentaMes');
-btnAumentaMes.addEventListener('click', function(e){
-  e.preventDefault();
-  let numeroMes = Number(mes.getAttribute('qualMes'));
-  numeroMes++;
-
-  mes.setAttribute('qualMes', numeroMes);
-  mes.textContent = qualMes(numeroMes + 1);
-  exibirCalendario(numeroMes, 2026);
-})
-
-function qualMes(mes){
-  let verificaMes = Number(mes);
-  let nomeMes = '';
-
-  switch(verificaMes){
-      case 1:
-          nomeMes = 'Janeiro';
-          break;
-      case 2:
-          nomeMes = 'Fevereiro';
-          break;
-      case 3:
-          nomeMes = 'Março';
-          break;
-      case 4:
-          nomeMes = 'Abril';
-          break;
-      case 5:
-          nomeMes = 'Maio';
-          break;
-      case 6:
-          nomeMes = 'Junho';
-          break;
-      case 7:
-          nomeMes = 'Julho';
-          break;
-      case 8:
-          nomeMes = 'Agosto';
-          break;
-      case 9:
-          nomeMes = 'Setembro';
-          break;
-      case 10:
-          nomeMes = 'Outubro';
-          break;
-      case 11:
-          nomeMes = 'Novembro';
-          break;
-      case 12:
-          nomeMes = 'Dezembro';
-          break;
-  }
-
-  return nomeMes;
-}

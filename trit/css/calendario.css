@@ -159,61 +159,31 @@ section{
 }
 
 /*  */
-#calendario{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+#calendario input{
+    display: none !important;
 }
 
-.cabecalho{
-    display: flex;
-    font-size: 20px;
-    color: rgb(9, 95, 184);
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+#calendario button{
+    color: rgb(9, 95, 184) !important;
+    font-weight: 600 !important;
 }
 
-.cabecalho div{
-    display: flex;
-    width: 100%;
-    padding-bottom: 4px;
-    padding-top: 4px;
-    padding-left: 12px;
-    padding-right: 12px;
+.lm-calendar-navigation button{
+    font-weight: 400 !important;
     background-color: #CCF6A2;
-    border-radius: 25px;
-    justify-content: space-between;
-    align-items: center;
 }
 
-.btnCalendario{
-    background: none;
-    border: none;
-    width: fit-content;
+.lm-calendar-weekdays{
+    color: rgb(29, 59, 90) !important;
 }
 
-.areaDias{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.lm-calendar-content>div[data-selected=true]{
+    border: none !important;
+    outline: none !important;
+    background-color: rgba(9, 94, 184, 0.195) !important;
+    color: rgb(9, 95, 184) !important;
 }
 
-.semana, .separaDia{
-    width: auto;
-    display: flex;
-    justify-content: space-between;
-}
-
-.dias{
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.separaDia p{
-    padding: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-align: center;
+.lm-calendar-footer{
+    display: none !important;
 }
