@@ -632,8 +632,8 @@ delimiter $$
 		ORDER BY data DESC;
 	END$$
 
-    DROP PROCEDURE IF EXISTS calcular_insignia_completados$$
-	CREATE PROCEDURE calcular_insignia_completados(pEmail VARCHAR(200), pQuantidade INT, pCodigoInsignia INT)
+    DROP PROCEDURE IF EXISTS calcular_insignia_cofrinhos_completados$$
+	CREATE PROCEDURE calcular_insignia_cofrinhos_completados(pEmail VARCHAR(200), pQuantidade INT, pCodigoInsignia INT)
 	BEGIN
 		DECLARE qtdUsuario INT DEFAULT 0;
 		DECLARE qtdCofrinho INT DEFAULT 0;
@@ -691,11 +691,38 @@ delimiter $$
 	CREATE PROCEDURE verificar_insignias_cofrinho(pEmail VARCHAR(200))
 	BEGIN
 		CALL calcular_primeiro_cofrinho_criado(pEmail);
-		CALL calcular_insignia_completados(pEmail, 1, 2);
-		CALL calcular_insignia_completados(pEmail, 5, 3);
-		CALL calcular_insignia_completados(pEmail, 10, 5);
+		CALL calcular_insignia_cofrinhos_completados(pEmail, 1, 2);
+		CALL calcular_insignia_cofrinhos_completados(pEmail, 5, 3);
+		CALL calcular_insignia_cofrinhos_completados(pEmail, 10, 5);
 		CALL calcular_primeiro_cofrinho_determinado_completado(pEmail);
 	END$$
+    
+    DROP PROCEDURE IF EXISTS calcular_insignia_nivel$$
+    CREATE PROCEDURE calcular_insignia_nivel (pEmail VARCHAR(200), pNivel INT, pCodigoInsignia INT)
+	BEGIN
+		declare vNivel int default 0;
+		DECLARE qtdUsuario INT DEFAULT 0;
+		
+		SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
+			IF qtdUsuario = 0 THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario não encontrado';
+		END IF;   
+		
+		SELECT FLOOR(qt_pontos / 15) INTO vNivel FROM Usuario 
+			WHERE nm_email = pEmail;
+			
+		if vNivel >= pNivel then
+			INSERT IGNORE INTO usuario_insignia (FK_nm_email, FK_cd_insignia) VALUES (pEmail, pCodigoInsignia);
+		end if;    
+	END$$
+    
+    DROP PROCEDURE IF EXISTS verificar_insignias_nivel$$
+	CREATE PROCEDURE verificar_insignias_nivel(pEmail VARCHAR(200))
+	BEGIN
+		CALL calcular_insignia_nivel(pEmail, 1, 7);
+        CALL calcular_insignia_nivel(pEmail, 5, 8);
+        CALL calcular_insignia_nivel(pEmail, 10, 9);
+    END$$
     
     DROP PROCEDURE IF EXISTS listar_insignias$$
 	CREATE PROCEDURE listar_insignias(pEmail VARCHAR(200))
@@ -703,6 +730,7 @@ delimiter $$
 		DECLARE qtdUsuario INT DEFAULT 0;
         
         CALL `trit`.`verificar_insignias_cofrinho`(pEmail);
+        CALL verificar_insignias_nivel(pEmail);
 
         
         SELECT count(*) into qtdUsuario from Usuario where nm_email = pEmail;
@@ -762,7 +790,7 @@ END$$
 		SELECT cd_desafio, pEmail, 0
 			FROM Desafio
 			WHERE qt_nivel_desafio <= GREATEST(vNivel, 1)
-			ORDER BY RAND()
+			ORDER BY qt_meta_desafio ASC, RAND()
 			LIMIT vFaltam;
 	END$$
     
@@ -794,6 +822,8 @@ END$$
 					 AND c.dt_exclusao IS NULL
 					 AND c.dt_conclusao >= du.dt_atribuicao) >= d.qt_meta_desafio;
 	END$$
+    
+    
 
 	DROP PROCEDURE IF EXISTS verificar_desafios$$
 	CREATE PROCEDURE verificar_desafios(pEmail VARCHAR(200))
