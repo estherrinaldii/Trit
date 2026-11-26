@@ -1140,13 +1140,16 @@ function criarAreaSaida(txtTipo){
             bloqueio.innerHTML = '';
         }
 
+        let hoje = new Date().toLocaleDateString("pt-BR");
+        let conjuntoData = hoje.split("/");
+        let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
 
         if(txtTipoSaida.value == 'Programada'){
             let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            sessionStorage.setItem(txtNomeSaida.value, 0);
-            criarSaida(txtNomeSaida.value, 'Fixa', dataLimite, valor, null, null, null, null, selecionado);
+            sessionStorage.setItem(txtNomeSaida.value, valor);
+            criarSaida(txtNomeSaida.value, 'Fixa', dataFormatada, 0, dataLimite, null, null, null, selecionado,);
             areaNovaSaida.remove();
             bloqueio.remove();
             bloqueio.innerHTML = '';

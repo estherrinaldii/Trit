@@ -28,8 +28,10 @@ const todasDatas = [];
     })
     .then(function (dadosJSON) {
       if (dadosJSON) {
+        console.log(dadosJSON);
           for (let i = 0; i < dadosJSON.saidas.length; i++) {
             const saida = dadosJSON.saidas[i];
+            console.log(saida);
             todasDatas.push(saida.Data);
             let valor = saida.Valor;
             valor = Number(valor).toFixed(2);
@@ -340,7 +342,9 @@ function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtu
     })
 }
 
-
+let hoje = new Date().toLocaleDateString("pt-BR");
+let conjuntoData = hoje.split("/");
+let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
 
 const areaPendencia = document.querySelector('.areaPendencias');
 function criarPendencia(txtNome, txtData, codigo){
@@ -427,7 +431,8 @@ function selecionaDia(){
             let txtDia = dia.textContent;
             let txtMes = mesAno[0].textContent;
             let txtAno = mesAno[1].textContent;
-        
+
+            
             let enviaMes = qualNumero(txtMes);
             if(Number(qualNumero(txtMes)) < 10){
               enviaMes = '0' + qualNumero(txtMes);
@@ -439,6 +444,7 @@ function selecionaDia(){
             }
         
             let dataTotal = `${txtAno}-${enviaMes}-${enviaDia}`;
+            console.log(dataTotal);
           pendenciasPorData(dataTotal);
           titulo.textContent = `${txtDia} de ${txtMes} de ${txtAno}`;
         }else{
@@ -496,37 +502,37 @@ function qualNumero(mes){
 }
 
 function pendenciasPorData(txtData){
-  // fixo
-  fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=fixa', {
-    method: "GET",
-       credentials: "include",
-  })
-    .then(function (resposta) {
-      if (!resposta.ok) {
-        throw new Error("Erro HTTP: " + resposta.status);
-      }
-      return resposta.json();
+    // fixo
+    fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=fixa', {
+      method: "GET",
+         credentials: "include",
     })
-    .then(function (dadosJSON) {
-      if (dadosJSON) {
-        for (let i = 0; i < dadosJSON.saidas.length; i++) {
-          const saida = dadosJSON.saidas[i];
-          if(saida.Prazo == txtData){
+      .then(function (resposta) {
+        if (!resposta.ok) {
+          throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+      })
+      .then(function (dadosJSON) {
+        if (dadosJSON) {
+          for (let i = 0; i < dadosJSON.saidas.length; i++) {
+            const saida = dadosJSON.saidas[i];
+            if(saida.Prazo == txtData){
+                areaPendencia.textContent = '';
+                criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
+            }else{
               areaPendencia.textContent = '';
-              criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
-          }else{
-            areaPendencia.textContent = '';
-            let vazio = document.createElement('p');
-            vazio.textContent = 'Não há nenhuma pendência para esse dia';
-            vazio.style.color = 'rgb(9, 95, 184)';
-            areaPendencia.appendChild(vazio);
+              let vazio = document.createElement('p');
+              vazio.textContent = 'Não há nenhuma pendência para esse dia';
+              vazio.style.color = 'rgb(9, 95, 184)';
+              areaPendencia.appendChild(vazio);
+            }
           }
         }
-      }
-    })
-    .catch(function (error) {
-      console.warn(error);
-    });
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
 
   //   fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
   //   method: "GET",

@@ -704,7 +704,7 @@ function exibirExtrato(dados){
 function criarMovimentacao(local, movimentacoes){
     for (let i = 0; i < movimentacoes.length; i++) {
         console.log(movimentacoes[i]);
-        if(movimentacoes[i].Valor != 10 || movimentacoes[i].Valor != 10.00){
+        if(movimentacoes[i].Valor != 0 || movimentacoes[i].Valor != 0.00){
             const movimentacao = document.createElement('div');
                 const nomeMovimentacao = document.createElement('p');
                 nomeMovimentacao.textContent = movimentacoes[i].Nome;
