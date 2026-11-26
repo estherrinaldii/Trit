@@ -171,11 +171,7 @@ delimiter $$
 				SET pCodigoSaida = maiorCodigo + 1;
                 
 		SELECT cd_carteira INTO pCarteira FROM Carteira WHERE FK_nm_email = pEmail LIMIT 1;
-        
-        IF pValor <= 0 THEN
-			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor não pode ser menor que 0';
-        END IF;
-
+                
         IF pTipo = 'parcelada' AND (pParcelas IS NULL OR pParcelas < 1) THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Número de parcelas inválido';
         END IF;
