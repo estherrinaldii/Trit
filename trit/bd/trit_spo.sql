@@ -178,7 +178,7 @@ delimiter $$
     
 		IF pTipo = 'fixa' THEN 
 		INSERT INTO saida(cd_saida, nm_saida, vl_saida, dt_saida, dt_prazo_saida, ic_tipo_saida, ic_status_saida, FK_cd_carteira, FK_cd_categoria_gasto)
-			VALUES (pCodigoSaida, pNomeSaida, pValor, pData, null, 'fixa', pStatus, pCarteira, null);
+			VALUES (pCodigoSaida, pNomeSaida, pValor, pData, pPrazo, 'fixa', pStatus, pCarteira, null);
          END IF; 
          
          IF  pTipo = 'parcelada' THEN 
