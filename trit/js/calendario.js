@@ -42,6 +42,12 @@ const todasDatas = [];
             
             let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
 
+            if(saida.Valor == 0){
+              valor = sessionStorage.getItem(saida.Nome).toLowerCase();
+              valor = String(valor).replaceAll(',','.');
+              valor = Number(valor); 
+            }
+
             criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, null, null, saida.Codigo);
             criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
           }
@@ -347,7 +353,7 @@ let conjuntoData = hoje.split("/");
 let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
 
 const areaPendencia = document.querySelector('.areaPendencias');
-function criarPendencia(txtNome, txtData, codigo){
+function criarPendencia(txtNome, txtData, codigo, txtValor){
     const card = document.createElement('div');
     card.classList.add('pendencia');
     card.id = codigo;
@@ -360,10 +366,21 @@ function criarPendencia(txtNome, txtData, codigo){
 
             areaConfirmacao.addEventListener('click', function(e){
                 e.preventDefault();
-        
+                let valor = 0;
+                if(txtValor == null || txtValor == 0){
+                  valor = sessionStorage.getItem(String(txtNome).toLowerCase());
+                  valor = String(valor).replaceAll(',','.');
+                  valor = Number(valor);
+                }else{
+                  valor = txtValor;
+                  valor = String(valor).replaceAll(',','.');
+                  valor = Number(valor);
+                }
+
                 if(!card.classList.contains('concluido'))
                 {
                     card.classList.add('concluido');
+                    criarSaidaPorClick(txtNome, 'parcelada', dataFormatada, valor, dataFormatada, 'pendente', 0, null);
                 }
                 else
                 {
@@ -519,7 +536,7 @@ function pendenciasPorData(txtData){
             const saida = dadosJSON.saidas[i];
             if(saida.Prazo == txtData){
                 areaPendencia.textContent = '';
-                criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
+                criarPendencia(saida.Nome, saida.Prazo, saida.Codigo, saida.Valor);
             }else{
               areaPendencia.textContent = '';
               let vazio = document.createElement('p');
@@ -564,4 +581,72 @@ function pendenciasPorData(txtData){
   //   .catch(function (error) {
   //     console.warn(error);
   //   });
+}
+
+
+function criarSaidaPorClick(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatus, txtParcelas, txtCategoria){
+    fetch("http://localhost/Trit/trit/api/criarSaida.php", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(
+        {
+            "nome":txtNome,
+            "valor":txtValor,
+            "data":txtData,
+            "prazo":txtDataLimite,
+            "tipo":txtTipo.toLowerCase(),
+            "status":txtStatus,
+            "parcelas":txtParcelas,
+            "categoria":txtCategoria
+        }
+    ),
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    })
+    .finally(function () {
+    });
+}
+
+function criarEntrada(nome, data, valor){
+  fetch("http://localhost/Trit/trit/api/criarEntrada.php", {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(
+        {
+            "nome":nome,
+            "data":data,
+            "valor":valor
+        }
+    ),
+    })
+    .then(function (resposta) {
+        if (!resposta.ok) {
+        throw new Error("Erro HTTP: " + resposta.status);
+        }
+        return resposta.json();
+    })
+    .then(function (dadosJSON) {
+        if (dadosJSON) {
+        }
+    })
+    .catch(function (error) {
+        console.warn(error);
+    });
 }
