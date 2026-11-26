@@ -1145,11 +1145,11 @@ function criarAreaSaida(txtTipo){
         let dataFormatada = `${conjuntoData[2]}-${conjuntoData[1]}-${conjuntoData[0]}`;
 
         if(txtTipoSaida.value == 'Programada'){
-            let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
+            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            sessionStorage.setItem(txtNomeSaida.value, valor);
-            criarSaida(txtNomeSaida.value, 'Fixa', dataFormatada, 0, dataLimite, null, null, null, selecionado,);
+            sessionStorage.setItem(String(txtNomeSaida.value).toLowerCase(), valor);
+            criarSaida(txtNomeSaida.value, 'Fixa', dataSaida, 0, dataSaida, null, null, null, selecionado);
             areaNovaSaida.remove();
             bloqueio.remove();
             bloqueio.innerHTML = '';
