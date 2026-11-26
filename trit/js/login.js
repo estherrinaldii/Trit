@@ -464,7 +464,7 @@ btnContinuar.addEventListener('click', function(e){
         
         msgErroClick = true;
 
-        console.log(emailUsuario, senhaUsuario, nomeUsuario, rendaUsuario, categoriasUsuario);
+        // console.log(emailUsuario, senhaUsuario, nomeUsuario, rendaUsuario, categoriasUsuario);
         //filtrar categorias selecionadas
         //enviar as informações do console para o banco FETCH!!
 
@@ -843,7 +843,6 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
 
         if(categoriasUsuario.length != 0)
         {
-            console.log(categoriasUsuario);
 
             let categoriaInclusa = false
 
@@ -869,7 +868,6 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
             {
                 let categoriaUsuario = {nomeCategoriaUsuario, valorCategoriaUsuario, codigoCategoriaUsuario};
                 categoriasUsuario.push(categoriaUsuario);
-                console.log(categoriasUsuario);
             }
             
             
@@ -878,12 +876,10 @@ function novaCategoria(categoriaAtual, categoriasSugeridas, nomeObrigatorio, cod
         {
             let categoriaUsuario = {nomeCategoriaUsuario, valorCategoriaUsuario, codigoCategoriaUsuario};
             categoriasUsuario.push(categoriaUsuario);
-            console.log(categoriasUsuario);
         }
 
         if(categoriaCriada)
         {
-            console.log('add classe')
             const todasCategorias = document.querySelector('.todasCategorias');
 
             const categoria = document.createElement('div');
@@ -922,7 +918,6 @@ function clickCategorias(categoriasSugeridas){
 
             if(!btnCategoria.classList.contains('selecionado'))
             {
-                console.log('add class selecionado')
                 btnCategoria.classList.add('selecionado');
                 click = true
     
@@ -933,7 +928,6 @@ function clickCategorias(categoriasSugeridas){
 
                 if(btnCategoria.getAttribute('id') == 'sugerida')
                 {
-                console.log('1')
 
                     txtNomeCategoria.disabled = true;
                 }
@@ -942,7 +936,6 @@ function clickCategorias(categoriasSugeridas){
 
                     if(btnCategoria.textContent == categoriasUsuario[index].nomeCategoriaUsuario)
                     { 
-                    console.log('2')
                         const txtValorCategoria = document.querySelector('#txtValorCategoria');
                         txtValorCategoria.value = categoriasUsuario[index].valorCategoriaUsuario;
 
@@ -953,7 +946,6 @@ function clickCategorias(categoriasSugeridas){
             }
             else
             {
-                console.log('3')
 
                 btnCategoria.classList.remove('selecionado');
                 click = false

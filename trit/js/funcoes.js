@@ -346,7 +346,7 @@ export function verificarInsignias(){
     });
 }
 
-export function popupInsigniaCompleta(bloqueio, body){
+export function popupInsigniaCompleta(bloqueio, body, nome, tipo, codigo){
     const areaInsigniaCompleta = document.createElement('div');
     areaInsigniaCompleta.classList.add('areaInsigniaCompleta');
     areaInsigniaCompleta.classList.add('popup');
@@ -357,11 +357,11 @@ export function popupInsigniaCompleta(bloqueio, body){
 
     const imgInsigniaCompleta = document.createElement('img');
     imgInsigniaCompleta.classList.add('imgInsigniaCompleta');
-    imgInsigniaCompleta.src = 'img/insignias/cofrinho-3.svg';
+    imgInsigniaCompleta.src = `img/insignias/${tipo}-${codigo}.svg`;
 
     const nomeInsigniaCompleta = document.createElement('p');
     nomeInsigniaCompleta.classList.add('nomeInsigniaCompleta');
-    nomeInsigniaCompleta.textContent = 'Bata 5 metas';
+    nomeInsigniaCompleta.textContent = nome;
 
     const btnOk = document.createElement('button');
     btnOk.classList.add('btnOk');

@@ -260,8 +260,12 @@ btnNovaEntrada.addEventListener('click', function(e){
 
                 carteira = carteira + valor;
                 mudaFaseArvore(carteira, carteiraTotal);
-                carteira = Number(carteira).toFixed(2)
+                carteira = Number(carteira).toFixed(2);
                 document.getElementById('valorAtual').textContent = String(carteira).replace('.',',');
+
+                let totalExibir = carteiraTotal + valor;
+                totalExibir = Number(totalExibir).toFixed(2);
+                document.getElementById('valorTotal').textContent = String(totalExibir).replace('.',',');
 
                 if(Number(document.querySelector('#valorAtual').textContent.replace(',','.')) <= 0)
                 {
@@ -855,14 +859,15 @@ function criarAreaSaida(txtTipo){
     btnCategorizado.textContent = 'Categorizada';
 
     const btnFixo = document.createElement('button');
-    btnFixo.textContent = 'Fixa';
+    btnFixo.textContent = 'Programada';
 
     const btnParcelado = document.createElement('button');
     btnParcelado.textContent = 'Parcelada';
 
     areaTitulo.append(tituloNovaSaida, btnSair);
 
-    opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
+    // opcoesSaida.append(btnCategorizado, btnFixo, btnParcelado);
+    opcoesSaida.append(btnCategorizado, btnFixo);
 
     areaNovaSaida.append(areaTitulo, opcoesSaida);
 
@@ -1009,7 +1014,7 @@ function criarAreaSaida(txtTipo){
             opcoesSaida.remove();
             divAlinhamento.innerHTML = '';
             areaInfos.innerHTML = '';
-            txtTipoSaida.value = 'Fixa';
+            txtTipoSaida.value = 'Programada';
             labelDataSaida.textContent = 'Vencimento:';
             labelValorSaida.textContent = 'Valor:';
 
@@ -1027,32 +1032,32 @@ function criarAreaSaida(txtTipo){
             })
         })
 
-        btnParcelado.addEventListener('click', function(e){
-            e.preventDefault();
+        // btnParcelado.addEventListener('click', function(e){
+        //     e.preventDefault();
 
-            opcoesSaida.remove();
-            divAlinhamento.innerHTML = '';
-            areaInfos.innerHTML = '';
-            txtTipoSaida.value = 'Parcelada';
-            labelDataSaida.textContent = 'Data:';
-            labelDataLimite.textContent = 'Vencimento:';
-            labelValorSaida.textContent = 'Valor da parcela:';
+        //     opcoesSaida.remove();
+        //     divAlinhamento.innerHTML = '';
+        //     areaInfos.innerHTML = '';
+        //     txtTipoSaida.value = 'Parcelada';
+        //     labelDataSaida.textContent = 'Data:';
+        //     labelDataLimite.textContent = 'Vencimento:';
+        //     labelValorSaida.textContent = 'Valor da parcela:';
 
-            divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
+        //     divAlinhamento.append(areaDataSaida, areaDataLimite, areaTipoSaida, areaParcelas);
 
-            areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
-            areaNovaSaida.append(areaInfos, btnSalvar);
+        //     areaInfos.append(areaNomeSaida, divAlinhamento, areaValorSaida);
+        //     areaNovaSaida.append(areaInfos, btnSalvar);
 
-            tituloNovaSaida.addEventListener('click', function(e){
-                e.preventDefault();
+        //     tituloNovaSaida.addEventListener('click', function(e){
+        //         e.preventDefault();
 
-                txtNomeSaida.value = 'Moto G7';
-                txtDataSaida.value = '03/12/2026';
-                txtDataLimite.value = '25/12/2026';
-                txtParcelas.value = '10';
-                txtValorSaida.value = '99,90';
-            })
-        })
+        //         txtNomeSaida.value = 'Moto G7';
+        //         txtDataSaida.value = '03/12/2026';
+        //         txtDataLimite.value = '25/12/2026';
+        //         txtParcelas.value = '10';
+        //         txtValorSaida.value = '99,90';
+        //     })
+        // })
     }else{
         if(txtTipo == 'Categorizada'){
             opcoesSaida.remove();
@@ -1098,24 +1103,24 @@ function criarAreaSaida(txtTipo){
             }
         }
 
-        if(txtTipoSaida.value == 'Parcelada')
-        {
+        // if(txtTipoSaida.value == 'Parcelada')
+        // {
 
-            if(txtDataLimite)
-            {
-                let erroEncontrado = '';
-                erroEncontrado = validaData(msgErro, txtDataLimite, areaInfos);
-                if(erroEncontrado){
-                    return;
-                }
-            }
+        //     if(txtDataLimite)
+        //     {
+        //         let erroEncontrado = '';
+        //         erroEncontrado = validaData(msgErro, txtDataLimite, areaInfos);
+        //         if(erroEncontrado){
+        //             return;
+        //         }
+        //     }
 
-            if(txtParcelas.value == '')
-            {
-                erro(msgErro, txtParcelas, 'Número de parcelas não foi informado!', areaInfos);
-                return;
-            }
-        }
+        //     if(txtParcelas.value == '')
+        //     {
+        //         erro(msgErro, txtParcelas, 'Número de parcelas não foi informado!', areaInfos);
+        //         return;
+        //     }
+        // }
 
         if(txtValorSaida.value == '')
         {
@@ -1136,26 +1141,27 @@ function criarAreaSaida(txtTipo){
         }
 
 
-        if(txtTipoSaida.value == 'Fixa'){
+        if(txtTipoSaida.value == 'Programada'){
             let dataLimite = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
             let valor = String(txtValorSaida.value).replace(',','.');
             valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataLimite, valor, null, null, null, null, selecionado);
+            sessionStorage.setItem(txtNomeSaida.value, 0);
+            criarSaida(txtNomeSaida.value, 'Fixa', dataLimite, valor, null, null, null, null, selecionado);
             areaNovaSaida.remove();
             bloqueio.remove();
             bloqueio.innerHTML = '';
         }
 
-        if(txtTipoSaida.value == 'Parcelada'){
-            let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
-            let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
-            let valor = String(txtValorSaida.value).replace(',','.');
-            valor = Number(valor);
-            criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null, selecionado);
-            areaNovaSaida.remove();
-            bloqueio.remove();
-            bloqueio.innerHTML = '';
-        }
+        // if(txtTipoSaida.value == 'Parcelada'){
+        //     let dataSaida = FormatarData(txtDataSaida, txtDataSaida, areaInfos);
+        //     let dataLimite = FormatarData(txtDataSaida, txtDataLimite, areaInfos);
+        //     let valor = String(txtValorSaida.value).replace(',','.');
+        //     valor = Number(valor);
+        //     criarSaida(txtNomeSaida.value, txtTipoSaida.value, dataSaida, valor, dataLimite, null, txtParcelas.value, null, selecionado);
+        //     areaNovaSaida.remove();
+        //     bloqueio.remove();
+        //     bloqueio.innerHTML = '';
+        // }
     })
 }
 
@@ -1201,7 +1207,7 @@ function criarSaida(txtNome, txtTipo, txtData, txtValor, txtDataLimite, txtStatu
             }
 
             if(txtTipo === 'Fixa'){
-                alterarCarteira(txtValor);
+                // alterarCarteira(txtValor);
             }
 
             if(txtTipo === 'Parcelada'){

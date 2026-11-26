@@ -51,38 +51,38 @@ const todasDatas = [];
   
   
   // parcelado
-  fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
-    method: "GET",
-       credentials: "include",
-  })
-    .then(function (resposta) {
-      if (!resposta.ok) {
-        throw new Error("Erro HTTP: " + resposta.status);
-      }
-      return resposta.json();
-    })
-    .then(function (dadosJSON) {
-      if (dadosJSON) {
-          for (let i = 0; i < dadosJSON.saidas.length; i++) {
-            const saida = dadosJSON.saidas[i];
-            todasDatas.push(saida.Data);
-            let valor = saida.Valor;
-            valor = Number(valor).toFixed(2);
-            valor = String(valor).replace('.',',');
+  // fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
+  //   method: "GET",
+  //      credentials: "include",
+  // })
+  //   .then(function (resposta) {
+  //     if (!resposta.ok) {
+  //       throw new Error("Erro HTTP: " + resposta.status);
+  //     }
+  //     return resposta.json();
+  //   })
+  //   .then(function (dadosJSON) {
+  //     if (dadosJSON) {
+  //         for (let i = 0; i < dadosJSON.saidas.length; i++) {
+  //           const saida = dadosJSON.saidas[i];
+  //           todasDatas.push(saida.Data);
+  //           let valor = saida.Valor;
+  //           valor = Number(valor).toFixed(2);
+  //           valor = String(valor).replace('.',',');
             
-            let data = saida.Prazo;
-            let conjuntoData = data.split("-");
+  //           let data = saida.Prazo;
+  //           let conjuntoData = data.split("-");
             
-            let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
+  //           let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
             
-            criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, 0, saida.Parcelas, saida.Codigo);
-            criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
-          }
-      }
-    })
-    .catch(function (error) {
-      console.warn(error);
-    });
+  //           criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, 0, saida.Parcelas, saida.Codigo);
+  //           criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
+  //         }
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.warn(error);
+  //   });
     
 function criarGasto(txtTipo, txtNome, txtValor, txtDataVencimento, txtParcelaAtual, txtParcelaTotal, codigo){
     const areaMensal = document.querySelector('.gastosMensais');
@@ -511,8 +511,6 @@ function pendenciasPorData(txtData){
       if (dadosJSON) {
         for (let i = 0; i < dadosJSON.saidas.length; i++) {
           const saida = dadosJSON.saidas[i];
-          console.log(txtData);
-          console.log(saida.Prazo);
           if(saida.Prazo == txtData){
               areaPendencia.textContent = '';
               criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
@@ -530,34 +528,34 @@ function pendenciasPorData(txtData){
       console.warn(error);
     });
 
-    fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
-    method: "GET",
-       credentials: "include",
-  })
-    .then(function (resposta) {
-      if (!resposta.ok) {
-        throw new Error("Erro HTTP: " + resposta.status);
-      }
-      return resposta.json();
-    })
-    .then(function (dadosJSON) {
-      if (dadosJSON) {
-        for (let i = 0; i < dadosJSON.saidas.length; i++) {
-          const saida = dadosJSON.saidas[i];
-          if(saida.Prazo == txtData){
-              areaPendencia.textContent = '';
-              criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
-          }else{
-            areaPendencia.textContent = '';
-            let vazio = document.createElement('p');
-            vazio.textContent = 'Não há nenhuma pendência para esse dia';
-            vazio.style.color = 'rgb(9, 95, 184)';
-            areaPendencia.appendChild(vazio);
-          }
-        }
-      }
-    })
-    .catch(function (error) {
-      console.warn(error);
-    });
+  //   fetch("http://localhost/Trit/trit/api/listarSaidasTipos.php?"+'tipo=parcelada', {
+  //   method: "GET",
+  //      credentials: "include",
+  // })
+  //   .then(function (resposta) {
+  //     if (!resposta.ok) {
+  //       throw new Error("Erro HTTP: " + resposta.status);
+  //     }
+  //     return resposta.json();
+  //   })
+  //   .then(function (dadosJSON) {
+  //     if (dadosJSON) {
+  //       for (let i = 0; i < dadosJSON.saidas.length; i++) {
+  //         const saida = dadosJSON.saidas[i];
+  //         if(saida.Prazo == txtData){
+  //             areaPendencia.textContent = '';
+  //             criarPendencia(saida.Nome, saida.Prazo, saida.Codigo);
+  //         }else{
+  //           areaPendencia.textContent = '';
+  //           let vazio = document.createElement('p');
+  //           vazio.textContent = 'Não há nenhuma pendência para esse dia';
+  //           vazio.style.color = 'rgb(9, 95, 184)';
+  //           areaPendencia.appendChild(vazio);
+  //         }
+  //       }
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.warn(error);
+  //   });
 }

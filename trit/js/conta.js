@@ -39,12 +39,13 @@ fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
   })
   .then(function (dadosJSON) {
     if (dadosJSON) {
+        let nome = String(dadosJSON.usuario[0].Nome).split(' ');
+        nomeUsuario.textContent = nome[0];
+
         let pontos = Number(dadosJSON.usuario[0].Pontos);
-        pontos = pontos.toFixed(0);
         let nivel = pontos / 15;
-        nivel = nivel.toFixed(0);
-        nivel = Number(nivel);
-        nomeUsuario.textContent = dadosJSON.usuario[0].Nome;
+        nivel = Math.floor(Number(nivel));
+
         nivelAtual.textContent = 'Nivel ' + nivel;
         proximoNivel.textContent = 'Nivel ' + (nivel + 1);
         
@@ -60,7 +61,6 @@ fetch("http://localhost/Trit/trit/api/buscarDadosUsuario.php", {
   .catch(function (error) {
     console.warn(error);
   });
-// for que compara cada item de (todasInsignias) com as insignias que o usuario possui e se ele possuir remove a class (naoPossui)
 
 
 const msgErro = document.createElement('p');

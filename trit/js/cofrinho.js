@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { verificarInsignias,erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData, deslogar } from "./funcoes.js";
+import { verificarInsignias,erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData, deslogar, popupInsigniaCompleta } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const main = document.querySelector('main');
@@ -1085,7 +1085,6 @@ function informacoesCofre()
     
                                 for (let index = 0; index < notificaConcluida.length; index++) {
                                     const notificacao = notificaConcluida[index];
-                                    console.log(notificacao);
     
                                     if(notificacao.id == i)
                                     {
@@ -1289,14 +1288,7 @@ function informacoesCofre()
                                         console.warn(error);
                                     })
                                     .finally(function(){
-                                        verificarInsignias().then(function(insignias) {
-                                            const insigniasSemRepeticao = [...insignias];
-                                            for (let i = 0; i < insigniasSemRepeticao.length; i++) {
-                                                if(insigniasAtuais[i] == null || insigniasAtuais[i] == undefined){
-                                                    console.log(insigniasSemRepeticao[i]);
-                                                }
-                                            }
-                                        });
+                                        notificarInsignia(insigniasAtuais);
                                     });
                                 }
                                 else
@@ -1521,14 +1513,7 @@ function informacoesCofre()
                                 console.warn(error);
                             })
                             .finally(function(){
-                                verificarInsignias().then(function(insignias) {
-                                    const insigniasSemRepeticao = [...insignias];
-                                    for (let i = 0; i < insigniasSemRepeticao.length; i++) {
-                                        if(insigniasAtuais[i].Codigo == null){
-                                            console.log(insigniasSemRepeticao[i]);
-                                        }
-                                    }
-                                });
+                                notificarInsignia(insigniasAtuais);
                             });
 
                         })
@@ -1694,4 +1679,14 @@ function ajustaPercentual(valorTotal, valorMax, local, nomePlanta, img, idNotifi
     {
         statusDeterminado.style.top = posicaoStatus;
     }
+}
+
+function notificarInsignia(insigniasAtuais){
+    verificarInsignias().then(function(insignias) {
+        let insigniasAntigas = new Set (insigniasAtuais.map(item => item.Codigo));
+        const novaInsignia = insignias.find(item => !insigniasAntigas.has(item.Codigo));
+        if(novaInsignia != undefined || novaInsignia != null || novaInsignia != ''){
+            popupInsigniaCompleta(bloqueio, body, novaInsignia.Nome, novaInsignia.Tipo, novaInsignia.Codigo);
+        }
+    });
 }

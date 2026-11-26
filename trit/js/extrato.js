@@ -436,7 +436,6 @@ function areaSelecaoMes()
                 })
                 .then(function (dadosJSON) {
                 if (dadosJSON) {
-                    console.log(dadosJSON);
                      if(dadosJSON.extrato.length > 0){
                         document.querySelector('section').textContent = '';
                         exibirExtrato(dadosJSON.extrato);
@@ -541,6 +540,7 @@ function areaSelecaoAno()
 
     btnMaisOpcoes.appendChild(iconMaisOpcoes);
     areaAnoSelecionado.append(anoSelecionado, btnMaisOpcoes);
+    naoSelecionado.append(ano, ano2);
     naoSelecionado.append(todos, ano, ano2);
     selecionarAno.append(areaAnoSelecionado, naoSelecionado);
 
@@ -703,47 +703,50 @@ function exibirExtrato(dados){
 
 function criarMovimentacao(local, movimentacoes){
     for (let i = 0; i < movimentacoes.length; i++) {
-        const movimentacao = document.createElement('div');
-            const nomeMovimentacao = document.createElement('p');
-            nomeMovimentacao.textContent = movimentacoes[i].Nome;
-
-            const localValor = document.createElement('div');
-            localValor.classList.add('valor');
-            
-                let txtOrigem = document.createElement('p');
-                if(movimentacoes[i].Origem == 'saida'){
-                    txtOrigem.textContent = '-';
-                    localValor.classList.add('saida');
-                }else{
-                    if(movimentacoes[i].Origem == 'entrada'){
-                        txtOrigem.textContent = '+';
-                        localValor.classList.add('entrada');
+        console.log(movimentacoes[i]);
+        if(movimentacoes[i].Valor != 10 || movimentacoes[i].Valor != 10.00){
+            const movimentacao = document.createElement('div');
+                const nomeMovimentacao = document.createElement('p');
+                nomeMovimentacao.textContent = movimentacoes[i].Nome;
+    
+                const localValor = document.createElement('div');
+                localValor.classList.add('valor');
+                
+                    let txtOrigem = document.createElement('p');
+                    if(movimentacoes[i].Origem == 'saida'){
+                        txtOrigem.textContent = '-';
+                        localValor.classList.add('saida');
                     }else{
-                        if(movimentacoes[i].Origem == 'guardar'){
-                            txtOrigem.textContent = 'Guardou';
-                            localValor.classList.add('cofrinho');
+                        if(movimentacoes[i].Origem == 'entrada'){
+                            txtOrigem.textContent = '+';
+                            localValor.classList.add('entrada');
                         }else{
-                            if(movimentacoes[i].Origem == 'resgatar'){
-                                txtOrigem.textContent = 'Resgatou';
-                                localValor.classList.add('resgate');
+                            if(movimentacoes[i].Origem == 'guardar'){
+                                txtOrigem.textContent = 'Guardou';
+                                localValor.classList.add('cofrinho');
+                            }else{
+                                if(movimentacoes[i].Origem == 'resgatar'){
+                                    txtOrigem.textContent = 'Resgatou';
+                                    localValor.classList.add('resgate');
+                                }
                             }
                         }
                     }
-                }
-                localValor.appendChild(txtOrigem);
-
-                let moeda = document.createElement('p');
-                moeda.textContent = 'R$';
-                localValor.appendChild(moeda);
-
-                let txtValor = document.createElement('p');
-                let valorFormatado = String(movimentacoes[i].Valor).replaceAll('.',',');
-                txtValor.textContent = valorFormatado;
-                localValor.appendChild(txtValor);
-
-        movimentacao.appendChild(nomeMovimentacao);
-        movimentacao.appendChild(localValor);
-        local.appendChild(movimentacao);
+                    localValor.appendChild(txtOrigem);
+    
+                    let moeda = document.createElement('p');
+                    moeda.textContent = 'R$';
+                    localValor.appendChild(moeda);
+    
+                    let txtValor = document.createElement('p');
+                    let valorFormatado = String(movimentacoes[i].Valor).replaceAll('.',',');
+                    txtValor.textContent = valorFormatado;
+                    localValor.appendChild(txtValor);
+    
+            movimentacao.appendChild(nomeMovimentacao);
+            movimentacao.appendChild(localValor);
+            local.appendChild(movimentacao);
+        }
     }
 
 }
