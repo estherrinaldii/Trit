@@ -2,7 +2,7 @@ if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
 }
 
-import { erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData, deslogar } from "./funcoes.js";
+import { verificarInsignias,erro, formataInputValor, formataInputData, validaData, botaoSair, avisoSair, obrigatorioIcon, FormatarData, deslogar } from "./funcoes.js";
 
 const body = document.querySelector('body');
 const main = document.querySelector('main');
@@ -10,6 +10,10 @@ const main = document.querySelector('main');
 let areaSemCofre = '';
 exibirCofres();
 
+const insigniasAtuais = [];
+verificarInsignias().then(function(insignias) {
+    insigniasAtuais.push(...insignias);
+});
 
 const msgErro = document.createElement('p');
 msgErro.classList.add('erro');
@@ -1283,6 +1287,16 @@ function informacoesCofre()
                                     })
                                     .catch(function (error) {
                                         console.warn(error);
+                                    })
+                                    .finally(function(){
+                                        verificarInsignias().then(function(insignias) {
+                                            const insigniasSemRepeticao = [...insignias];
+                                            for (let i = 0; i < insigniasSemRepeticao.length; i++) {
+                                                if(insigniasAtuais[i] == null || insigniasAtuais[i] == undefined){
+                                                    console.log(insigniasSemRepeticao[i]);
+                                                }
+                                            }
+                                        });
                                     });
                                 }
                                 else
@@ -1506,6 +1520,16 @@ function informacoesCofre()
                             .catch(function (error) {
                                 console.warn(error);
                             })
+                            .finally(function(){
+                                verificarInsignias().then(function(insignias) {
+                                    const insigniasSemRepeticao = [...insignias];
+                                    for (let i = 0; i < insigniasSemRepeticao.length; i++) {
+                                        if(insigniasAtuais[i].Codigo == null){
+                                            console.log(insigniasSemRepeticao[i]);
+                                        }
+                                    }
+                                });
+                            });
 
                         })
                         
