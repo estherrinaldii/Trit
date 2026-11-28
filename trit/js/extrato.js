@@ -325,7 +325,8 @@ function areaExtrato(){
     .then(function (dadosJSON) {
     if (dadosJSON) {
         if(dadosJSON.extrato.length > 0){
-            exibirExtrato(dadosJSON.extrato);
+            const apenasComValor = dadosJSON.extrato.filter(item => Number(item.Valor) !== 0);
+            exibirExtrato(apenasComValor);
         }else{
             const semRegistros = document.createElement('p');
             semRegistros.textContent = 'Nenhum registro para essa data';
@@ -438,7 +439,8 @@ function areaSelecaoMes()
                 if (dadosJSON) {
                      if(dadosJSON.extrato.length > 0){
                         document.querySelector('section').textContent = '';
-                        exibirExtrato(dadosJSON.extrato);
+                        const apenasComValor = dadosJSON.extrato.filter(item => Number(item.Valor) !== 0);
+                        exibirExtrato(apenasComValor);
                     }else{
                         document.querySelector('section').textContent = '';
                         const semRegistros = document.createElement('p');
@@ -594,7 +596,8 @@ function areaSelecaoAno()
                 if (dadosJSON) {
                     if(dadosJSON.extrato.length > 0){
                         document.querySelector('section').textContent = '';
-                        exibirExtrato(dadosJSON.extrato);
+                        const apenasComValor = dadosJSON.extrato.filter(item => Number(item.Valor) !== 0);
+                        exibirExtrato(apenasComValor);
                     }else{
                         document.querySelector('section').textContent = '';
                         const semRegistros = document.createElement('p');
@@ -703,7 +706,6 @@ function exibirExtrato(dados){
 
 function criarMovimentacao(local, movimentacoes){
     for (let i = 0; i < movimentacoes.length; i++) {
-        console.log(movimentacoes[i]);
         if(movimentacoes[i].Valor != 0 || movimentacoes[i].Valor != 0.00){
             const movimentacao = document.createElement('div');
                 const nomeMovimentacao = document.createElement('p');

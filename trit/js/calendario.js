@@ -1,4 +1,4 @@
-import { FormatarData, botaoSair, deslogar, formataInputData, formataInputValor, erro, avisoSair, validaData } from "./funcoes.js";
+import { botaoSair, deslogar, formataInputData, formataInputValor, erro, avisoSair, validaData } from "./funcoes.js";
 
 if(sessionStorage['logado'] == null || sessionStorage['logado'] == ""){
     window.location.href = "http://localhost/Trit/trit/login.html";
@@ -28,14 +28,11 @@ const todasDatas = [];
     })
     .then(function (dadosJSON) {
       if (dadosJSON) {
-        console.log(dadosJSON);
           for (let i = 0; i < dadosJSON.saidas.length; i++) {
             const saida = dadosJSON.saidas[i];
-            console.log(saida);
             todasDatas.push(saida.Data);
             let valor = saida.Valor;
             valor = Number(valor).toFixed(2);
-            valor = String(valor).replace('.',',');
             
             let data = saida.Prazo;
             let conjuntoData = data.split("-");
@@ -43,19 +40,26 @@ const todasDatas = [];
             let dataFormatada = `${conjuntoData[2]}/${conjuntoData[1]}/${conjuntoData[0]}`;
 
             if(saida.Valor == 0){
-              valor = sessionStorage.getItem(saida.Nome).toLowerCase();
-              valor = String(valor).replaceAll(',','.');
-              valor = Number(valor); 
+              valor = sessionStorage.getItem(String(saida.Nome).toLowerCase());
+              valor = Number(valor).toFixed(2); 
             }
 
-            criarGasto(saida.Tipo, saida.Nome, valor, dataFormatada, null, null, saida.Codigo);
-            criarPendencia(saida.Nome, dataFormatada, saida.Codigo);
+            criarGasto(saida.Tipo, saida.Nome, String(valor).replaceAll('.',','), dataFormatada, null, null, saida.Codigo);
+            criarPendencia(saida.Nome, dataFormatada, saida.Codigo, valor);
           }
       }
     })
     .catch(function (error) {
       console.warn(error);
-    });
+    }).finally(function(){
+      const todasPendencias = document.querySelectorAll('.pendencia');
+      for (let i = 0; i < todasPendencias.length; i++) {
+        const pendencia = todasPendencias[i];
+        if(sessionStorage.getItem(pendencia.id) == 'concluido'){
+          pendencia.classList.add('concluido');
+        }
+      }
+    })
   
   
   // parcelado
@@ -380,11 +384,13 @@ function criarPendencia(txtNome, txtData, codigo, txtValor){
                 if(!card.classList.contains('concluido'))
                 {
                     card.classList.add('concluido');
-                    criarSaidaPorClick(txtNome, 'parcelada', dataFormatada, valor, dataFormatada, 'pendente', 0, null);
+                    sessionStorage.setItem(codigo, 'concluido');
+                    criarSaidaPorClick(txtNome, 'parcelada', dataFormatada, valor, dataFormatada, 'pendente', 1, null);
                 }
                 else
                 {
                     card.classList.remove('concluido');
+                    sessionStorage.removeItem(codigo);
                 }
             });
 
@@ -461,7 +467,6 @@ function selecionaDia(){
             }
         
             let dataTotal = `${txtAno}-${enviaMes}-${enviaDia}`;
-            console.log(dataTotal);
           pendenciasPorData(dataTotal);
           titulo.textContent = `${txtDia} de ${txtMes} de ${txtAno}`;
         }else{
